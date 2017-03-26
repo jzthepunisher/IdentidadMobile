@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">IdentidadMobile</string>
+
+    <string name="hint_imei">IMEI</string>
+    <string name="hint_id_card_sim">Id Card SIM</string>
+    <string name="hint_celular">Número Celular</string>
+
+    <string name="accion_cancelar">Cancelar</string>
+    <string name="accion_aceptar">Aceptar</string>
+    <string name="actividad_titulo_registrar_dispositivo">Registrar Dispositivo</string>
+
+</resources>
