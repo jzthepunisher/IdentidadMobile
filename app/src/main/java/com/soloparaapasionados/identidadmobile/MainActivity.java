@@ -64,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         setToolbar();// Añadir action bar
 
 
@@ -129,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                         insertarDispositivo();
 
                         String mensajeTextoValidacion="";
-                        mensajeTextoValidacion= "Boxer-Verificacion-Celular:" + editTextCelular.getText().toString();
+                        mensajeTextoValidacion= "Boxer-Verificacion-Celular:" + editTextCelular.getText().toString() + ":IMEI:" + editTextIMEI.getText().toString();
 
                         SmsManager sms = SmsManager.getDefault();
                         sms.sendTextMessage(editTextCelular.getText().toString(),   null, mensajeTextoValidacion, sentPI, deliveredPI);
@@ -276,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
                     numeroCelularEntrante=mensajeTrozo[2];
                     IMEI_Entrante=mensajeTrozo[4];
 
-                    ActualizarMensajeValidado(numeroCelularEntrante,IMEI_Entrante);
+                    ActualizarMensajeValidado(IMEI_Entrante,numeroCelularEntrante);
 
                     //---display the new SMS message---
                     Toast.makeText(context, numeroCelularEntrante + "  " + IMEI_Entrante, Toast.LENGTH_LONG).show();
@@ -407,20 +405,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void ActualizarMensajeValidado(String IMEI_Entrante,String numeroCelularEntrante) {
         ContentResolver r = getContentResolver();
-        String numeroCelularGrabado="";
+        String numeroCelularGrabado=null;
         // Lista de operaciones
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
 
-        Log.d("Cabeceras de pedido", "Cabeceras de pedido");
+        Log.d("Cabeceras de pedido", "ActualizarMensajeValidado");
         DatabaseUtils.dumpCursor(r.query(Dispositivos.crearUriDispositivo(IMEI_Entrante), null, null, null, null));
 
         Cursor cursorDispositivo=r.query(Dispositivos.crearUriDispositivo(IMEI_Entrante), null, null, null, null);
 
+        if (!cursorDispositivo.moveToFirst())
+            return;
+
         if (cursorDispositivo.getCount()==1)   {
             numeroCelularGrabado=cursorDispositivo.getString(cursorDispositivo.getColumnIndexOrThrow(Dispositivos.NUMERO_CELULAR));
 
-            if (numeroCelularGrabado==numeroCelularEntrante){
+            if (numeroCelularGrabado.equals(numeroCelularEntrante)){
                 ops.add(ContentProviderOperation.newUpdate(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()))
                         .withValue(Dispositivos.VALIDADO, 1)
                         .build());
@@ -428,7 +429,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            if (cursorDispositivo.getCount()==1 && numeroCelularGrabado==numeroCelularEntrante)   {
+            if (cursorDispositivo.getCount()==1 && numeroCelularGrabado.equals(numeroCelularEntrante))   {
                 r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
                 switchCompatMensajeValidado.setChecked(true);
             }
