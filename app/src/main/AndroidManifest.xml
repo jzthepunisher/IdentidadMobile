@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,9 +27,9 @@
             android:name=".sqlite.ProviderCotizacion"
             android:authorities="com.soloparaapasionados.identidadmobile"
             android:enabled="true"
-            android:exported="true">
-        </provider>
+            android:exported="true"></provider>
 
+        <activity android:name=".actividades.EmpleadoActivity"></activity>
     </application>
 
 </manifest>
