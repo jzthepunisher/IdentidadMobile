@@ -120,13 +120,118 @@
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/linearMensajeEnviado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/linearLayoutCelular"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageMensajeEnviado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_send_black_24dp" />
+
+            <TextView
+                android:id="@+id/textViewMensajeEnviado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:text="Mensaje Enviado : "
+                android:layout_marginLeft="62dp"
+                android:layout_centerVertical="true"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switchCompatMensajeEnviado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="32dp"
+                android:layout_alignParentRight="true"
+                android:checked="true"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/linearMensajeRecibido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/linearMensajeEnviado"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageMensajeRecibido"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_textsms_black_24dp" />
+
+            <TextView
+                android:id="@+id/textViewMensajeRecibido"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:text="Mensaje Recibido : "
+                android:layout_marginLeft="62dp"
+                android:layout_centerVertical="true"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switchCompatMensajeRecibido"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="32dp"
+                android:layout_alignParentRight="true"
+                android:checked="true"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/linearMensajeValidado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/linearMensajeRecibido"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageMensajeValidado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_textsms_black_24dp" />
+
+            <TextView
+                android:id="@+id/textViewMensajeValidado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:text="Mensaje Validado : "
+                android:layout_marginLeft="62dp"
+                android:layout_centerVertical="true"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switchCompatMensajeValidado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="32dp"
+                android:layout_alignParentRight="true"
+                android:checked="true"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
         <!-- Bottom Bar -->
         <LinearLayout
             android:id="@+id/bottom_bar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_alignParentBottom="true"
-            android:layout_below="@+id/linearLayoutCelular"
+            android:layout_below="@+id/linearMensajeValidado"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
