@@ -7,6 +7,12 @@
 
     <string name="accion_cancelar">Cancelar</string>
     <string name="accion_aceptar">Aceptar</string>
-    <string name="actividad_titulo_registrar_dispositivo">Registrar Dispositivo</string>
+    <string name="actividad_titulo_registrar_dispositivo">Registro de Dispositivo</string>
 
+
+    <string name="delete">Delete</string>
+    <string name="search">Search</string>
+    <string name="settings">Settings</string>
+    <string name="edit">Edit</string>
+    <string name="exit">Exit</string>
 </resources>

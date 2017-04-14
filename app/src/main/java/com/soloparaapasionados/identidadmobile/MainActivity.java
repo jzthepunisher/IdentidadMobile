@@ -13,13 +13,19 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.RemoteException;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,8 +43,15 @@ public class MainActivity extends AppCompatActivity {
     TextView editTextIMEI;
     TextView editTextIdCardSim;
     EditText editTextCelular;
+
+    SwitchCompat switchCompatMensajeEnviado;
+    SwitchCompat switchCompatMensajeRecibido;
+    SwitchCompat switchCompatMensajeValidado;
+
     Button buttonAceptar;
     Button buttonCancelar;
+
+    CollapsingToolbarLayout collapser;
 
     String SENT = "SMS_SENT";
     String DELIVERED = "SMS_DELIVERED";
@@ -51,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+        setToolbar();// Añadir action bar
+
+
         EstablecerEventos();
         MostrarInformacionCelular();
         editTextCelular.setText("997253205");
@@ -59,8 +77,32 @@ public class MainActivity extends AppCompatActivity {
         deliveredPI = PendingIntent.getBroadcast(this, 0,new Intent(DELIVERED), 0);
 
 
-        getApplicationContext().deleteDatabase("cotizaciones.db");
+        //getApplicationContext().deleteDatabase("cotizaciones.db");
 
+    }
+
+    private void setToolbar() {
+        // Añadir la Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Registro de Dispositivo");
+
+
+        if (getSupportActionBar() != null) // Habilitar up button
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void EstablecerEventos(){
@@ -68,12 +110,35 @@ public class MainActivity extends AppCompatActivity {
         editTextIMEI=(TextView)findViewById(R.id.editTextIMEI);
         editTextIdCardSim=(TextView)findViewById(R.id.editTextIdCardSim);
         editTextCelular=(EditText)findViewById(R.id.editTextCelular);
-        buttonAceptar = (Button)findViewById(R.id.buttonAceptar);
-        buttonCancelar = (Button)findViewById(R.id.buttonCancelar);
+
+        switchCompatMensajeEnviado=(SwitchCompat)findViewById(R.id.switchCompatMensajeEnviado);
+        switchCompatMensajeRecibido=(SwitchCompat)findViewById(R.id.switchCompatMensajeRecibido);
+        switchCompatMensajeValidado=(SwitchCompat)findViewById(R.id.switchCompatMensajeValidado);
+        switchCompatMensajeEnviado.setChecked(false);
+        switchCompatMensajeRecibido.setChecked(false);
+        switchCompatMensajeValidado.setChecked(false);
+
+// Setear escucha al FAB
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButtonSalvar);
+        fab.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // validarDatos()
+
+                        insertarDispositivo();
+
+                        String mensajeTextoValidacion="";
+                        mensajeTextoValidacion= "Boxer-Verificacion-Celular:" + editTextCelular.getText().toString();
+
+                        SmsManager sms = SmsManager.getDefault();
+                        sms.sendTextMessage(editTextCelular.getText().toString(),   null, mensajeTextoValidacion, sentPI, deliveredPI);
 
 
-
-        buttonAceptar.setOnClickListener(new View.OnClickListener() {
+                    }
+                }
+        );
+        /*buttonAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // validarDatos()
@@ -88,14 +153,14 @@ public class MainActivity extends AppCompatActivity {
 
 
             }
-        });
+        });*/
 
-        buttonCancelar.setOnClickListener(new View.OnClickListener() {
+        /*buttonCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // validarDatos()
             }
-        });
+        });*/
     }
 
     private void MostrarInformacionCelular(){
@@ -124,6 +189,8 @@ public class MainActivity extends AppCompatActivity {
             //Toast.makeText(this, "Phone number: " + telNumber, Toast.LENGTH_LONG).show();
             editTextCelular.setText(telNumber);
         }
+
+
     }
 
     @Override
@@ -137,8 +204,8 @@ public class MainActivity extends AppCompatActivity {
                 switch (getResultCode())
                 {
                     case Activity.RESULT_OK:
-
-                        Toast.makeText(getBaseContext(), "SMS sent", Toast.LENGTH_LONG).show();
+                        ActualizarMensajeEnviado();
+                        Toast.makeText(getBaseContext(), "SMS Enviado Satisfactoriamente", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
                         Toast.makeText(getBaseContext(), "Generic failure",
@@ -167,7 +234,8 @@ public class MainActivity extends AppCompatActivity {
                 switch (getResultCode())
                 {
                     case Activity.RESULT_OK:
-                        Toast.makeText(getBaseContext(), "SMS delivered", Toast.LENGTH_LONG).show();
+                        ActualizarMensajeRecibido();
+                        Toast.makeText(getBaseContext(), "SMS Recibido Satisfactoriamente", Toast.LENGTH_SHORT).show();
                         break;
                     case Activity.RESULT_CANCELED:
                         Toast.makeText(getBaseContext(), "SMS not delivered",
@@ -200,8 +268,18 @@ public class MainActivity extends AppCompatActivity {
                         //---get the message body---
                         str += msgs[i].getMessageBody().toString();
                     }
+
+                    String[] mensajeTrozo= str.split(":");
+                    String numeroCelularEntrante;
+                    String IMEI_Entrante;
+
+                    numeroCelularEntrante=mensajeTrozo[2];
+                    IMEI_Entrante=mensajeTrozo[4];
+
+                    ActualizarMensajeValidado(numeroCelularEntrante,IMEI_Entrante);
+
                     //---display the new SMS message---
-                    Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, numeroCelularEntrante + "  " + IMEI_Entrante, Toast.LENGTH_LONG).show();
                     //---prevent this SMS message from being broadcasted---
                     abortBroadcast();
                     Log.d("SMSReceiver", str);
@@ -267,4 +345,97 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void ActualizarMensajeEnviado(){
+        ContentResolver r = getContentResolver();
+
+        // Lista de operaciones
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+
+
+        Log.d("MensajeEnviado", "ActualizarMensajeEnviado");
+        DatabaseUtils.dumpCursor(r.query(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()), null, null, null, null));
+
+        Cursor cursorDispositivo=r.query(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()), null, null, null, null);
+
+        if (cursorDispositivo.getCount()==1)   {
+            ops.add(ContentProviderOperation.newUpdate(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()))
+                    .withValue(Dispositivos.ENVIADO, 1)
+                    .build());
+        }
+
+        try {
+            if (cursorDispositivo.getCount()==1){
+                r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
+                switchCompatMensajeEnviado.setChecked(true);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (OperationApplicationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ActualizarMensajeRecibido(){
+        ContentResolver r = getContentResolver();
+
+        // Lista de operaciones
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+
+
+        Log.d("MensajeEnviado", "ActualizarMensajeEnviado");
+        DatabaseUtils.dumpCursor(r.query(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()), null, null, null, null));
+
+        Cursor cursorDispositivo=r.query(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()), null, null, null, null);
+
+        if (cursorDispositivo.getCount()==1)   {
+            ops.add(ContentProviderOperation.newUpdate(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()))
+                    .withValue(Dispositivos.RECIBIDO, 1)
+                    .build());
+        }
+
+        try {
+            if (cursorDispositivo.getCount()==1){
+                r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
+                switchCompatMensajeRecibido.setChecked(true);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (OperationApplicationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void ActualizarMensajeValidado(String IMEI_Entrante,String numeroCelularEntrante) {
+        ContentResolver r = getContentResolver();
+        String numeroCelularGrabado="";
+        // Lista de operaciones
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+
+
+        Log.d("Cabeceras de pedido", "Cabeceras de pedido");
+        DatabaseUtils.dumpCursor(r.query(Dispositivos.crearUriDispositivo(IMEI_Entrante), null, null, null, null));
+
+        Cursor cursorDispositivo=r.query(Dispositivos.crearUriDispositivo(IMEI_Entrante), null, null, null, null);
+
+        if (cursorDispositivo.getCount()==1)   {
+            numeroCelularGrabado=cursorDispositivo.getString(cursorDispositivo.getColumnIndexOrThrow(Dispositivos.NUMERO_CELULAR));
+
+            if (numeroCelularGrabado==numeroCelularEntrante){
+                ops.add(ContentProviderOperation.newUpdate(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()))
+                        .withValue(Dispositivos.VALIDADO, 1)
+                        .build());
+            }
+        }
+
+        try {
+            if (cursorDispositivo.getCount()==1 && numeroCelularGrabado==numeroCelularEntrante)   {
+                r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
+                switchCompatMensajeValidado.setChecked(true);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (OperationApplicationException e) {
+            e.printStackTrace();
+        }
+    }
 }
