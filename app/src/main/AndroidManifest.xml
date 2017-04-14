@@ -16,11 +16,11 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
 
         <provider
@@ -29,7 +29,16 @@
             android:enabled="true"
             android:exported="true"></provider>
 
-        <activity android:name=".actividades.EmpleadoActivity"></activity>
+        <activity android:name=".actividades.EmpleadoActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/actividad_titulo_registrar_empleado">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>
