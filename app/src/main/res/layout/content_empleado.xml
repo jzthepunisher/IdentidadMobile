@@ -169,7 +169,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="32dp">
-
+                    <!--android:maxLines="1"-->
                     <EditText
                         android:id="@+id/editTextDireccionEmpleado"
                         android:layout_width="match_parent"
@@ -177,101 +177,257 @@
                         android:ems="10"
                         android:enabled="true"
                         android:hint="@string/hint_direcccion_empleado"
-                        android:inputType="text"
-                        android:maxLines="3" />
+
+                        android:inputType="textMultiLine"
+                        android:maxLines="3"
+                        android:lines="3"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/linearLayoutDniEmpleado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayoutDireccionEmpleado"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewDniEmpleado"
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_contacts_black_24dp"/>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textInputLayoutDniEmpleado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp">
+
+                    <EditText
+                        android:id="@+id/editTextDniEmpleado"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:enabled="true"
+                        android:hint="@string/hint_dni_empleado"
+                        android:inputType="phone"
+                        android:maxLines="1" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutCelular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayoutDniEmpleado"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewCelular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_call_black_24dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textInputLayoutCelular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp">
+
+                    <EditText
+                        android:id="@+id/editTextCelular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/hint_celular"
+                        android:inputType="phone" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayoutCelular"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_email_black_24dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textInputLayoutEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp">
+
+                    <EditText
+                        android:id="@+id/editTextEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/hint_email_empleado"
+                        android:inputType="textEmailAddress" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearFechaNacimiento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_below="@+id/linearLayoutEmail"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewFechaNacimiento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_date_range_black_24dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textInputLayoutFechaNacimiento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp">
+
+                    <EditText
+                        android:id="@+id/editTextFechaNacimiento"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="6"
+                        android:text="01/11/1986"
+                        android:hint="@string/hint_fecha_nacimiento_empleado"
+                        android:inputType="date"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+           <!-- android:layout_toRightOf="@+id/linearFechaNacimiento"-->
+            <LinearLayout
+                android:id="@+id/linearCargo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_below="@+id/linearFechaNacimiento"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewCargo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_work_black_24dp" />
+
+                <LinearLayout
+                    android:id="@+id/linearCargoDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="0dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/TextViewEtiquetaCargo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cargo"
+                        android:layout_marginLeft="38dp"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/colorAccent" />
+
+                    <Spinner
+                        android:id="@+id/categoria_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="32dp"
+                        android:paddingLeft="0dp"
+                        android:layout_below="@+id/TextViewEtiquetaCargo"
+                        android:entries="@array/entradas_cargo" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linearFechaIngreso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_below="@+id/linearCargo"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewFechaIngreso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_date_range_black_24dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textInputLayoutFechaIngreso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp">
+
+                    <EditText
+                        android:id="@+id/editTextFechaIngreso"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="6"
+                        android:text="01/11/1986"
+                        android:hint="@string/hint_fecha_ingreso_empleado"
+                        android:inputType="date"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearFechaBaja"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_below="@+id/linearFechaIngreso"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewFechaBaja"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_date_range_black_24dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textInputLayoutFechaBaja"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp">
+
+                    <EditText
+                        android:id="@+id/editTextFechaBaja"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="6"
+                        android:text="01/11/1986"
+                        android:hint="@string/hint_fecha_baja_empleado"
+                        android:inputType="date"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+
+
         </RelativeLayout>
 
-
-
-
-
-        <!-- Card Perfil -->
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/card_margin">
-
-            <LinearLayout
-                style="@style/Widget.CardContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <!--Etiqueta Perfil -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Perfil"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-                <!--Texto de ejemplo-->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/girl_ipsum" />
-
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <!-- Card Amigos -->
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/card_margin"
-            android:layout_marginLeft="@dimen/card_margin"
-            android:layout_marginRight="@dimen/card_margin">
-
-            <LinearLayout
-                style="@style/Widget.CardContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <!-- Etiqueta Amigos -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Amigos(450)"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-                <!-- Texto de ejemplo -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/girl_ipsum" />
-
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <!-- Card Intereses -->
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/card_margin"
-            android:layout_marginLeft="@dimen/card_margin"
-            android:layout_marginRight="@dimen/card_margin">
-
-            <LinearLayout
-                style="@style/Widget.CardContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <!-- Etiqueta Intereses -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Intereses"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-                <!-- Texto de ejemplo -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/girl_ipsum" />
-
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
 
     </LinearLayout>
 

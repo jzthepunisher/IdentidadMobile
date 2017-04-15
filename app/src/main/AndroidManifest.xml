@@ -16,29 +16,40 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
 
         <provider
             android:name=".sqlite.ProviderCotizacion"
             android:authorities="com.soloparaapasionados.identidadmobile"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="true" />
 
-        <activity android:name=".actividades.EmpleadoActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/actividad_titulo_registrar_empleado">
+        <activity
+            android:name=".actividades.EmpleadoActivity"
+            android:label="@string/actividad_titulo_registrar_empleado"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
+        <activity
+            android:name=".actividades.EmpleadoAdicionarEditarActivity"
+            android:label="@string/title_activity_empleado_adicionar_editar"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+
     </application>
 
 </manifest>
