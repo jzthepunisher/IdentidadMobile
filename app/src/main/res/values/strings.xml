@@ -39,6 +39,12 @@
     <string name="hint_fecha_ingreso_empleado">Fecha Ingreso</string>
     <string name="hint_fecha_baja_empleado">Fecha de Baja</string>
 
+    <string name="error_campo_vacio">Ingresa un valor</string>
+    <string name="error_campo_grande">Ingresa un valor de tamaño adecuado</string>
+    <string name="error_campo_invalido_nombre_empleado">Nombre de empleado inválido (Sólo caractéres)</string>
+    <string name="error_campo_invalido_apellido_paterno_empleado">Apellido paterno de empleado inválido (Sólo caractéres)</string>
+    <string name="error_campo_invalido_apellido_materno_empleado">Apellido materno de empleado inválido (Sólo caractéres)</string>
+
     <!-- Categorías -->
     <string-array name="entradas_cargo">
         <item>Vendedor</item>
