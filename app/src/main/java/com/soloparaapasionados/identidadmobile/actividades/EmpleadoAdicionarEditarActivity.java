@@ -10,9 +10,11 @@ import android.view.Menu;
 import android.view.View;
 
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.fragmentos.DatePickerFragment;
 import com.soloparaapasionados.identidadmobile.fragmentos.EmpleadoAdicionarEditarFragment;
 
-public class EmpleadoAdicionarEditarActivity extends AppCompatActivity {
+public class EmpleadoAdicionarEditarActivity extends AppCompatActivity
+        implements DatePickerFragment.OnDateSelectedListener{
 
     public static final String EXTRA_ID_EMPLEADO = "extra_id_empleado";
 
@@ -69,7 +71,15 @@ public class EmpleadoAdicionarEditarActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public void onDateSelected(int idViewSeleccionadora,int year, int month, int day) {
+        EmpleadoAdicionarEditarFragment empleadoAdicionarEditarFragment = (EmpleadoAdicionarEditarFragment)
+                getSupportFragmentManager().findFragmentById(R.id.empleado_adicionar_editar_container);
 
+        if (empleadoAdicionarEditarFragment != null) {
+            empleadoAdicionarEditarFragment.actualizarFecha(idViewSeleccionadora,year, month, day);
+        }
+    }
 
 }
 

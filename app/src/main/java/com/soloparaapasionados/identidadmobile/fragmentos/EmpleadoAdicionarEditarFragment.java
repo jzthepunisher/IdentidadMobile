@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,10 @@ import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -52,9 +58,10 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
 
     FloatingActionButton floatingActionButtonGuardar;
 
-
+    final static String DATE_FORMAT = "dd/MM/yyyy";
 
     private static final String ARGUMENTO_ID_EMPLEADO = "argumento_id_empleado";
+
     private String mIdEmpleado;
 
     public EmpleadoAdicionarEditarFragment() {
@@ -108,11 +115,18 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
         editTextFechaNacimiento=(EditText) root.findViewById(R.id.editTextFechaNacimiento);
         editTextFechaIngreso=(EditText) root.findViewById(R.id.editTextFechaIngreso);
         editTextFechaBaja=(EditText) root.findViewById(R.id.editTextFechaBaja);
-
+        //Establecer eventos TextWatcher.
         editTextIdEmpleado.addTextChangedListener(new MiTextWatcher(editTextIdEmpleado));
         editTextNombresEmpleado.addTextChangedListener(new MiTextWatcher(editTextNombresEmpleado));
         editTextApellidoPaternoEmpleado.addTextChangedListener(new MiTextWatcher(editTextApellidoPaternoEmpleado));
         editTextApellidoMaternoEmpleado.addTextChangedListener(new MiTextWatcher(editTextApellidoMaternoEmpleado));
+        editTextDireccionEmpleado.addTextChangedListener(new MiTextWatcher(editTextDireccionEmpleado));
+        editTextDniEmpleado.addTextChangedListener(new MiTextWatcher(editTextDniEmpleado));
+        editTextCelular.addTextChangedListener(new MiTextWatcher(editTextCelular));
+        editTextEmail.addTextChangedListener(new MiTextWatcher(editTextEmail));
+        editTextFechaNacimiento.addTextChangedListener(new MiTextWatcher(editTextFechaNacimiento));
+        editTextFechaIngreso.addTextChangedListener(new MiTextWatcher(editTextFechaIngreso));
+        editTextFechaBaja.addTextChangedListener(new MiTextWatcher(editTextFechaBaja));
 
         floatingActionButtonGuardar = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButtonGuardar);
 
@@ -124,9 +138,52 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
             }
         });
 
+        editTextFechaNacimiento.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogFragment picker = new DatePickerFragment();
+                    Bundle bundle=new Bundle();
+                    bundle.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaNacimiento.getId());
+                    picker.setArguments(bundle);
+                    picker.show(getFragmentManager(), "datePicker");
+
+                }
+            }
+        );
+
+        editTextFechaIngreso.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DialogFragment picker = new DatePickerFragment();
+                        Bundle bundle=new Bundle();
+                        bundle.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaIngreso.getId());
+                        picker.setArguments(bundle);
+                        picker.show(getFragmentManager(), "datePicker");
+
+                    }
+                }
+        );
+
+        editTextFechaBaja.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DialogFragment picker = new DatePickerFragment();
+                        Bundle bundle=new Bundle();
+                        bundle.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaBaja.getId());
+                        picker.setArguments(bundle);
+                        picker.show(getFragmentManager(), "datePicker");
+
+                    }
+                }
+        );
+
         return root;
     }
 
+    //Validar datos del empleado
     private void validarDatosEmpleado() {
         boolean error = false;
 
@@ -155,68 +212,39 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
             error = true;
         }
 
-        /*if (TextUtils.isEmpty(ApellidoPaternoEmpleado)) {
-            textInputLayoutApellidoPaternoEmpleado.setError(getString(R.string.error_campo_vacio));
-            textInputLayoutApellidoPaternoEmpleado.requestFocus();
+
+        if (!esApelllidoMaternoValido()) {
             error = true;
-            return;
         }
 
-        if (TextUtils.isEmpty(ApellidoMaternoEmpleado)) {
-            textInputLayoutApellidoMaternoEmpleado.setError(getString(R.string.error_campo_vacio));
-            textInputLayoutApellidoMaternoEmpleado.requestFocus();
+        if (!esDireccionValido()) {
             error = true;
-            return;
         }
 
-        if (TextUtils.isEmpty(DireccionEmpleado)) {
-            textInputLayoutDireccionEmpleado.setError(getString(R.string.error_campo_vacio));
-            textInputLayoutDireccionEmpleado.requestFocus();
+        if (!esDNIValido()) {
             error = true;
-            return;
         }
 
-        if (TextUtils.isEmpty(DniEmpleado)) {
-            textInputLayoutDniEmpleado.setError(getString(R.string.error_campo_vacio));
-            textInputLayoutDniEmpleado.requestFocus();
+        if (!esCelularValido()) {
             error = true;
-            return;
         }
 
-        if (TextUtils.isEmpty(Celular)) {
-            textInputLayoutCelular.setError(getString(R.string.error_campo_vacio));
-            textInputLayoutCelular.requestFocus();
+        if (!esEmailValido()) {
             error = true;
-            return;
         }
 
-        if (TextUtils.isEmpty(Email)) {
-            textInputLayoutEmail.setError(getString(R.string.error_campo_vacio));
-            textInputLayoutEmail.requestFocus();
+        if (!esFechaNacimientoValido()) {
             error = true;
-            return;
         }
 
-        if (TextUtils.isEmpty(FechaNacimiento)) {
-            textInputLayoutFechaNacimiento.setError(getString(R.string.error_campo_vacio));
-            textInputLayoutFechaNacimiento.requestFocus();
+        if (!esFechaIngresoValido()) {
             error = true;
-            return;
         }
 
-        if (TextUtils.isEmpty(FechaIngreso)) {
-            textInputLayoutFechaIngreso.setError(getString(R.string.error_campo_vacio));
-            textInputLayoutFechaIngreso.requestFocus();
+        if (!esFechaBajaValido()) {
             error = true;
-            return;
         }
 
-        if (TextUtils.isEmpty(FechaBaja)) {
-            textInputLayoutFechaBaja.setError(getString(R.string.error_campo_vacio));
-            textInputLayoutFechaBaja.requestFocus();
-            error = true;
-            return;
-        }*/
 
         if (error) {
             return;
@@ -235,6 +263,7 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
 
     }
 
+    //Validar datos del empleado online
     private class MiTextWatcher implements TextWatcher {
 
         private View view;
@@ -264,6 +293,27 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
                     break;
                 case R.id.editTextApellidoMaternoEmpleado:
                     esApelllidoMaternoValido();
+                    break;
+                case R.id.editTextDireccionEmpleado:
+                    esDireccionValido();
+                    break;
+                case R.id.editTextDniEmpleado:
+                    esDNIValido();
+                    break;
+                case R.id.editTextCelular:
+                    esCelularValido();
+                    break;
+                case R.id.editTextEmail:
+                    esEmailValido();
+                    break;
+                case R.id.editTextFechaNacimiento:
+                    esFechaNacimientoValido();
+                    break;
+                case R.id.editTextFechaIngreso:
+                    esFechaIngresoValido();
+                    break;
+                case R.id.editTextFechaBaja:
+                    esFechaBajaValido();
                     break;
             }
         }
@@ -323,10 +373,12 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
         String apelllidoPaterno=editTextApellidoPaternoEmpleado.getText().toString().trim();
 
         Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
-        if (!patron.matcher(apelllidoPaterno).matches()) {
-            textInputLayoutApellidoPaternoEmpleado.setError(getString(R.string.error_campo_invalido_apellido_paterno_empleado));
-            textInputLayoutApellidoPaternoEmpleado.requestFocus();
-            return false;
+        if (apelllidoPaterno.length() > 0  ){
+            if (!patron.matcher(apelllidoPaterno).matches()) {
+                textInputLayoutApellidoPaternoEmpleado.setError(getString(R.string.error_campo_invalido_apellido_paterno_empleado));
+                textInputLayoutApellidoPaternoEmpleado.requestFocus();
+                return false;
+            }
         }
 
         if (apelllidoPaterno.length() > 30) {
@@ -345,10 +397,13 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
         String apelllidoMaterno=editTextApellidoMaternoEmpleado.getText().toString().trim();
 
         Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
-        if (!patron.matcher(apelllidoMaterno).matches() ) {
-            textInputLayoutApellidoMaternoEmpleado.setError(getString(R.string.error_campo_invalido_apellido_materno_empleado));
-            textInputLayoutApellidoMaternoEmpleado.requestFocus();
-            return false;
+
+        if (apelllidoMaterno.length() > 0  ){
+            if (!patron.matcher(apelllidoMaterno).matches()) {
+                textInputLayoutApellidoMaternoEmpleado.setError(getString(R.string.error_campo_invalido_apellido_materno_empleado));
+                textInputLayoutApellidoMaternoEmpleado.requestFocus();
+                return false;
+            }
         }
 
         if (apelllidoMaterno.length() > 30) {
@@ -362,4 +417,137 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
         return true;
     }
 
+    //Dirección del Empleado
+    private boolean esDireccionValido() {
+        String direccion=editTextDireccionEmpleado.getText().toString().trim();
+
+        if (direccion.length() > 50) {
+            textInputLayoutDireccionEmpleado.setError(getString(R.string.error_campo_grande));
+            textInputLayoutDireccionEmpleado.requestFocus();
+            return false;
+        }
+
+        textInputLayoutDireccionEmpleado.setErrorEnabled(false);
+
+        return true;
+    }
+
+    //DNI del Empleado
+    private boolean esDNIValido() {
+        String DNI=editTextDniEmpleado.getText().toString().trim();
+
+        if (DNI.length() > 8) {
+            textInputLayoutDniEmpleado.setError(getString(R.string.error_campo_grande));
+            textInputLayoutDniEmpleado.requestFocus();
+            return false;
+        }
+
+        textInputLayoutDniEmpleado.setErrorEnabled(false);
+
+        return true;
+    }
+
+    //Celular del Empleado
+    private boolean esCelularValido() {
+        String celular=editTextCelular.getText().toString().trim();
+
+        if (celular.length() > 15) {
+            textInputLayoutCelular.setError(getString(R.string.error_campo_grande));
+            textInputLayoutCelular.requestFocus();
+            return false;
+        }
+
+        textInputLayoutCelular.setErrorEnabled(false);
+
+        return true;
+    }
+
+    //Email del Empleado
+    private boolean esEmailValido() {
+        String email=editTextEmail.getText().toString().trim();
+
+        if (email.length() > 30) {
+            textInputLayoutEmail.setError(getString(R.string.error_campo_grande));
+            textInputLayoutEmail.requestFocus();
+            return false;
+        }
+
+        if (email.length() > 0) {
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                textInputLayoutEmail.setError(getString(R.string.error_campo_invalido_mail));
+                return false;
+            }
+        }
+
+        textInputLayoutEmail.setErrorEnabled(false);
+
+        return true;
+    }
+
+    //Fecha de Nacimiento del Empleado
+    private boolean esFechaNacimientoValido() {
+        String fechaNacimiento=editTextFechaNacimiento.getText().toString().trim();
+
+        try {
+            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+            df.setLenient(false);
+            df.parse(fechaNacimiento);
+            textInputLayoutFechaNacimiento.setErrorEnabled(false);
+            return true;
+        } catch (ParseException e) {
+            textInputLayoutFechaNacimiento.setError(getString(R.string.error_campo_invalido_fecha));
+            return false;
+        }
+    }
+
+    //Fecha de Ingreso del Empleado
+    private boolean esFechaIngresoValido() {
+        String fechaIngreso=editTextFechaIngreso.getText().toString().trim();
+
+        try {
+            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+            df.setLenient(false);
+            df.parse(fechaIngreso);
+            textInputLayoutFechaIngreso.setErrorEnabled(false);
+            return true;
+        } catch (ParseException e) {
+            textInputLayoutFechaIngreso.setError(getString(R.string.error_campo_invalido_fecha));
+            return false;
+        }
+    }
+
+    //Fecha de Ingreso del Empleado
+    private boolean esFechaBajaValido() {
+        String fechaBaja=editTextFechaBaja.getText().toString().trim();
+
+        try {
+            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+            df.setLenient(false);
+            df.parse(fechaBaja);
+            textInputLayoutFechaBaja.setErrorEnabled(false);
+            return true;
+        } catch (ParseException e) {
+            textInputLayoutFechaBaja.setError(getString(R.string.error_campo_invalido_fecha));
+            return false;
+        }
+    }
+
+    public void actualizarFecha(int idViewSeleccionadora ,int ano, int mes, int dia) {
+
+        switch (idViewSeleccionadora)
+        {
+            case R.id.editTextFechaNacimiento:
+                editTextFechaNacimiento.setText( dia + "/" + (mes + 1) + "/" +  ano );
+                break;
+            case R.id.editTextFechaIngreso:
+                editTextFechaIngreso.setText( dia + "/" + (mes + 1) + "/" +  ano );
+                break;
+            case R.id.editTextFechaBaja:
+                editTextFechaBaja.setText( dia + "/" + (mes + 1) + "/" +  ano );
+                break;
+        }
+        // Setear en el textview la fecha
+        //editTextFechaNacimiento.setText(ano + "-" + (mes + 1) + "-" + dia);
+
+    }
 }

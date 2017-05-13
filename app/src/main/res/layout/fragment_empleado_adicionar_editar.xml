@@ -180,7 +180,9 @@
                     android:id="@+id/textInputLayoutDireccionEmpleado"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="32dp">
+                    android:layout_marginLeft="32dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30">
                     <!--android:maxLines="1"-->
                     <EditText
                         android:id="@+id/editTextDireccionEmpleado"
@@ -189,10 +191,10 @@
                         android:ems="10"
                         android:enabled="true"
                         android:hint="@string/hint_direcccion_empleado"
-
                         android:inputType="textMultiLine"
                         android:maxLines="3"
-                        android:lines="3"/>
+                        android:lines="3"
+                        android:maxLength="30"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -214,7 +216,9 @@
                     android:id="@+id/textInputLayoutDniEmpleado"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="32dp">
+                    android:layout_marginLeft="32dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="8">
 
                     <EditText
                         android:id="@+id/editTextDniEmpleado"
@@ -224,7 +228,9 @@
                         android:enabled="true"
                         android:hint="@string/hint_dni_empleado"
                         android:inputType="phone"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:maxLength="8"
+                        android:digits="0123456789"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -246,7 +252,9 @@
                     android:id="@+id/textInputLayoutCelular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="32dp">
+                    android:layout_marginLeft="32dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="15">
 
                     <EditText
                         android:id="@+id/editTextCelular"
@@ -254,7 +262,9 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="@string/hint_celular"
-                        android:inputType="phone" />
+                        android:inputType="phone"
+                        android:maxLength="15"
+                        android:digits="0123456789"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -276,7 +286,9 @@
                     android:id="@+id/textInputLayoutEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="32dp">
+                    android:layout_marginLeft="32dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30">
 
                     <EditText
                         android:id="@+id/editTextEmail"
@@ -284,7 +296,8 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="@string/hint_email_empleado"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        android:maxLength="30"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -313,7 +326,8 @@
                         android:id="@+id/editTextFechaNacimiento"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ems="6"
+                        style="@android:style/Widget.DeviceDefault.Light.Spinner"
+                        android:ems="7"
                         android:text="01/11/1986"
                         android:hint="@string/hint_fecha_nacimiento_empleado"
                         android:inputType="date"
@@ -393,7 +407,8 @@
                         android:id="@+id/editTextFechaIngreso"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ems="6"
+                        style="@android:style/Widget.DeviceDefault.Light.Spinner"
+                        android:ems="7"
                         android:text="01/11/1986"
                         android:hint="@string/hint_fecha_ingreso_empleado"
                         android:inputType="date"
@@ -427,7 +442,8 @@
                         android:id="@+id/editTextFechaBaja"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ems="6"
+                        style="@android:style/Widget.DeviceDefault.Light.Spinner"
+                        android:ems="7"
                         android:text="01/11/1986"
                         android:hint="@string/hint_fecha_baja_empleado"
                         android:inputType="date"
