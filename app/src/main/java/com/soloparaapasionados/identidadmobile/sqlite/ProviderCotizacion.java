@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -37,6 +38,7 @@ public class ProviderCotizacion extends ContentProvider {
     // Casos
     public static final int DISPOSITIVOS = 100;
     public static final int DISPOSITIVOS_ID = 101;
+    public static final int CARGOS = 200;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
@@ -45,10 +47,11 @@ public class ProviderCotizacion extends ContentProvider {
 
         uriMatcher.addURI(AUTORIDAD, "dispositivos", DISPOSITIVOS);
         uriMatcher.addURI(AUTORIDAD, "dispositivos/#", DISPOSITIVOS_ID);
+        uriMatcher.addURI(AUTORIDAD, "cargos", CARGOS);
     }
     // [/URI_MATCHER]
 
-    // [CAMPOS_AUXILIARES]
+    // [CAMPOS_AUXILIARES DE PROYECCCIONES]
     private final String[] proyDispositivo = new String[]{
            Tablas.DISPOSITIVO + "." + ContratoCotizacion.Dispositivos.IMEI,
             ContratoCotizacion.Dispositivos.ID_TIPO_DISPOSITIVO,
@@ -57,6 +60,11 @@ public class ProviderCotizacion extends ContentProvider {
             ContratoCotizacion.Dispositivos.ENVIADO,
             ContratoCotizacion.Dispositivos.RECIBIDO,
             ContratoCotizacion.Dispositivos.VALIDADO};
+
+    private final String[] proyCargo = new String[]{
+            BaseColumns._ID,
+            Tablas.CARGO + "." + ContratoCotizacion.Cargos.ID_CARGO,
+            ContratoCotizacion.Cargos.DESCRIPCION};
     // [/CAMPOS_AUXILIARES]
 
     @Override
@@ -72,6 +80,8 @@ public class ProviderCotizacion extends ContentProvider {
                 return ContratoCotizacion.generarMime("dispositivos");
             case DISPOSITIVOS_ID:
                 return ContratoCotizacion.generarMimeItem("dispositivos");
+            case CARGOS:
+                return ContratoCotizacion.generarMime("cargos");
             default:
                 throw new UnsupportedOperationException("Uri desconocida =>" + uri);
         }
@@ -138,7 +148,6 @@ public class ProviderCotizacion extends ContentProvider {
 
         switch (match) {
             case DISPOSITIVOS:
-
                 // Consultando todas las cabeceras de pedido
                 builder.setTables(Tablas.DISPOSITIVO);
                 c = builder.query(bd, proyDispositivo,
@@ -154,6 +163,13 @@ public class ProviderCotizacion extends ContentProvider {
                                 " AND (" + selection + ')' : ""),
                         selectionArgs, null, null, null);
                 break;
+            case CARGOS:
+                // Consultando todos los cargos
+                builder.setTables(Tablas.CARGO);
+                c = builder.query(bd, proyCargo,
+                        null, null, null, null,null);
+                break;
+
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }

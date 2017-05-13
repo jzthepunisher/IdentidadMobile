@@ -9,20 +9,42 @@ import android.net.Uri;
 public class ContratoCotizacion {
 
     interface ColumnasDispositivo {
-        String IMEI = "imei";
+        String IMEI                = "imei";
         String ID_TIPO_DISPOSITIVO = "id_tipo_dispositivo";
-        String ID_SIM_CARD = "id_sim_card";
-        String NUMERO_CELULAR = "numero_celular";
-        String ENVIADO = "enviado";
-        String RECIBIDO = "recibido";
-        String VALIDADO= "validado";
+        String ID_SIM_CARD         = "id_sim_card";
+        String NUMERO_CELULAR      = "numero_celular";
+        String ENVIADO             = "enviado";
+        String RECIBIDO            = "recibido";
+        String VALIDADO            = "validado";
+    }
+
+    interface ColumnasEmpleado{
+        String ID_EMPLEADO      = "id_empleado";
+        String NOMBRES          = "nombres";
+        String APELLIDO_PATERNO = "apellido_paterno";
+        String APELLIDO_MAERNO  = "apellido_materno";
+        String DIRECCION        = "direccion";
+        String DNI              = "dni";
+        String CELULAR          = "celular";
+        String EMAIL            = "email";
+        String FECHA_NACIMIENTO = "fecha_nacimiento";
+        String ID_CARGO         = "id_cargo";
+        String FECHA_INGRESO    = "fecha_ingreso";
+        String FECHA_BAJA       = "fecha_baja";
+        String FECHA_CREACION   = "fecha_creacion";
+        String FOTO             = "foto";
+    }
+
+    interface ColumnasCargo{
+        String ID_CARGO    = "id_cargo";
+        String DESCRIPCION = "descripcion";
     }
     // [URIS]
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
-
     public static final Uri URI_BASE = Uri.parse("content://" + AUTORIDAD);
-
     private static final String RUTA_DISPOSITIVOS="dispositivos";
+    private static final String RUTA_EMPLEADOS="empleados";
+    private static final String RUTA_CARGOS="cargos";
     // [/URIS]
 
     // [TIPOS_MIME]
@@ -50,7 +72,7 @@ public class ContratoCotizacion {
         }
     }
     // [/TIPOS_MIME]
-
+    //Clase contrato de Dispositivo
     public static class Dispositivos implements ColumnasDispositivo {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_DISPOSITIVOS).build();
@@ -61,6 +83,38 @@ public class ContratoCotizacion {
 
         public static Uri crearUriDispositivo(String id) {
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+    }
+
+    //Clase contrato de Empleado
+    public static class Empleados implements ColumnasEmpleado {
+
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_EMPLEADOS).build();
+
+        public static String obtenerIdEmpleado(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri crearUriEmpleado(String id) {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+    }
+
+    //Clase contrato de Cargo
+    public static class Cargos implements ColumnasCargo {
+
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_CARGOS).build();
+
+        public static String obtenerIdCargo(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri crearUriCargo(String id) {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+
+        public static Uri crearUriCargoLista() {
+            return URI_CONTENIDO;
         }
     }
 

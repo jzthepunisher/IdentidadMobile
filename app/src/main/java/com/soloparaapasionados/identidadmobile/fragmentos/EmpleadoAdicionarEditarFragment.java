@@ -1,6 +1,7 @@
 package com.soloparaapasionados.identidadmobile.fragmentos;
 
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
@@ -15,9 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -55,6 +59,8 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
     private EditText editTextFechaNacimiento;
     private EditText editTextFechaIngreso;
     private EditText editTextFechaBaja;
+    //Lista Spinner
+    private Spinner spinnerCargos;
 
     FloatingActionButton floatingActionButtonGuardar;
 
@@ -63,6 +69,11 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
     private static final String ARGUMENTO_ID_EMPLEADO = "argumento_id_empleado";
 
     private String mIdEmpleado;
+
+    /*
+    Adaptadores para los Spinners
+     */
+    SimpleCursorAdapter cargoSpinnerAdapter;
 
     public EmpleadoAdicionarEditarFragment() {
         // Required empty public constructor
@@ -115,6 +126,8 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
         editTextFechaNacimiento=(EditText) root.findViewById(R.id.editTextFechaNacimiento);
         editTextFechaIngreso=(EditText) root.findViewById(R.id.editTextFechaIngreso);
         editTextFechaBaja=(EditText) root.findViewById(R.id.editTextFechaBaja);
+        //Referencias Spiner de la UI
+        spinnerCargos=(Spinner)root.findViewById(R.id.spinnerCargos);
         //Establecer eventos TextWatcher.
         editTextIdEmpleado.addTextChangedListener(new MiTextWatcher(editTextIdEmpleado));
         editTextNombresEmpleado.addTextChangedListener(new MiTextWatcher(editTextNombresEmpleado));
@@ -127,6 +140,7 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
         editTextFechaNacimiento.addTextChangedListener(new MiTextWatcher(editTextFechaNacimiento));
         editTextFechaIngreso.addTextChangedListener(new MiTextWatcher(editTextFechaIngreso));
         editTextFechaBaja.addTextChangedListener(new MiTextWatcher(editTextFechaBaja));
+
 
         floatingActionButtonGuardar = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButtonGuardar);
 
@@ -153,34 +167,51 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
         );
 
         editTextFechaIngreso.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DialogFragment picker = new DatePickerFragment();
-                        Bundle bundle=new Bundle();
-                        bundle.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaIngreso.getId());
-                        picker.setArguments(bundle);
-                        picker.show(getFragmentManager(), "datePicker");
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogFragment picker = new DatePickerFragment();
+                    Bundle bundle=new Bundle();
+                    bundle.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaIngreso.getId());
+                    picker.setArguments(bundle);
+                    picker.show(getFragmentManager(), "datePicker");
 
-                    }
                 }
+            }
         );
 
         editTextFechaBaja.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DialogFragment picker = new DatePickerFragment();
-                        Bundle bundle=new Bundle();
-                        bundle.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaBaja.getId());
-                        picker.setArguments(bundle);
-                        picker.show(getFragmentManager(), "datePicker");
-
-                    }
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogFragment picker = new DatePickerFragment();
+                    Bundle bundle=new Bundle();
+                    bundle.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaBaja.getId());
+                    picker.setArguments(bundle);
+                    picker.show(getFragmentManager(), "datePicker");
                 }
+            }
         );
 
+        //Creando Adaptador para CargoSpinner
+        cargoSpinnerAdapter = new SimpleCursorAdapter(getActivity(),
+                android.R.layout.simple_selectable_list_item,
+                ObtenerCargos(),
+                new String[]{ContratoCotizacion.Cargos.DESCRIPCION},
+                new int[]{android.R.id.text1},
+                SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+        spinnerCargos.setAdapter(cargoSpinnerAdapter);
         return root;
+    }
+
+    private Cursor ObtenerCargos() {
+        Cursor cursorCargos=null;
+
+        cursorCargos=getActivity().getContentResolver().query(ContratoCotizacion.Cargos.crearUriCargoLista(), null, null, null, null);
+
+        int count =cursorCargos.getCount();
+        return cursorCargos;
     }
 
     //Validar datos del empleado

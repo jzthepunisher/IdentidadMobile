@@ -1,5 +1,6 @@
 package com.soloparaapasionados.identidadmobile.actividades;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,7 @@ import android.view.View;
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.fragmentos.DatePickerFragment;
 import com.soloparaapasionados.identidadmobile.fragmentos.EmpleadoAdicionarEditarFragment;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 
 public class EmpleadoAdicionarEditarActivity extends AppCompatActivity
         implements DatePickerFragment.OnDateSelectedListener{
@@ -47,6 +49,7 @@ public class EmpleadoAdicionarEditarActivity extends AppCompatActivity
                     .commit();
         }
 
+        Cursor cursorDispositivo=getContentResolver().query(ContratoCotizacion.Dispositivos.crearUriDispositivo("333333"), null, null, null, null);
 
         FloatingActionButton floatingActionButtonGuardar = (FloatingActionButton) findViewById(R.id.floatingActionButtonGuardar);
         floatingActionButtonGuardar.setOnClickListener(new View.OnClickListener() {
