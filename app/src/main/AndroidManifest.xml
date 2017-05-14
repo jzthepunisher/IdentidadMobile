@@ -49,6 +49,11 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".ServicioLocal.CargoServicioLocal"
+            android:exported="false" >
+        </service>
+
     </application>
 
 </manifest>

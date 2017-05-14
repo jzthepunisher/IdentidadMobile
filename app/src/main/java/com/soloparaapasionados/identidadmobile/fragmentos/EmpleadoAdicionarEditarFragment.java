@@ -1,6 +1,7 @@
 package com.soloparaapasionados.identidadmobile.fragmentos;
 
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +9,9 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -15,12 +19,15 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.ServicioLocal.CargoServicioLocal;
+import com.soloparaapasionados.identidadmobile.aplicacion.Constantes;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 
 import java.text.DateFormat;
@@ -34,7 +41,8 @@ import java.util.regex.Pattern;
  * Use the {@link EmpleadoAdicionarEditarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EmpleadoAdicionarEditarFragment extends Fragment {
+public class EmpleadoAdicionarEditarFragment extends Fragment
+implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
     // Lista TextInputEditText
     private TextInputLayout textInputLayoutIdEmpleado;
     private TextInputLayout textInputLayoutNombresEmpleado;
@@ -69,6 +77,7 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
     private static final String ARGUMENTO_ID_EMPLEADO = "argumento_id_empleado";
 
     private String mIdEmpleado;
+    private int idCursor;
 
     /*
     Adaptadores para los Spinners
@@ -140,7 +149,8 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
         editTextFechaNacimiento.addTextChangedListener(new MiTextWatcher(editTextFechaNacimiento));
         editTextFechaIngreso.addTextChangedListener(new MiTextWatcher(editTextFechaIngreso));
         editTextFechaBaja.addTextChangedListener(new MiTextWatcher(editTextFechaBaja));
-
+        //Eventos del Spinner de la UI
+        spinnerCargos.setOnItemSelectedListener(this);
 
         floatingActionButtonGuardar = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButtonGuardar);
 
@@ -193,25 +203,53 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
             }
         );
 
-        //Creando Adaptador para CargoSpinner
-        cargoSpinnerAdapter = new SimpleCursorAdapter(getActivity(),
-                android.R.layout.simple_selectable_list_item,
-                ObtenerCargos(),
-                new String[]{ContratoCotizacion.Cargos.DESCRIPCION},
-                new int[]{android.R.id.text1},
-                SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        // Iniciar loader
+        getActivity().getSupportLoaderManager().restartLoader(1,null,this);
+        getActivity().getSupportLoaderManager().restartLoader(2,null,this);
+        getActivity().getSupportLoaderManager().restartLoader(3,null,this);
 
-        spinnerCargos.setAdapter(cargoSpinnerAdapter);
         return root;
     }
 
-    private Cursor ObtenerCargos() {
-        Cursor cursorCargos=null;
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        idCursor=id;
+        switch (id){
+            case 1:
+            //cursorCargos=getContentResolver().query(ContratoCotizacion.Cargos.crearUriCargoLista(), null, null, null, null);
+            return new CursorLoader(getActivity(), ContratoCotizacion.Cargos.crearUriCargoLista(), null, null, null, null);
+        }
+        return null;
+    }
 
-        cursorCargos=getActivity().getContentResolver().query(ContratoCotizacion.Cargos.crearUriCargoLista(), null, null, null, null);
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        //Creando Adaptador para CargoSpinner
 
-        int count =cursorCargos.getCount();
-        return cursorCargos;
+        if(data!=null){
+            switch (loader.getId()){
+                case 1:
+                    cargoSpinnerAdapter = new SimpleCursorAdapter(getActivity(),
+                        android.R.layout.simple_selectable_list_item,
+                        data,
+                        new String[]{ContratoCotizacion.Cargos.DESCRIPCION},
+                        new int[]{android.R.id.text1},
+                        SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+                    spinnerCargos.setAdapter(cargoSpinnerAdapter);
+            }
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
+
+    private void ObtenerCargos() {
+        Intent intent = new Intent(getActivity(), CargoServicioLocal.class);
+        intent.setAction(Constantes.ACCION_OBTENER_CARGOS);
+        getActivity().startService(intent);
     }
 
     //Validar datos del empleado
@@ -579,6 +617,40 @@ public class EmpleadoAdicionarEditarFragment extends Fragment {
         }
         // Setear en el textview la fecha
         //editTextFechaNacimiento.setText(ano + "-" + (mes + 1) + "-" + dia);
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        //Obteniendo el id del Spinner que recibió el evento
+        int idSpinner = parent.getId();
+
+
+        switch(idSpinner) {
+
+            case R.id.spinnerCargos:
+                //Obteniendo el id del género seleccionado
+                Cursor c1 = (Cursor) parent.getItemAtPosition(position);
+
+                String codigoCargoSeleccionado = c1.getString(
+                        c1.getColumnIndex(ContratoCotizacion.Cargos.ID_CARGO));
+
+                String codigoDescripcionCargoSeleccionado = c1.getString(
+                        c1.getColumnIndex(ContratoCotizacion.Cargos.DESCRIPCION));
+
+                Toast.makeText(getActivity(),codigoCargoSeleccionado+ " " + codigoDescripcionCargoSeleccionado ,Toast.LENGTH_LONG).show();
+
+                break;
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+        /*
+        Nada por hacer
+         */
 
     }
 }

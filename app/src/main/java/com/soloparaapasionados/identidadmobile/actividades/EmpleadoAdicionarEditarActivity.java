@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.fragmentos.DatePickerFragment;
@@ -83,6 +85,8 @@ public class EmpleadoAdicionarEditarActivity extends AppCompatActivity
             empleadoAdicionarEditarFragment.actualizarFecha(idViewSeleccionadora,year, month, day);
         }
     }
+
+
 
 }
 
