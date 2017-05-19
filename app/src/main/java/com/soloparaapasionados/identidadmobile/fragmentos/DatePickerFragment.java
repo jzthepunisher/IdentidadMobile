@@ -36,7 +36,6 @@ public class DatePickerFragment extends DialogFragment
             idViewSeleccionadora = getArguments().getInt(ARGUMENTO_ID_VIEW);
         }
 
-
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
@@ -59,11 +58,9 @@ public class DatePickerFragment extends DialogFragment
         }
     }
 
-
     @Override
     public void onDateSet(DatePicker view, int ano, int mes, int dia) {
         mCallback.onDateSelected(idViewSeleccionadora,ano, mes, dia);
     }
-
 
 }

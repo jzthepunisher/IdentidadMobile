@@ -8,6 +8,7 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.provider.BaseColumns;
 
 /**
@@ -18,7 +19,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 2;
+    private static final int VERSION_ACTUAL = 3;
 
     private final Context contexto;
 
@@ -26,6 +27,11 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         String DISPOSITIVO = "dispositivo";
         String EMPLEADO    = "empleado";
         String CARGO       = "cargo";
+    }
+
+    interface Referencias {
+        String ID_CARGO = String.format("REFERENCES %s(%s) ",
+                Tablas.CARGO, Cargos.ID_CARGO);
     }
 
     public BaseDatosCotizaciones(Context contexto) {
@@ -47,19 +53,36 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
             Tablas.CARGO, BaseColumns._ID,
             Cargos.ID_CARGO,Cargos.DESCRIPCION));
 
-        /*db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "%s TEXT UNIQUE NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL,%s TEXT NULL," +
-            "%s INTEGER NOT NULL ,%s INTEGER NOT NULL,%s INTEGER NOT NULL)",
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL,%s TEXT NULL,%s TEXT NULL," +
+            "%s TEXT NULL ,%s TEXT NULL,%s TEXT NULL,%s TEXT NULL,"+
+            "%s DATETIME NULL ,%s TEXT NULL %s ,%s DATETIME NULL,%s DATETIME NULL,"+
+            "%s DATETIME NULL ,%s TEXT NULL)",
             Tablas.EMPLEADO, BaseColumns._ID,
-            Empleados.ID_CARGO,Dispositivos.ID_TIPO_DISPOSITIVO, Dispositivos.ID_SIM_CARD,Dispositivos.NUMERO_CELULAR,
-            Dispositivos.ENVIADO, Dispositivos.RECIBIDO, Dispositivos.VALIDADO));*/
+            Empleados.ID_EMPLEADO,Empleados.NOMBRES, Empleados.APELLIDO_PATERNO,Empleados.APELLIDO_MAERNO,
+            Empleados.DIRECCION, Empleados.DNI, Empleados.CELULAR, Empleados.EMAIL,
+            Empleados.FECHA_NACIMIENTO, Empleados.ID_CARGO,Referencias.ID_CARGO, Empleados.FECHA_INGRESO, Empleados.FECHA_BAJA,
+            Empleados.FECHA_CREACION,Empleados.FOTO));
 
         mockData(db);
     }
 
     @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        if (!db.isReadOnly()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                db.setForeignKeyConstraintsEnabled(true);
+            } else {
+                db.execSQL("PRAGMA foreign_keys=ON");
+            }
+        }
+    }
+
+    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.DISPOSITIVO);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.CARGO);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.EMPLEADO);
 
         onCreate(db);

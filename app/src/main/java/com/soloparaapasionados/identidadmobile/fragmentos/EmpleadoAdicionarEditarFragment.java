@@ -4,8 +4,8 @@ package com.soloparaapasionados.identidadmobile.fragmentos;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -13,7 +13,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -26,14 +25,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
-import com.soloparaapasionados.identidadmobile.ServicioLocal.CargoServicioLocal;
+import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
 import com.soloparaapasionados.identidadmobile.aplicacion.Constantes;
+import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -76,12 +76,12 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
 
     private static final String ARGUMENTO_ID_EMPLEADO = "argumento_id_empleado";
 
+    String codigoCargoSeleccionado;
+
     private String mIdEmpleado;
     private int idCursor;
 
-    /*
-    Adaptadores para los Spinners
-     */
+    /* Adaptadores para los Spinners*/
     SimpleCursorAdapter cargoSpinnerAdapter;
 
     public EmpleadoAdicionarEditarFragment() {
@@ -205,8 +205,8 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
 
         // Iniciar loader
         getActivity().getSupportLoaderManager().restartLoader(1,null,this);
-        getActivity().getSupportLoaderManager().restartLoader(2,null,this);
-        getActivity().getSupportLoaderManager().restartLoader(3,null,this);
+        //getActivity().getSupportLoaderManager().restartLoader(2,null,this);
+        //getActivity().getSupportLoaderManager().restartLoader(3,null,this);
 
         return root;
     }
@@ -246,28 +246,9 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
-    private void ObtenerCargos() {
-        Intent intent = new Intent(getActivity(), CargoServicioLocal.class);
-        intent.setAction(Constantes.ACCION_OBTENER_CARGOS);
-        getActivity().startService(intent);
-    }
-
     //Validar datos del empleado
     private void validarDatosEmpleado() {
         boolean error = false;
-
-        String IdEmpleado = editTextIdEmpleado.getText().toString();
-        String NombresEmpleado=editTextNombresEmpleado.getText().toString();
-        String ApellidoPaternoEmpleado=editTextApellidoPaternoEmpleado.getText().toString();
-        String ApellidoMaternoEmpleado=editTextApellidoMaternoEmpleado.getText().toString();
-        String DireccionEmpleado=editTextDireccionEmpleado.getText().toString();
-        String DniEmpleado=editTextDniEmpleado.getText().toString();
-        String Celular=editTextCelular.getText().toString();
-        String Email=editTextEmail.getText().toString();
-        String FechaNacimiento=editTextFechaNacimiento.getText().toString();
-        String FechaIngreso=editTextFechaIngreso.getText().toString();
-        String FechaBaja=editTextFechaBaja.getText().toString();
-
 
         if (!esIdEmpleadoValido()) {
             error = true;
@@ -280,7 +261,6 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
         if (!esApelllidoPaternoValido()) {
             error = true;
         }
-
 
         if (!esApelllidoMaternoValido()) {
             error = true;
@@ -314,22 +294,42 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
             error = true;
         }
 
-
         if (error) {
             return;
         }
 
         Toast.makeText(getActivity(), "Thank You!", Toast.LENGTH_SHORT).show();
 
-        //boolean a = esNombreValido(nombre);
-        //boolean b = esTelefonoValido(telefono);
-        //boolean c = esCorreoValido(correo);
+        insertarEmpleadoLocalmente();
 
-        //if (a && b && c) {
-        //    // OK, se pasa a la siguiente acción
-        //   Toast.makeText(this, "Se guarda el registro", Toast.LENGTH_LONG).show();
-        //}
+    }
 
+    private void insertarEmpleadoLocalmente(){
+        Intent intent = new Intent(getActivity(), EmpleadoServicioLocal.class);
+        intent.setAction(EmpleadoServicioLocal.ACCION_INSERTAR_EMPLEADO_ISERVICE);
+        Empleado empleado=generarEntidadEmpleado();
+        intent.putExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO, empleado);
+        getActivity().startService(intent);
+    }
+
+    //Generar entidad empleado
+    private Empleado generarEntidadEmpleado(){
+        Empleado empleado =new Empleado();
+
+        empleado.setIdEmpleado(this.editTextIdEmpleado.getText().toString().trim());
+        empleado.setNombres(this.editTextNombresEmpleado.getText().toString().trim());
+        empleado.setApellidoPaterno(this.editTextApellidoPaternoEmpleado.getText().toString().trim());
+        empleado.setApellidoMaterno(this.editTextApellidoMaternoEmpleado.getText().toString().trim());
+        empleado.setDireccion(this.editTextDireccionEmpleado.getText().toString().trim());
+        empleado.setDNI(this.editTextDniEmpleado.getText().toString().trim());
+        empleado.setCelular(this.editTextCelular.getText().toString().trim());
+        empleado.setEmail(this.editTextEmail.getText().toString().trim());
+        empleado.setFechaNacimiento(this.editTextFechaNacimiento.getText().toString().trim());
+        empleado.setIdCargo(this.codigoCargoSeleccionado);
+        empleado.setFechaIngreso(this.editTextFechaIngreso.getText().toString().trim());
+        empleado.setFechaBaja(this.editTextFechaBaja.getText().toString().trim());
+
+        return empleado;
     }
 
     //Validar datos del empleado online
@@ -620,19 +620,18 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
 
     }
 
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         //Obteniendo el id del Spinner que recibió el evento
         int idSpinner = parent.getId();
 
-
         switch(idSpinner) {
-
             case R.id.spinnerCargos:
                 //Obteniendo el id del género seleccionado
                 Cursor c1 = (Cursor) parent.getItemAtPosition(position);
 
-                String codigoCargoSeleccionado = c1.getString(
+                codigoCargoSeleccionado = c1.getString(
                         c1.getColumnIndex(ContratoCotizacion.Cargos.ID_CARGO));
 
                 String codigoDescripcionCargoSeleccionado = c1.getString(
