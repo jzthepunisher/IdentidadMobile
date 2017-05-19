@@ -142,7 +142,7 @@ public class Empleado implements Serializable {
     }
 
     public ContentValues toContentValues() {
-        
+
         ContentValues values = new ContentValues();
         values.put(ContratoCotizacion.Empleados.ID_EMPLEADO, IdEmpleado);
         values.put(ContratoCotizacion.Empleados.NOMBRES, Nombres);

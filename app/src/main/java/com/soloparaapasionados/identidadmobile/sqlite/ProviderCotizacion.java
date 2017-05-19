@@ -3,6 +3,7 @@ package com.soloparaapasionados.identidadmobile.sqlite;
 
 import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones.Tablas;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Dispositivos;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -15,6 +16,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -22,7 +24,7 @@ import java.util.ArrayList;
 
 public class ProviderCotizacion extends ContentProvider {
 
-    public static final String TAG = "ContentProvider";
+    public static final String TAG = "ProviderCotizacion";
     public static final String URI_NO_SOPORTADA = "Uri no soportada";
 
     private BaseDatosCotizaciones helper;
@@ -39,6 +41,7 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int DISPOSITIVOS = 100;
     public static final int DISPOSITIVOS_ID = 101;
     public static final int CARGOS = 200;
+    public static final int EMPLEADOS=300;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
@@ -48,6 +51,7 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "dispositivos", DISPOSITIVOS);
         uriMatcher.addURI(AUTORIDAD, "dispositivos/#", DISPOSITIVOS_ID);
         uriMatcher.addURI(AUTORIDAD, "cargos", CARGOS);
+        uriMatcher.addURI(AUTORIDAD, "empleados", EMPLEADOS);
     }
     // [/URI_MATCHER]
 
@@ -82,6 +86,8 @@ public class ProviderCotizacion extends ContentProvider {
                 return ContratoCotizacion.generarMimeItem("dispositivos");
             case CARGOS:
                 return ContratoCotizacion.generarMime("cargos");
+            case EMPLEADOS:
+                return  ContratoCotizacion.generarMimeItem("empleados");
             default:
                 throw new UnsupportedOperationException("Uri desconocida =>" + uri);
         }
@@ -97,9 +103,15 @@ public class ProviderCotizacion extends ContentProvider {
 
         switch (uriMatcher.match(uri)) {
             case DISPOSITIVOS:
+                id = values.getAsString(Dispositivos.IMEI);
                 bd.insertOrThrow(Tablas.DISPOSITIVO, null, values);
                 notificarCambio(uri);
                 return Dispositivos.crearUriDispositivo(id);
+            case EMPLEADOS:
+                id = values.getAsString(Empleados.ID_EMPLEADO);
+                bd.insertOrThrow(Tablas.EMPLEADO,null,values);
+                notificarCambio(uri);
+                return Empleados.crearUriEmpleado(id);
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }

@@ -1,8 +1,12 @@
 package com.soloparaapasionados.identidadmobile.ServicioLocal;
 
 import android.app.IntentService;
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -10,6 +14,13 @@ import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.aplicacion.Constantes;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by USUARIO on 13/05/2017.
@@ -34,9 +45,6 @@ public class EmpleadoServicioLocal extends IntentService {
 
                 Empleado empleado=(Empleado)intent.getSerializableExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO);
 
-                Toast.makeText(this,empleado.getNombres(), Toast.LENGTH_LONG).show();
-                Toast.makeText(this,empleado.getApellidoMaterno(),Toast.LENGTH_LONG).show();
-
                 insertarEmpleadoLocal(empleado);
             }
         }
@@ -50,62 +58,46 @@ public class EmpleadoServicioLocal extends IntentService {
                     .setContentTitle("Servicio Local en segundo plano")
                     .setContentText("Procesando inserción de empleado...");
 
-            // Bucle de simulación
-            for (int i = 1; i <= 10; i++) {
+            builder.setProgress( 2, 1, false);
+            startForeground(1, builder.build());
 
-                Log.d(TAG, i + ""); // Logueo
+            ContentResolver r = getContentResolver();
 
-                // Poner en primer plano
-                builder.setProgress( 10, i, false);
-                startForeground(1, builder.build());
+            // Lista de operaciones
+            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
-                // Intent localIntent = new Intent(Constantes.ACTION_RUN_ISERVICE)
-                //         .putExtra(Constantes.EXTRA_PROGRESS, i);
+            // [INSERCIONES]
+            //Date miFecha = new Date();
+            Date miFecha = Calendar.getInstance().getTime();
 
-                // Emisión de {@code localIntent}
-                //LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+            String miFechaCadena=new SimpleDateFormat("dd/MM/yyyy").format(miFecha);
 
-                // Retardo de 1 segundo en la iteración
-                Thread.sleep(1000);
-            }
+            ops.add(ContentProviderOperation.newInsert(Empleados.URI_CONTENIDO)
+                    .withValue(Empleados.ID_EMPLEADO, empleado.getIdEmpleado())
+                    .withValue(Empleados.NOMBRES, empleado.getNombres())
+                    .withValue(Empleados.APELLIDO_PATERNO, empleado.getApellidoPaterno())
+                    .withValue(Empleados.APELLIDO_MAERNO, empleado.getApellidoMaterno())
+                    .withValue(Empleados.DIRECCION, empleado.getDireccion())
+                    .withValue(Empleados.DNI, empleado.getDNI())
+                    .withValue(Empleados.CELULAR, empleado.getCelular())
+                    .withValue(Empleados.EMAIL, empleado.getEmail())
+                    .withValue(Empleados.FECHA_NACIMIENTO, empleado.getFechaNacimiento())
+                    .withValue(Empleados.ID_CARGO, empleado.getIdCargo())
+                    .withValue(Empleados.FECHA_INGRESO, empleado.getFechaIngreso())
+                    .withValue(Empleados.FECHA_BAJA, empleado.getFechaBaja())
+                    .withValue(Empleados.FECHA_CREACION, miFechaCadena)
+                    .withValue(Empleados.FOTO, empleado.getFoto())
+                    .build());
+
+            r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
+
             // Quitar de primer plano
+            builder.setProgress( 2, 2, false);
             stopForeground(true);
-        } catch (InterruptedException e) {
+
+        } catch (RemoteException e) {
             e.printStackTrace();
-        }
-    }
-    /**
-     * Maneja la acción de ejecución del servicio
-     */
-    private void handleActionRun() {
-        try {
-            // Se construye la notificación
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(android.R.drawable.stat_sys_download_done)
-                    .setContentTitle("Servicio en segundo plano")
-                    .setContentText("Procesando...");
-
-            // Bucle de simulación
-            for (int i = 1; i <= 10; i++) {
-
-                Log.d(TAG, i + ""); // Logueo
-
-                // Poner en primer plano
-                builder.setProgress( 10, i, false);
-                startForeground(1, builder.build());
-
-               // Intent localIntent = new Intent(Constantes.ACTION_RUN_ISERVICE)
-               //         .putExtra(Constantes.EXTRA_PROGRESS, i);
-
-                // Emisión de {@code localIntent}
-                //LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
-
-                // Retardo de 1 segundo en la iteración
-                Thread.sleep(1000);
-            }
-            // Quitar de primer plano
-            stopForeground(true);
-        } catch (InterruptedException e) {
+        } catch (OperationApplicationException e) {
             e.printStackTrace();
         }
     }
@@ -120,6 +112,5 @@ public class EmpleadoServicioLocal extends IntentService {
 
         Log.d(TAG, "Servicio destruido...");
     }
-
 
 }
