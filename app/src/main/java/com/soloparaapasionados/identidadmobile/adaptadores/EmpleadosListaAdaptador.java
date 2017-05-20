@@ -2,6 +2,10 @@ package com.soloparaapasionados.identidadmobile.adaptadores;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 
@@ -69,14 +74,34 @@ public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosLista
     public void onBindViewHolder(ViewHolder holder, int position) {
         items.moveToPosition(position);
 
-        String s;
+        String s,nombresCompletos;
 
         // Asignación UI
-        s = items.getString(items.getColumnIndex(Empleados.NOMBRES));
-        holder.textViewNombresEmpleado.setText(s);
+        nombresCompletos = items.getString(items.getColumnIndex(Empleados.NOMBRES));
+        nombresCompletos += " " + items.getString(items.getColumnIndex(Empleados.APELLIDO_PATERNO));
+        nombresCompletos += " " + items.getString(items.getColumnIndex(Empleados.APELLIDO_MAERNO));
+
+        holder.textViewNombresEmpleado.setText(nombresCompletos);
 
         s = items.getString(items.getColumnIndex(Empleados.FOTO));
-        Glide.with(contexto).load(s).centerCrop().into(holder.imageViewFotoEmpleado);
+
+        final ImageView imageViewFotoEmpleado = holder.imageViewFotoEmpleado;
+        //Glide.with(contexto).load(s).error(R.drawable.ic_account_circle_black_24dp).centerCrop().into(holder.imageViewFotoEmpleado);
+
+        Glide.with(contexto)
+            .load(Uri.parse("file:///android_asset/" + s))
+            .asBitmap()
+            .error(R.drawable.ic_account_circle_black_24dp)
+            .centerCrop()
+            .into(new BitmapImageViewTarget(holder.imageViewFotoEmpleado) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(contexto.getResources(), resource);
+                    drawable.setCircular(true);
+                    imageViewFotoEmpleado.setImageDrawable(drawable);
+                }
+            });
+
     }
 
     @Override

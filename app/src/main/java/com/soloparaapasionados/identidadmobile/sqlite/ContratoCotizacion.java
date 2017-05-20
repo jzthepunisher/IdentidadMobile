@@ -72,6 +72,8 @@ public class ContratoCotizacion {
         }
     }
     // [/TIPOS_MIME]
+
+    public int OFF_SET=10;
     //Clase contrato de Dispositivo
     public static class Dispositivos implements ColumnasDispositivo {
 
@@ -90,6 +92,8 @@ public class ContratoCotizacion {
     public static class Empleados implements ColumnasEmpleado {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_EMPLEADOS).build();
+        public static final String PARAMETRO_CONSULTA = "off_set";
+
 
         public static String obtenerIdEmpleado(Uri uri) {
             return uri.getPathSegments().get(1);
@@ -97,6 +101,14 @@ public class ContratoCotizacion {
 
         public static Uri crearUriEmpleado(String id) {
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+
+        public static Uri crearUriEmpleadoOffSet(String offSet) {
+            return URI_CONTENIDO.buildUpon().appendQueryParameter("off_set",offSet).build();
+        }
+
+        public static boolean tieneOffSet(Uri uri) {
+            return uri != null && uri.getQueryParameter(PARAMETRO_CONSULTA) != null;
         }
     }
 

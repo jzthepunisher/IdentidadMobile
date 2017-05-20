@@ -1,6 +1,7 @@
 package com.soloparaapasionados.identidadmobile.sqlite;
 
 import com.soloparaapasionados.identidadmobile.modelo.Cargo;
+import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Dispositivos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
@@ -19,7 +20,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 3;
+    private static final int VERSION_ACTUAL = 7;
 
     private final Context contexto;
 
@@ -65,6 +66,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
             Empleados.FECHA_CREACION,Empleados.FOTO));
 
         mockData(db);
+        mockDataEmpleados(db);
     }
 
     @Override
@@ -97,10 +99,170 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         mockLawyer(sqLiteDatabase, new Cargo("C005", "Supervisor"));
     }
 
+    private void mockDataEmpleados(SQLiteDatabase sqLiteDatabase) {
+
+        Empleado empleado=new Empleado();
+        empleado.setIdEmpleado("EM001");
+        empleado.setNombres("Andres");
+        empleado.setApellidoPaterno("Léido");
+        empleado.setApellidoMaterno("Cueva");
+        empleado.setFoto("carlos_perez.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM002");
+        empleado.setNombres("Brenda");
+        empleado.setApellidoPaterno("Rosas");
+        empleado.setApellidoMaterno("Licuona");
+        empleado.setFoto("lucia_aristizabal.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM003");
+        empleado.setNombres("Diana");
+        empleado.setApellidoPaterno("Yarasca");
+        empleado.setApellidoMaterno("Berrospi");
+        empleado.setFoto("marina_acosta.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM004");
+        empleado.setNombres("Eliana");
+        empleado.setApellidoPaterno("Trujillo");
+        empleado.setApellidoMaterno("Baza");
+        empleado.setFoto("olga_ortiz.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM005");
+        empleado.setNombres("Geraldine");
+        empleado.setApellidoPaterno("Rivas");
+        empleado.setApellidoMaterno("Huamaní");
+        empleado.setFoto("pamela_briger.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM006");
+        empleado.setNombres("Giancarlo");
+        empleado.setApellidoPaterno("Aquije");
+        empleado.setApellidoMaterno("Milachay");
+        empleado.setFoto("daniel_samper.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM007");
+        empleado.setNombres("Gianfranco");
+        empleado.setApellidoPaterno("Vela");
+        empleado.setApellidoMaterno("Benavides");
+        empleado.setFoto("rodrigo_benavidez.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM008");
+        empleado.setNombres("Giannia");
+        empleado.setApellidoPaterno("Lopez");
+        empleado.setApellidoMaterno("Torres");
+        empleado.setFoto("pamela_briger.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM009");
+        empleado.setNombres("Isaac");
+        empleado.setApellidoPaterno("Alvarez");
+        empleado.setApellidoMaterno("Alvarez");
+        empleado.setFoto("tom_bonz.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM010");
+        empleado.setNombres("Leo");
+        empleado.setApellidoPaterno("Angúlo");
+        empleado.setApellidoMaterno("Ferroñay");
+        empleado.setFoto("carlos_perez.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM011");
+        empleado.setNombres("Luis");
+        empleado.setApellidoPaterno("Rivera");
+        empleado.setApellidoMaterno("Nuñez");
+        empleado.setFoto("daniel_samper.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM012");
+        empleado.setNombres("Marina");
+        empleado.setApellidoPaterno("Rayme");
+        empleado.setApellidoMaterno("Rayme");
+        empleado.setFoto("lucia_aristizabal.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM013");
+        empleado.setNombres("María Cristina");
+        empleado.setApellidoPaterno("Rojas");
+        empleado.setApellidoMaterno("Rojas");
+        empleado.setFoto("marina_acosta.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM014");
+        empleado.setNombres("Melissa");
+        empleado.setApellidoPaterno("Elera");
+        empleado.setApellidoMaterno("García");
+        empleado.setFoto("olga_ortiz.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM015");
+        empleado.setNombres("Paola");
+        empleado.setApellidoPaterno("Ramos");
+        empleado.setApellidoMaterno("Ramos");
+        empleado.setFoto("pamela_briger.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM016");
+        empleado.setNombres("Rosario");
+        empleado.setApellidoPaterno("Zapata");
+        empleado.setApellidoMaterno("Huamaní");
+        empleado.setFoto("lucia_aristizabal.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM017");
+        empleado.setNombres("Sheyla");
+        empleado.setApellidoPaterno("Sánchez");
+        empleado.setApellidoMaterno("Condemarín");
+        empleado.setFoto("marina_acosta.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM018");
+        empleado.setNombres("Sofía");
+        empleado.setApellidoPaterno("Sánchez");
+        empleado.setApellidoMaterno("Cardenas");
+        empleado.setFoto("olga_ortiz.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM019");
+        empleado.setNombres("Victor Ronald");
+        empleado.setApellidoPaterno("Rivero");
+        empleado.setApellidoMaterno("Pumachagua");
+        empleado.setFoto("rodrigo_benavidez.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM020");
+        empleado.setNombres("Violeta");
+        empleado.setApellidoPaterno("Cabezudo");
+        empleado.setApellidoMaterno("Cabezudo");
+        empleado.setFoto("pamela_briger.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+        empleado.setIdEmpleado("EM021");
+        empleado.setNombres("Diego Elmuth");
+        empleado.setApellidoPaterno("Vera");
+        empleado.setApellidoMaterno("Bueno");
+        empleado.setFoto("tom_bonz.jpg");
+        mockEmpleado(sqLiteDatabase, empleado);
+
+
+    }
+
     public long mockLawyer(SQLiteDatabase db, Cargo cargo) {
         return db.insert(
                 Tablas.CARGO,
                 null,
                 cargo.toContentValues());
+    }
+
+    public long mockEmpleado(SQLiteDatabase db, Empleado empleado) {
+        return db.insert(
+                Tablas.EMPLEADO,
+                null,
+                empleado.toContentValues());
     }
 }

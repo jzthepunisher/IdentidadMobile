@@ -74,8 +74,11 @@ public class ProviderCotizacion extends ContentProvider {
     private final String[] proyEmpleado = new String[]{
             BaseColumns._ID,
             Tablas.EMPLEADO + "." + Empleados.ID_EMPLEADO,
-            Empleados.NOMBRES};
+            Empleados.NOMBRES,Empleados.APELLIDO_PATERNO,Empleados.APELLIDO_MAERNO,
+            Empleados.FOTO};
     // [/CAMPOS_AUXILIARES]
+
+    int offSet=30;
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -188,10 +191,24 @@ public class ProviderCotizacion extends ContentProvider {
                         null, null, null, null,null);
                 break;
             case EMPLEADOS:
-                // Consultando todos los Empleados
-                builder.setTables(Tablas.EMPLEADO);
-                c = builder.query(bd, proyEmpleado,
-                        null, null, null, null,null);
+                // Obtener filtro
+                int offSetActual=0;
+                offSetActual=Empleados.tieneOffSet(uri)? Integer.valueOf( uri.getQueryParameter("off_set")) : 0;
+
+                //String clausulaWhere=BaseColumns._ID  + ">=" + "" + offSetActual + " AND " +  BaseColumns._ID + " <= " + (offSetActual + this.offSet);
+                //String clausulaWhere=" 1 = 1 limit " + offSetActual + "," + this.offSet;
+
+                // Consultando todos los Empleados con offset
+                //builder.setTables(Tablas.EMPLEADO);
+                //c = builder.query(bd, proyEmpleado,
+                //        clausulaWhere , null, null, null,null);
+
+                String query = "select " + BaseColumns._ID + "," + Empleados.ID_EMPLEADO + "," + Empleados.NOMBRES;
+                query += "," + Empleados.APELLIDO_PATERNO + "," + Empleados.APELLIDO_MAERNO + "," + Empleados.FOTO;
+                query += " from " + Tablas.EMPLEADO+ " limit ?,?";
+
+                c = bd.rawQuery(query, new String[]{String.valueOf(offSetActual),String.valueOf(offSet)});
+
                 break;
 
             default:
@@ -202,6 +219,7 @@ public class ProviderCotizacion extends ContentProvider {
 
         return c;
     }
+
 
     @Override
     public int update(Uri uri, ContentValues values, String selection,
