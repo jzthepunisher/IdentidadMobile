@@ -4,6 +4,7 @@ package com.soloparaapasionados.identidadmobile.sqlite;
 import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones.Tablas;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Dispositivos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -67,8 +68,13 @@ public class ProviderCotizacion extends ContentProvider {
 
     private final String[] proyCargo = new String[]{
             BaseColumns._ID,
-            Tablas.CARGO + "." + ContratoCotizacion.Cargos.ID_CARGO,
-            ContratoCotizacion.Cargos.DESCRIPCION};
+            Tablas.CARGO + "." + Cargos.ID_CARGO,
+            Cargos.DESCRIPCION};
+
+    private final String[] proyEmpleado = new String[]{
+            BaseColumns._ID,
+            Tablas.EMPLEADO + "." + Empleados.ID_EMPLEADO,
+            Empleados.NOMBRES};
     // [/CAMPOS_AUXILIARES]
 
     @Override
@@ -179,6 +185,12 @@ public class ProviderCotizacion extends ContentProvider {
                 // Consultando todos los cargos
                 builder.setTables(Tablas.CARGO);
                 c = builder.query(bd, proyCargo,
+                        null, null, null, null,null);
+                break;
+            case EMPLEADOS:
+                // Consultando todos los Empleados
+                builder.setTables(Tablas.EMPLEADO);
+                c = builder.query(bd, proyEmpleado,
                         null, null, null, null,null);
                 break;
 

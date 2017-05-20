@@ -226,18 +226,20 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         //Creando Adaptador para CargoSpinner
 
-        if(data!=null){
-            switch (loader.getId()){
-                case 1:
-                    cargoSpinnerAdapter = new SimpleCursorAdapter(getActivity(),
-                        android.R.layout.simple_selectable_list_item,
-                        data,
-                        new String[]{ContratoCotizacion.Cargos.DESCRIPCION},
-                        new int[]{android.R.id.text1},
-                        SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+        switch (loader.getId()){
+        case 1:
+            if(data!=null){
+                cargoSpinnerAdapter = new SimpleCursorAdapter(getActivity(),
+                    android.R.layout.simple_selectable_list_item,
+                    data,
+                    new String[]{ContratoCotizacion.Cargos.DESCRIPCION},
+                    new int[]{android.R.id.text1},
+                    SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
                     spinnerCargos.setAdapter(cargoSpinnerAdapter);
             }
+            break;
         }
 
     }
@@ -619,7 +621,6 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
         //editTextFechaNacimiento.setText(ano + "-" + (mes + 1) + "-" + dia);
 
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

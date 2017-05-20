@@ -35,12 +35,20 @@
         <activity
             android:name=".actividades.EmpleadoActivity"
             android:label="@string/actividad_titulo_registrar_empleado"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".actividades.EmpleadoAdicionarEditarActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
 
+        <service
+            android:name=".ServicioLocal.EmpleadoServicioLocal"
+            android:exported="false"></service>
+
         <activity
-            android:name=".actividades.EmpleadoAdicionarEditarActivity"
+            android:name=".actividades.EmpleadoListadoActivity"
+            android:label="@string/title_activity_empleado_listado"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,12 +56,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".ServicioLocal.EmpleadoServicioLocal"
-            android:exported="false" >
-        </service>
-
     </application>
 
 </manifest>
