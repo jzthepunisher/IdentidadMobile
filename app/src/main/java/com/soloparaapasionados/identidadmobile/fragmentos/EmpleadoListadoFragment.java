@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoAdicionarEditarActivity;
+import com.soloparaapasionados.identidadmobile.actividades.EmpleadoDetalleActivity;
+import com.soloparaapasionados.identidadmobile.actividades.EmpleadoListadoActivity;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosListaAdaptador;
 import com.soloparaapasionados.identidadmobile.helper.DividerItemDecoration;
 import com.soloparaapasionados.identidadmobile.observadores.MiObervador;
@@ -39,6 +41,8 @@ public class EmpleadoListadoFragment extends Fragment
     private SwipeRefreshLayout swipeRefreshLayoutEmpleadoListado;
     private FloatingActionButton floatingActionButtonAdicionar;
     private int offSetInicial=0;
+
+    public static final int REQUEST_ACTUALIZAR_ELIMINAR_EMPLEADO = 2;
     private boolean aptoParaCargar;
 
     public EmpleadoListadoFragment() {
@@ -134,11 +138,13 @@ public class EmpleadoListadoFragment extends Fragment
     private void obtenerDatos(int offSetInicial) {
         getActivity().getSupportLoaderManager().restartLoader(1, null,this);
     }
+
     @Override
     public void onClick(EmpleadosListaAdaptador.ViewHolder holder, String idEmpleado) {
-        Toast.makeText(getActivity(),":id = " + idEmpleado,Toast.LENGTH_SHORT).show();
+        muestraPantallaDetalle(idEmpleado);
     }
 
+    //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
@@ -170,5 +176,11 @@ public class EmpleadoListadoFragment extends Fragment
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////
 
+    private void muestraPantallaDetalle(String idEmpleado) {
+        Intent intent = new Intent(getActivity(), EmpleadoDetalleActivity.class);
+        intent.putExtra(EmpleadoListadoActivity.EXTRA_ID_EMPLEADO, idEmpleado);
+        startActivityForResult(intent, REQUEST_ACTUALIZAR_ELIMINAR_EMPLEADO);
+    }
 }

@@ -1,8 +1,9 @@
 package com.soloparaapasionados.identidadmobile.modelo;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
-import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 
 import java.io.Serializable;
 
@@ -144,20 +145,20 @@ public class Empleado implements Serializable {
     public ContentValues toContentValues() {
 
         ContentValues values = new ContentValues();
-        values.put(ContratoCotizacion.Empleados.ID_EMPLEADO, IdEmpleado);
-        values.put(ContratoCotizacion.Empleados.NOMBRES, Nombres);
-        values.put(ContratoCotizacion.Empleados.APELLIDO_PATERNO, ApellidoPaterno);
-        values.put(ContratoCotizacion.Empleados.APELLIDO_MAERNO, ApellidoMaterno);
-        values.put(ContratoCotizacion.Empleados.DIRECCION, Direccion);
-        values.put(ContratoCotizacion.Empleados.DNI, DNI);
-        values.put(ContratoCotizacion.Empleados.CELULAR, Celular);
-        values.put(ContratoCotizacion.Empleados.EMAIL, Email);
-        values.put(ContratoCotizacion.Empleados.FECHA_NACIMIENTO, FechaNacimiento);
-        values.put(ContratoCotizacion.Empleados.ID_CARGO, IdCargo);
-        values.put(ContratoCotizacion.Empleados.FECHA_INGRESO, FechaIngreso);
-        values.put(ContratoCotizacion.Empleados.FECHA_BAJA, FechaBaja);
-        values.put(ContratoCotizacion.Empleados.FECHA_CREACION, FechaCreacion);
-        values.put(ContratoCotizacion.Empleados.FOTO, Foto);
+        values.put(Empleados.ID_EMPLEADO, IdEmpleado);
+        values.put(Empleados.NOMBRES, Nombres);
+        values.put(Empleados.APELLIDO_PATERNO, ApellidoPaterno);
+        values.put(Empleados.APELLIDO_MAERNO, ApellidoMaterno);
+        values.put(Empleados.DIRECCION, Direccion);
+        values.put(Empleados.DNI, DNI);
+        values.put(Empleados.CELULAR, Celular);
+        values.put(Empleados.EMAIL, Email);
+        values.put(Empleados.FECHA_NACIMIENTO, FechaNacimiento);
+        values.put(Empleados.ID_CARGO, IdCargo);
+        values.put(Empleados.FECHA_INGRESO, FechaIngreso);
+        values.put(Empleados.FECHA_BAJA, FechaBaja);
+        values.put(Empleados.FECHA_CREACION, FechaCreacion);
+        values.put(Empleados.FOTO, Foto);
 
         return values;
     }

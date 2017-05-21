@@ -24,6 +24,8 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 
 public class EmpleadoListadoActivity extends AppCompatActivity {
 
+    public static final String EXTRA_ID_EMPLEADO = "extra_id_empleado";
+
     DrawerLayout navigationDrawerLayout;
 
     @Override

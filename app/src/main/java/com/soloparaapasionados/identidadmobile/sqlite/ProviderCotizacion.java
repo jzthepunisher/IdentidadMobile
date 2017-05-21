@@ -43,16 +43,18 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int DISPOSITIVOS_ID = 101;
     public static final int CARGOS = 200;
     public static final int EMPLEADOS=300;
+    public static final int EMPLEADOS_ID=301;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        uriMatcher.addURI(AUTORIDAD, "dispositivos", DISPOSITIVOS);
+        uriMatcher.addURI(AUTORIDAD, "dispositivos"  , DISPOSITIVOS);
         uriMatcher.addURI(AUTORIDAD, "dispositivos/#", DISPOSITIVOS_ID);
-        uriMatcher.addURI(AUTORIDAD, "cargos", CARGOS);
-        uriMatcher.addURI(AUTORIDAD, "empleados", EMPLEADOS);
+        uriMatcher.addURI(AUTORIDAD, "cargos"        , CARGOS);
+        uriMatcher.addURI(AUTORIDAD, "empleados"     , EMPLEADOS);
+        uriMatcher.addURI(AUTORIDAD, "empleados/*"   , EMPLEADOS_ID);
     }
     // [/URI_MATCHER]
 
@@ -76,6 +78,7 @@ public class ProviderCotizacion extends ContentProvider {
             Tablas.EMPLEADO + "." + Empleados.ID_EMPLEADO,
             Empleados.NOMBRES,Empleados.APELLIDO_PATERNO,Empleados.APELLIDO_MAERNO,
             Empleados.FOTO};
+
     // [/CAMPOS_AUXILIARES]
 
 
@@ -87,12 +90,6 @@ public class ProviderCotizacion extends ContentProvider {
     int offSet=30;
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Implement this to handle requests to delete one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    @Override
     public String getType(Uri uri) {
         switch (uriMatcher.match(uri)) {
             case DISPOSITIVOS:
@@ -102,10 +99,18 @@ public class ProviderCotizacion extends ContentProvider {
             case CARGOS:
                 return ContratoCotizacion.generarMime("cargos");
             case EMPLEADOS:
-                return  ContratoCotizacion.generarMimeItem("empleados");
+                return  ContratoCotizacion.generarMime("empleados");
+            case EMPLEADOS_ID:
+                return ContratoCotizacion.generarMimeItem("empleados");
             default:
                 throw new UnsupportedOperationException("Uri desconocida =>" + uri);
         }
+    }
+
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        // Implement this to handle requests to delete one or more rows.
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
@@ -140,23 +145,7 @@ public class ProviderCotizacion extends ContentProvider {
         return true;
     }
 
-    @Override
-    public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations)
-            throws OperationApplicationException {
-        final SQLiteDatabase db = helper.getWritableDatabase();
-        db.beginTransaction();
-        try {
-            final int numOperations = operations.size();
-            final ContentProviderResult[] results = new ContentProviderResult[numOperations];
-            for (int i = 0; i < numOperations; i++) {
-                results[i] = operations.get(i).apply(this, results, i);
-            }
-            db.setTransactionSuccessful();
-            return results;
-        } finally {
-            db.endTransaction();
-        }
-    }
+
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
@@ -217,6 +206,16 @@ public class ProviderCotizacion extends ContentProvider {
                 c = bd.rawQuery(query, new String[]{String.valueOf(offSetActual),String.valueOf(offSet)});
 
                 break;
+            case EMPLEADOS_ID:
+                // Consultando un empleado
+                id = Empleados.obtenerIdEmpleado(uri);
+                builder.setTables(EMPLEADO_CARGO);
+                c = builder.query(bd, null,
+                        Empleados.ID_EMPLEADO + "=" + "\'" + id + "\'"
+                                + (!TextUtils.isEmpty(selection) ?
+                                " AND (" + selection + ')' : ""),
+                        selectionArgs, null, null, null);
+                break;
 
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
@@ -226,7 +225,6 @@ public class ProviderCotizacion extends ContentProvider {
 
         return c;
     }
-
 
     @Override
     public int update(Uri uri, ContentValues values, String selection,
@@ -255,5 +253,23 @@ public class ProviderCotizacion extends ContentProvider {
 
     private void notificarCambio(Uri uri) {
         resolver.notifyChange(uri, null);
+    }
+
+    @Override
+    public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations)
+            throws OperationApplicationException {
+        final SQLiteDatabase db = helper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            final int numOperations = operations.size();
+            final ContentProviderResult[] results = new ContentProviderResult[numOperations];
+            for (int i = 0; i < numOperations; i++) {
+                results[i] = operations.get(i).apply(this, results, i);
+            }
+            db.setTransactionSuccessful();
+            return results;
+        } finally {
+            db.endTransaction();
+        }
     }
 }
