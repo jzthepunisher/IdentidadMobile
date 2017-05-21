@@ -16,7 +16,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
 
 /**
  * Created by USUARIO on 19/05/2017.
@@ -35,12 +37,15 @@ public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosLista
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // Referencias UI
         public TextView textViewNombresEmpleado;
+        public TextView textViewDescripcionCargoEmpleado;
         public ImageView imageViewFotoEmpleado;
 
         public ViewHolder(View v) {
             super(v);
             textViewNombresEmpleado = (TextView) v.findViewById(R.id.textViewNombresEmpleado);
             imageViewFotoEmpleado = (ImageView) v.findViewById(R.id.imageViewFotoEmpleado);
+            textViewDescripcionCargoEmpleado = (TextView) v.findViewById(R.id.textViewDescripcionCargoEmpleado);
+
             v.setOnClickListener(this);
         }
 
@@ -82,6 +87,8 @@ public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosLista
         nombresCompletos += " " + items.getString(items.getColumnIndex(Empleados.APELLIDO_MAERNO));
 
         holder.textViewNombresEmpleado.setText(nombresCompletos);
+
+        holder.textViewDescripcionCargoEmpleado.setText(items.getString(items.getColumnIndex(Cargos.DESCRIPCION)));
 
         s = items.getString(items.getColumnIndex(Empleados.FOTO));
 

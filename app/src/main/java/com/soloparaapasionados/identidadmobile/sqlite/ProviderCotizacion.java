@@ -78,6 +78,12 @@ public class ProviderCotizacion extends ContentProvider {
             Empleados.FOTO};
     // [/CAMPOS_AUXILIARES]
 
+
+    private static final String EMPLEADO_CARGO =
+            "empleado INNER JOIN cargo " +
+                    "ON empleado.id_cargo = cargo.id_cargo";
+
+
     int offSet=30;
 
     @Override
@@ -203,9 +209,10 @@ public class ProviderCotizacion extends ContentProvider {
                 //c = builder.query(bd, proyEmpleado,
                 //        clausulaWhere , null, null, null,null);
 
-                String query = "select " + BaseColumns._ID + "," + Empleados.ID_EMPLEADO + "," + Empleados.NOMBRES;
+                String query = "select " + Tablas.EMPLEADO + "." + BaseColumns._ID + "," + Empleados.ID_EMPLEADO + "," + Empleados.NOMBRES;
                 query += "," + Empleados.APELLIDO_PATERNO + "," + Empleados.APELLIDO_MAERNO + "," + Empleados.FOTO;
-                query += " from " + Tablas.EMPLEADO+ " limit ?,?";
+                query += "," + Tablas.CARGO + "." + Cargos.DESCRIPCION;
+                query += " from " + EMPLEADO_CARGO + " limit ?,?";
 
                 c = bd.rawQuery(query, new String[]{String.valueOf(offSetActual),String.valueOf(offSet)});
 

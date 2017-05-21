@@ -7,4 +7,7 @@
     <color name="colorPrimary">#7B1FA2</color>
     <color name="colorPrimaryDark">#AB47BC</color>
     <color name="colorAccent">#EC407A</color>
+
+    <color name="md_indigo_500_25">#403f51b5</color>
+    <color name="md_white_1000">#ffffff</color>
 </resources>

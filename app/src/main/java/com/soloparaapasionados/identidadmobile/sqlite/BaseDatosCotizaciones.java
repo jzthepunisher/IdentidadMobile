@@ -20,7 +20,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 7;
+    private static final int VERSION_ACTUAL = 8;
 
     private final Context contexto;
 
@@ -107,6 +107,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Léido");
         empleado.setApellidoMaterno("Cueva");
         empleado.setFoto("carlos_perez.jpg");
+        empleado.setIdCargo("C001");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM002");
@@ -114,6 +115,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Rosas");
         empleado.setApellidoMaterno("Licuona");
         empleado.setFoto("lucia_aristizabal.jpg");
+        empleado.setIdCargo("C002");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM003");
@@ -121,6 +123,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Yarasca");
         empleado.setApellidoMaterno("Berrospi");
         empleado.setFoto("marina_acosta.jpg");
+        empleado.setIdCargo("C003");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM004");
@@ -128,6 +131,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Trujillo");
         empleado.setApellidoMaterno("Baza");
         empleado.setFoto("olga_ortiz.jpg");
+        empleado.setIdCargo("C004");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM005");
@@ -135,6 +139,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Rivas");
         empleado.setApellidoMaterno("Huamaní");
         empleado.setFoto("pamela_briger.jpg");
+        empleado.setIdCargo("C005");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM006");
@@ -142,6 +147,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Aquije");
         empleado.setApellidoMaterno("Milachay");
         empleado.setFoto("daniel_samper.jpg");
+        empleado.setIdCargo("C001");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM007");
@@ -149,6 +155,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Vela");
         empleado.setApellidoMaterno("Benavides");
         empleado.setFoto("rodrigo_benavidez.jpg");
+        empleado.setIdCargo("C002");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM008");
@@ -156,6 +163,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Lopez");
         empleado.setApellidoMaterno("Torres");
         empleado.setFoto("pamela_briger.jpg");
+        empleado.setIdCargo("C003");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM009");
@@ -163,6 +171,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Alvarez");
         empleado.setApellidoMaterno("Alvarez");
         empleado.setFoto("tom_bonz.jpg");
+        empleado.setIdCargo("C004");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM010");
@@ -170,6 +179,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Angúlo");
         empleado.setApellidoMaterno("Ferroñay");
         empleado.setFoto("carlos_perez.jpg");
+        empleado.setIdCargo("C005");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM011");
@@ -177,6 +187,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Rivera");
         empleado.setApellidoMaterno("Nuñez");
         empleado.setFoto("daniel_samper.jpg");
+        empleado.setIdCargo("C001");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM012");
@@ -184,6 +195,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Rayme");
         empleado.setApellidoMaterno("Rayme");
         empleado.setFoto("lucia_aristizabal.jpg");
+        empleado.setIdCargo("C002");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM013");
@@ -198,6 +210,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Elera");
         empleado.setApellidoMaterno("García");
         empleado.setFoto("olga_ortiz.jpg");
+        empleado.setIdCargo("C003");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM015");
@@ -205,6 +218,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Ramos");
         empleado.setApellidoMaterno("Ramos");
         empleado.setFoto("pamela_briger.jpg");
+        empleado.setIdCargo("C004");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM016");
@@ -212,6 +226,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Zapata");
         empleado.setApellidoMaterno("Huamaní");
         empleado.setFoto("lucia_aristizabal.jpg");
+        empleado.setIdCargo("C005");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM017");
@@ -219,6 +234,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Sánchez");
         empleado.setApellidoMaterno("Condemarín");
         empleado.setFoto("marina_acosta.jpg");
+        empleado.setIdCargo("C001");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM018");
@@ -226,6 +242,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Sánchez");
         empleado.setApellidoMaterno("Cardenas");
         empleado.setFoto("olga_ortiz.jpg");
+        empleado.setIdCargo("C002");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM019");
@@ -233,6 +250,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Rivero");
         empleado.setApellidoMaterno("Pumachagua");
         empleado.setFoto("rodrigo_benavidez.jpg");
+        empleado.setIdCargo("C003");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM020");
@@ -240,6 +258,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Cabezudo");
         empleado.setApellidoMaterno("Cabezudo");
         empleado.setFoto("pamela_briger.jpg");
+        empleado.setIdCargo("C004");
         mockEmpleado(sqLiteDatabase, empleado);
 
         empleado.setIdEmpleado("EM021");
@@ -247,6 +266,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         empleado.setApellidoPaterno("Vera");
         empleado.setApellidoMaterno("Bueno");
         empleado.setFoto("tom_bonz.jpg");
+        empleado.setIdCargo("C005");
         mockEmpleado(sqLiteDatabase, empleado);
 
 

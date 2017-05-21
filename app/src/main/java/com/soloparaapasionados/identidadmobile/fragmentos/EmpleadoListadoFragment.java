@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -22,7 +24,9 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.actividades.EmpleadoAdicionarEditarActivity;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosListaAdaptador;
+import com.soloparaapasionados.identidadmobile.observadores.MiObervador;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 
 public class EmpleadoListadoFragment extends Fragment
@@ -32,6 +36,7 @@ public class EmpleadoListadoFragment extends Fragment
     private LinearLayoutManager linearLayoutManager;
     private EmpleadosListaAdaptador empleadosListaAdaptador;
     private SwipeRefreshLayout swipeRefreshLayoutEmpleadoListado;
+    private FloatingActionButton floatingActionButtonAdicionar;
     private int offSetInicial=0;
     private boolean aptoParaCargar;
 
@@ -59,7 +64,15 @@ public class EmpleadoListadoFragment extends Fragment
         empleadosListaAdaptador = new EmpleadosListaAdaptador(getActivity(), this);
         recyclerViewListadoEmpleado.setAdapter(empleadosListaAdaptador);
 
-        swipeRefreshLayoutEmpleadoListado = (SwipeRefreshLayout) root.findViewById(R.id.SwipeRefreshLayoutEmpleadoListado);
+        floatingActionButtonAdicionar = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButtonAdicionar);
+        floatingActionButtonAdicionar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                muestraPatallaAdicionarEditar();
+            }
+        });
+
+        /*swipeRefreshLayoutEmpleadoListado = (SwipeRefreshLayout) root.findViewById(R.id.SwipeRefreshLayoutEmpleadoListado);
         swipeRefreshLayoutEmpleadoListado.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -70,7 +83,7 @@ public class EmpleadoListadoFragment extends Fragment
                         //new HackingBackgroundTask().execute();
                     }
                 }
-        );
+        );*/
 
         recyclerViewListadoEmpleado.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -102,7 +115,13 @@ public class EmpleadoListadoFragment extends Fragment
         // Iniciar loader
         getActivity().getSupportLoaderManager().restartLoader(1, null,  this);
 
+
         return root;
+    }
+
+    private void muestraPatallaAdicionarEditar() {
+        Intent intent = new Intent(getActivity(), EmpleadoAdicionarEditarActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -132,14 +151,13 @@ public class EmpleadoListadoFragment extends Fragment
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         //Creando Adaptador para CargoSpinner
 
-
         switch (loader.getId()){
             case 1:
                 if(data!=null){
                     if (empleadosListaAdaptador != null) {
                         empleadosListaAdaptador.swapCursor(data);
                         aptoParaCargar=true;
-                        swipeRefreshLayoutEmpleadoListado.setRefreshing(false);
+                        //swipeRefreshLayoutEmpleadoListado.setRefreshing(false);
                     }
                 }
                 break;

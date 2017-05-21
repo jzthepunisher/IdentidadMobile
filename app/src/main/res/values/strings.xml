@@ -60,5 +60,6 @@
     <string name="error_campo_invalido_mail">Correo electrónico inválido</string>
     <string name="error_campo_invalido_fecha">Valor de fecha inválida</string>
     <string name="title_activity_empleado_listado">Listado de Empleados</string>
+    <string name="title_activity_dispostivo_registro">Registrar Dispositivo</string>
 
 </resources>
