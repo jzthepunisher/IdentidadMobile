@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoAdicionarEditarActivity;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosListaAdaptador;
+import com.soloparaapasionados.identidadmobile.helper.DividerItemDecoration;
 import com.soloparaapasionados.identidadmobile.observadores.MiObervador;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 
@@ -62,6 +63,7 @@ public class EmpleadoListadoFragment extends Fragment
         recyclerViewListadoEmpleado.setLayoutManager(linearLayoutManager);
 
         empleadosListaAdaptador = new EmpleadosListaAdaptador(getActivity(), this);
+        recyclerViewListadoEmpleado.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerViewListadoEmpleado.setAdapter(empleadosListaAdaptador);
 
         floatingActionButtonAdicionar = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButtonAdicionar);

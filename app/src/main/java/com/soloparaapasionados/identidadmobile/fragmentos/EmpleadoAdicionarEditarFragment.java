@@ -15,6 +15,7 @@ import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ import java.util.regex.Pattern;
  * create an instance of this fragment.
  */
 public class EmpleadoAdicionarEditarFragment extends Fragment
-implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
+implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor>,View.OnLongClickListener {
     // Lista TextInputEditText
     private TextInputLayout textInputLayoutIdEmpleado;
     private TextInputLayout textInputLayoutNombresEmpleado;
@@ -151,6 +152,10 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
         editTextFechaBaja.addTextChangedListener(new MiTextWatcher(editTextFechaBaja));
         //Eventos del Spinner de la UI
         spinnerCargos.setOnItemSelectedListener(this);
+        //Eventos setOnLongClickListener del EditText Fechas de la UI
+        editTextFechaNacimiento.setOnLongClickListener(this);
+        editTextFechaIngreso.setOnLongClickListener(this);
+        editTextFechaBaja.setOnLongClickListener(this);
 
         floatingActionButtonGuardar = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButtonGuardar);
 
@@ -161,47 +166,6 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
                 validarDatosEmpleado();
             }
         });
-
-        editTextFechaNacimiento.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DialogFragment picker = new DatePickerFragment();
-                    Bundle bundle=new Bundle();
-                    bundle.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaNacimiento.getId());
-                    picker.setArguments(bundle);
-                    picker.show(getFragmentManager(), "datePicker");
-
-                }
-            }
-        );
-
-        editTextFechaIngreso.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DialogFragment picker = new DatePickerFragment();
-                    Bundle bundle=new Bundle();
-                    bundle.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaIngreso.getId());
-                    picker.setArguments(bundle);
-                    picker.show(getFragmentManager(), "datePicker");
-
-                }
-            }
-        );
-
-        editTextFechaBaja.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DialogFragment picker = new DatePickerFragment();
-                    Bundle bundle=new Bundle();
-                    bundle.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaBaja.getId());
-                    picker.setArguments(bundle);
-                    picker.show(getFragmentManager(), "datePicker");
-                }
-            }
-        );
 
         // Iniciar loader
         getActivity().getSupportLoaderManager().restartLoader(1,null,this);
@@ -653,4 +617,36 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
          */
 
     }
+
+    @Override
+    public boolean onLongClick(View view) {
+
+        switch (view.getId()){
+            case R.id.editTextFechaNacimiento:
+                DialogFragment picker = new DatePickerFragment();
+                Bundle bundle=new Bundle();
+                bundle.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaNacimiento.getId());
+                picker.setArguments(bundle);
+                picker.show(getFragmentManager(), "datePicker");
+                break;
+
+            case R.id.editTextFechaIngreso:
+                DialogFragment picker2 = new DatePickerFragment();
+                Bundle bundle2=new Bundle();
+                bundle2.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaIngreso.getId());
+                picker2.setArguments(bundle2);
+                picker2.show(getFragmentManager(), "datePicker");
+                break;
+            case R.id.editTextFechaBaja:
+                DialogFragment picker3 = new DatePickerFragment();
+                Bundle bundle3=new Bundle();
+                bundle3.putInt (DatePickerFragment.ARGUMENTO_ID_VIEW,editTextFechaBaja.getId());
+                picker3.setArguments(bundle3);
+                picker3.show(getFragmentManager(), "datePicker");
+        }
+
+        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+        return true;
+    }
+
 }

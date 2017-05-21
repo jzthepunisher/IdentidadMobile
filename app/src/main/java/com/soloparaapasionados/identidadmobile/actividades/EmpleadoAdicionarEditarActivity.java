@@ -36,7 +36,7 @@ public class EmpleadoAdicionarEditarActivity extends AppCompatActivity
 
         String idEmpleado = getIntent().getStringExtra(EmpleadoAdicionarEditarActivity.EXTRA_ID_EMPLEADO);
 
-        collapsingToolbarLayout.setTitle(idEmpleado == null ? "Añadir Empleado" : "Editar Empleado");
+        collapsingToolbarLayout.setTitle(idEmpleado == null ? "Registro de Empleado" : "Edición de Empleado");
 
 
         EmpleadoAdicionarEditarFragment empleadoAdicionarEditarFragment = (EmpleadoAdicionarEditarFragment)
@@ -70,11 +70,11 @@ public class EmpleadoAdicionarEditarActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_empleado_adicionar_editar, menu);
         return super.onCreateOptionsMenu(menu);
-    }
+    }*/
 
     @Override
     public void onDateSelected(int idViewSeleccionadora,int year, int month, int day) {
@@ -85,7 +85,6 @@ public class EmpleadoAdicionarEditarActivity extends AppCompatActivity
             empleadoAdicionarEditarFragment.actualizarFecha(idViewSeleccionadora,year, month, day);
         }
     }
-
 
 
 }

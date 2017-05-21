@@ -23,7 +23,7 @@ import com.soloparaapasionados.identidadmobile.observadores.MiObervador;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 
 public class EmpleadoListadoActivity extends AppCompatActivity {
-    MiObervador miObervador;
+
     DrawerLayout navigationDrawerLayout;
 
     @Override
@@ -42,8 +42,6 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
             setupNavigationDrawerContent(navigationView);
         }
         setupNavigationDrawerContent(navigationView);
-
-        miObervador = new MiObervador(new Handler());
 
         EmpleadoListadoFragment empleadoListadoFragment = (EmpleadoListadoFragment)
                 getSupportFragmentManager().findFragmentById(R.id.empleados_listado_container);
@@ -69,12 +67,12 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
 
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
+    }*/
 
    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -97,20 +95,19 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
         super.onResume();
         // put your code here...
 
-        getContentResolver().registerContentObserver(ContratoCotizacion.Empleados.crearUriEmpleadoOffSet(String.valueOf(0)),true,miObervador);
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //getContentResolver().unregisterContentObserver(miObervador);
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        getContentResolver().unregisterContentObserver(miObervador);
+
 
     }
 
@@ -164,4 +161,5 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
                 }
             });
     }
+
 }
