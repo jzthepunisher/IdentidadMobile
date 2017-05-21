@@ -51,8 +51,6 @@ public class EmpleadoAdicionarEditarActivity extends AppCompatActivity
                     .commit();
         }
 
-        Cursor cursorDispositivo=getContentResolver().query(ContratoCotizacion.Dispositivos.crearUriDispositivo("333333"), null, null, null, null);
-
         FloatingActionButton floatingActionButtonGuardar = (FloatingActionButton) findViewById(R.id.floatingActionButtonGuardar);
         floatingActionButtonGuardar.setOnClickListener(new View.OnClickListener() {
             @Override

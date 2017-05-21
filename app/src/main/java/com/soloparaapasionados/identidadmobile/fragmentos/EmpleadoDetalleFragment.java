@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.actividades.EmpleadoAdicionarEditarActivity;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 
@@ -99,21 +100,29 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
 
         return root;
     }
-/*
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit:
-                showEditScreen();
+                muestraPantallaEdicion();
                 break;
             case R.id.action_delete:
-                new DeleteLawyerTask().execute();
+                //new DeleteLawyerTask().execute();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void muestraPantallaEdicion() {
+        Intent intent = new Intent(getActivity(), EmpleadoAdicionarEditarActivity.class);
+        intent.putExtra(EmpleadoAdicionarEditarActivity.EXTRA_ID_EMPLEADO, idEmpleado);
+        startActivityForResult(intent, EmpleadoListadoFragment.REQUEST_ACTUALIZAR_ELIMINAR_EMPLEADO);
+    }
+/*
+
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -125,22 +134,9 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
         }
     }
 
-    private void showLawyer(Lawyer lawyer) {
-        mCollapsingView.setTitle(lawyer.getName());
-        Glide.with(this)
-                .load(Uri.parse("file:///android_asset/" + lawyer.getAvatarUri()))
-                .centerCrop()
-                .into(mAvatar);
-        mPhoneNumber.setText(lawyer.getPhoneNumber());
-        mSpecialty.setText(lawyer.getSpecialty());
-        mBio.setText(lawyer.getBio());
-    }
 
-    private void showEditScreen() {
-        Intent intent = new Intent(getActivity(), AddEditLawyerActivity.class);
-        intent.putExtra(LawyersActivity.EXTRA_LAWYER_ID, mLawyerId);
-        startActivityForResult(intent, LawyersFragment.REQUEST_UPDATE_DELETE_LAWYER);
-    }
+
+
 
     private void showLawyersScreen(boolean requery) {
         if (!requery) {
@@ -149,14 +145,6 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
         getActivity().setResult(requery ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
         getActivity().finish();
     }
-
-
-    private void showDeleteError() {
-        Toast.makeText(getActivity(),
-                "Error al eliminar abogado", Toast.LENGTH_SHORT).show();
-    }
-
-
 
     private class DeleteLawyerTask extends AsyncTask<Void, Void, Integer> {
 
@@ -189,7 +177,6 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
 
         switch (loader.getId()){
             case 1:
-
                 if (data != null && data.moveToLast()) {
                     muestraEmpleado(data);
                 } else {

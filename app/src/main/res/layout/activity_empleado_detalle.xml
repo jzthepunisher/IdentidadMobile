@@ -30,18 +30,18 @@
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"
-                android:src="@mipmap/brian_o_conner"/>
+                />
+            <!-- android:src="@mipmap/brian_o_conner" -->
+             <android.support.v7.widget.Toolbar
+                 android:id="@+id/toolbar"
+                 android:layout_width="match_parent"
+                 android:layout_height="?attr/actionBarSize"
+                 app:layout_collapseMode="pin"
+                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+         </android.support.design.widget.CollapsingToolbarLayout>
+     </android.support.design.widget.AppBarLayout>
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
+     <include layout="@layout/content_empleado_detalle" />
 
-    <include layout="@layout/content_empleado_detalle" />
-
-</android.support.design.widget.CoordinatorLayout>
+ </android.support.design.widget.CoordinatorLayout>

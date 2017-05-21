@@ -3,8 +3,10 @@ package com.soloparaapasionados.identidadmobile.fragmentos;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -21,15 +24,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
 import com.soloparaapasionados.identidadmobile.aplicacion.Constantes;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
-import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -44,6 +50,9 @@ import java.util.regex.Pattern;
  */
 public class EmpleadoAdicionarEditarFragment extends Fragment
 implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor>,View.OnLongClickListener {
+
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private ImageView imageViewFotoEmpleado;
     // Lista TextInputEditText
     private TextInputLayout textInputLayoutIdEmpleado;
     private TextInputLayout textInputLayoutNombresEmpleado;
@@ -81,6 +90,7 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
 
     private String mIdEmpleado;
     private int idCursor;
+    String idCargoEmpleado="";
 
     /* Adaptadores para los Spinners*/
     SimpleCursorAdapter cargoSpinnerAdapter;
@@ -112,6 +122,15 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_empleado_adicionar_editar, container, false);
+
+        //Referencias Spiner de la UI
+        spinnerCargos=(Spinner)root.findViewById(R.id.spinnerCargos);
+        // Iniciar loader
+        getActivity().getSupportLoaderManager().restartLoader(1,null,this);
+
+        collapsingToolbarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.collapser);
+        imageViewFotoEmpleado = (ImageView) getActivity().findViewById(R.id.image_paralax);
+
         //Referencias TextInputLayout de la UI
         textInputLayoutIdEmpleado =(TextInputLayout) root.findViewById(R.id.textInputLayoutIdEmpleado);
         textInputLayoutNombresEmpleado=(TextInputLayout) root.findViewById(R.id.textInputLayoutNombresEmpleado);
@@ -136,8 +155,7 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
         editTextFechaNacimiento=(EditText) root.findViewById(R.id.editTextFechaNacimiento);
         editTextFechaIngreso=(EditText) root.findViewById(R.id.editTextFechaIngreso);
         editTextFechaBaja=(EditText) root.findViewById(R.id.editTextFechaBaja);
-        //Referencias Spiner de la UI
-        spinnerCargos=(Spinner)root.findViewById(R.id.spinnerCargos);
+
         //Establecer eventos TextWatcher.
         editTextIdEmpleado.addTextChangedListener(new MiTextWatcher(editTextIdEmpleado));
         editTextNombresEmpleado.addTextChangedListener(new MiTextWatcher(editTextNombresEmpleado));
@@ -167,21 +185,31 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
             }
         });
 
-        // Iniciar loader
-        getActivity().getSupportLoaderManager().restartLoader(1,null,this);
-        //getActivity().getSupportLoaderManager().restartLoader(2,null,this);
-        //getActivity().getSupportLoaderManager().restartLoader(3,null,this);
+
+        // Carga de datos
+        if (mIdEmpleado != null) {
+            cargaEmpleado();
+        }
 
         return root;
     }
 
+    private void cargaEmpleado(){
+        getActivity().getSupportLoaderManager().restartLoader(2,null,this);
+    }
+
+    //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         idCursor=id;
         switch (id){
             case 1:
-            //cursorCargos=getContentResolver().query(ContratoCotizacion.Cargos.crearUriCargoLista(), null, null, null, null);
-            return new CursorLoader(getActivity(), ContratoCotizacion.Cargos.crearUriCargoLista(), null, null, null, null);
+                //cursorCargos=getContentResolver().query(ContratoCotizacion.Cargos.crearUriCargoLista(), null, null, null, null);
+                return new CursorLoader(getActivity(), Cargos.crearUriCargoLista(), null, null, null, null);
+            case 2:
+                //cursorCargos=getContentResolver().query(ContratoCotizacion.Cargos.crearUriCargoLista(), null, null, null, null);
+                return new CursorLoader(getActivity(), Empleados.crearUriEmpleado(mIdEmpleado), null, null, null, null);
+
         }
         return null;
     }
@@ -189,28 +217,90 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         //Creando Adaptador para CargoSpinner
-
-
         switch (loader.getId()){
         case 1:
             if(data!=null){
                 cargoSpinnerAdapter = new SimpleCursorAdapter(getActivity(),
                     android.R.layout.simple_selectable_list_item,
                     data,
-                    new String[]{ContratoCotizacion.Cargos.DESCRIPCION},
+                    new String[]{Cargos.DESCRIPCION},
                     new int[]{android.R.id.text1},
                     SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
                     spinnerCargos.setAdapter(cargoSpinnerAdapter);
+
+                    spinnerCargos.setSelection(getIndex(spinnerCargos,Cargos.ID_CARGO,idCargoEmpleado));
             }
+            break;
+        case 2:
+
+            if (data != null && data.moveToLast()) {
+                muestraEmpleado(data);
+                //spinnerCargos.setSelection(getIndex(data,Cargos.ID_CARGO,idCargoEmpleado));
+                spinnerCargos.setSelection(getIndex(spinnerCargos,Cargos.ID_CARGO,idCargoEmpleado));
+            } else {
+                muestraErrorCarga();
+            }
+
             break;
         }
 
     }
 
+    private int getIndex(Spinner spinner, String columnName, String searchString) {
+
+        //Log.d(LOG_TAG, "getIndex(" + searchString + ")");
+
+        if (searchString == null || spinner.getCount() == 0) {
+            return -1; // Not found
+        }
+        else {
+            try{
+                Cursor cursor = (Cursor)spinner.getItemAtPosition(0);
+
+                for (int i = 0; i < spinner.getCount(); i++) {
+
+                    cursor.moveToPosition(i);
+                    String itemText = cursor.getString(cursor.getColumnIndex(columnName));
+
+                    if (itemText.equals(searchString)) {
+                        return i;
+                    }
+                }
+                return -1; // Not found
+            }catch (ClassCastException e){
+                return -1;
+            }
+
+
+        }
+    }
+    private int getIndex(Cursor cursor, String columnName, String searchString) {
+
+        //Log.d(LOG_TAG, "getIndex(" + searchString + ")");
+
+        if (searchString == null || cursor.getCount() == 0) {
+            return -1; // Not found
+        }
+        else {
+
+            for (int i = 0; i < cursor.getCount(); i++) {
+
+                cursor.moveToPosition(i);
+                String itemText = cursor.getString(cursor.getColumnIndex(columnName));
+
+                if (itemText.equals(searchString)) {
+                    return i;
+                }
+            }
+            return -1; // Not found
+        }
+    }
+
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////
 
     //Validar datos del empleado
     private void validarDatosEmpleado() {
@@ -266,13 +356,26 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
 
         Toast.makeText(getActivity(), "Thank You!", Toast.LENGTH_SHORT).show();
 
-        insertarEmpleadoLocalmente();
+        if (mIdEmpleado != null) {
+            actualizarEmpleadoLocalmente();
+        }else {
+            insertarEmpleadoLocalmente();
+        }
+
 
     }
 
     private void insertarEmpleadoLocalmente(){
         Intent intent = new Intent(getActivity(), EmpleadoServicioLocal.class);
         intent.setAction(EmpleadoServicioLocal.ACCION_INSERTAR_EMPLEADO_ISERVICE);
+        Empleado empleado=generarEntidadEmpleado();
+        intent.putExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO, empleado);
+        getActivity().startService(intent);
+    }
+
+    private void actualizarEmpleadoLocalmente(){
+        Intent intent = new Intent(getActivity(), EmpleadoServicioLocal.class);
+        intent.setAction(EmpleadoServicioLocal.ACCION_ACTUALIZAR_EMPLEADO_ISERVICE);
         Empleado empleado=generarEntidadEmpleado();
         intent.putExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO, empleado);
         getActivity().startService(intent);
@@ -597,12 +700,12 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
                 Cursor c1 = (Cursor) parent.getItemAtPosition(position);
 
                 codigoCargoSeleccionado = c1.getString(
-                        c1.getColumnIndex(ContratoCotizacion.Cargos.ID_CARGO));
+                        c1.getColumnIndex(Cargos.ID_CARGO));
 
                 String codigoDescripcionCargoSeleccionado = c1.getString(
-                        c1.getColumnIndex(ContratoCotizacion.Cargos.DESCRIPCION));
+                        c1.getColumnIndex(Cargos.DESCRIPCION));
 
-                Toast.makeText(getActivity(),codigoCargoSeleccionado+ " " + codigoDescripcionCargoSeleccionado ,Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),codigoCargoSeleccionado+ " " + codigoDescripcionCargoSeleccionado ,Toast.LENGTH_SHORT).show();
 
                 break;
         }
@@ -647,6 +750,42 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
 
         view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
         return true;
+    }
+
+    private void muestraErrorCarga() {
+        Toast.makeText(getActivity(),
+                "No se ha cargado información", Toast.LENGTH_SHORT).show();
+    }
+
+    private void muestraEmpleado(Cursor cursorEmpleado){
+        idCargoEmpleado="";
+        String nombresCompletos="";
+        nombresCompletos+=cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.NOMBRES));
+        nombresCompletos+=" " + cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.APELLIDO_PATERNO));
+        nombresCompletos+=" " + cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.APELLIDO_MAERNO));
+
+        collapsingToolbarLayout.setTitle(nombresCompletos);
+        Glide.with(this)
+                .load(Uri.parse("file:///android_asset/" + cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.FOTO))))
+                .centerCrop()
+                .into(imageViewFotoEmpleado);
+
+        editTextIdEmpleado.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.ID_EMPLEADO)));
+        editTextNombresEmpleado.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.NOMBRES)));
+        editTextApellidoPaternoEmpleado.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.APELLIDO_PATERNO)));
+        editTextApellidoMaternoEmpleado.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.APELLIDO_MAERNO)));
+        editTextDireccionEmpleado.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.DIRECCION)));
+        editTextDniEmpleado.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.DNI)));
+        editTextCelular.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.CELULAR)));
+        editTextEmail.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.EMAIL)));
+        editTextFechaNacimiento.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.FECHA_NACIMIENTO)));
+
+        idCargoEmpleado=cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.ID_CARGO));
+        //spinnerCargos.setSelection(getIndex(spinnerCargos,Cargos.ID_CARGO,idCargoEmpleado));
+
+        editTextFechaIngreso.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.FECHA_INGRESO)));
+        editTextFechaBaja.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.FECHA_BAJA)));
+
     }
 
 }

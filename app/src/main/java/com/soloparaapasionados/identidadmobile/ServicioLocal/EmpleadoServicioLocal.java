@@ -29,7 +29,8 @@ import java.util.Date;
 public class EmpleadoServicioLocal extends IntentService {
     private static final String TAG = EmpleadoServicioLocal.class.getSimpleName();
 
-    public static final String ACCION_INSERTAR_EMPLEADO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_INSERTAR_EMPLEADO_ISERVICE";
+    public static final String ACCION_INSERTAR_EMPLEADO_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_INSERTAR_EMPLEADO_ISERVICE";
+    public static final String ACCION_ACTUALIZAR_EMPLEADO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ACTUALIZAR_EMPLEADO_ISERVICE";
     public static final String EXTRA_MI_EMPLEADO="EXTRA_MI_EMPLEADO";
 
     public EmpleadoServicioLocal() {
