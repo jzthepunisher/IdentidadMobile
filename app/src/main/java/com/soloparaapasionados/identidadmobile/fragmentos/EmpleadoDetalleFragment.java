@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -22,7 +23,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoAdicionarEditarActivity;
+import com.soloparaapasionados.identidadmobile.dialogos.SimpleDialog;
+import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 
@@ -108,7 +112,9 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
                 muestraPantallaEdicion();
                 break;
             case R.id.action_delete:
-                //new DeleteLawyerTask().execute();
+                // Obtención del manejador de fragmentos
+                FragmentManager fragmentManager = getFragmentManager();
+                new SimpleDialog().show(fragmentManager, "SimpleDialog");
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -119,24 +125,9 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
         intent.putExtra(EmpleadoAdicionarEditarActivity.EXTRA_ID_EMPLEADO, idEmpleado);
         startActivityForResult(intent, EmpleadoListadoFragment.REQUEST_ACTUALIZAR_ELIMINAR_EMPLEADO);
     }
+
+
 /*
-
-
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == LawyersFragment.REQUEST_UPDATE_DELETE_LAWYER) {
-            if (resultCode == Activity.RESULT_OK) {
-                getActivity().setResult(Activity.RESULT_OK);
-                getActivity().finish();
-            }
-        }
-    }
-
-
-
-
 
     private void showLawyersScreen(boolean requery) {
         if (!requery) {
@@ -224,6 +215,16 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
     private void muestraErrorCarga() {
         Toast.makeText(getActivity(),
                 "No se ha cargado información", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EmpleadoListadoFragment.REQUEST_ACTUALIZAR_ELIMINAR_EMPLEADO) {
+            if (resultCode == Activity.RESULT_OK) {
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
+            }
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.soloparaapasionados.identidadmobile.fragmentos;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -130,11 +131,6 @@ public class EmpleadoListadoFragment extends Fragment
         startActivity(intent);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-    }
-
     private void obtenerDatos(int offSetInicial) {
         getActivity().getSupportLoaderManager().restartLoader(1, null,this);
     }
@@ -183,4 +179,27 @@ public class EmpleadoListadoFragment extends Fragment
         intent.putExtra(EmpleadoListadoActivity.EXTRA_ID_EMPLEADO, idEmpleado);
         startActivityForResult(intent, REQUEST_ACTUALIZAR_ELIMINAR_EMPLEADO);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (Activity.RESULT_OK == resultCode) {
+            switch (requestCode) {
+                case EmpleadoAdicionarEditarActivity.REQUEST_ADICIONAR_EMPLEADO:
+                    muestraMensajeSalvadoSatisfactorio();
+
+                    break;
+                case REQUEST_ACTUALIZAR_ELIMINAR_EMPLEADO:
+                    muestraMensajeSalvadoSatisfactorio();
+                    break;
+            }
+        }
+    }
+
+
+
+    private void muestraMensajeSalvadoSatisfactorio() {
+        Toast.makeText(getActivity(),
+                "Empleado guardado correctamente", Toast.LENGTH_SHORT).show();
+    }
+
 }

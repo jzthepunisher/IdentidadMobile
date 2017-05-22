@@ -33,6 +33,7 @@ public class ContratoCotizacion {
         String FECHA_BAJA       = "fecha_baja";
         String FECHA_CREACION   = "fecha_creacion";
         String FOTO             = "foto";
+        String ELIMINADO        = "eliminado";
     }
 
     interface ColumnasCargo{

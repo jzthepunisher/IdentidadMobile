@@ -1,6 +1,7 @@
 package com.soloparaapasionados.identidadmobile.fragmentos;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -185,7 +186,7 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
             }
         });
 
-
+        this.editTextIdEmpleado.setEnabled(true);
         // Carga de datos
         if (mIdEmpleado != null) {
             cargaEmpleado();
@@ -196,6 +197,7 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
 
     private void cargaEmpleado(){
         getActivity().getSupportLoaderManager().restartLoader(2,null,this);
+        this.editTextIdEmpleado.setEnabled(false);
     }
 
     //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>
@@ -358,10 +360,11 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
 
         if (mIdEmpleado != null) {
             actualizarEmpleadoLocalmente();
+            muestraPantallaDetalleEmpleados();
         }else {
             insertarEmpleadoLocalmente();
+            muestraPantallaDetalleEmpleados();
         }
-
 
     }
 
@@ -626,48 +629,63 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
     private boolean esFechaNacimientoValido() {
         String fechaNacimiento=editTextFechaNacimiento.getText().toString().trim();
 
-        try {
-            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
-            df.setLenient(false);
-            df.parse(fechaNacimiento);
-            textInputLayoutFechaNacimiento.setErrorEnabled(false);
-            return true;
-        } catch (ParseException e) {
-            textInputLayoutFechaNacimiento.setError(getString(R.string.error_campo_invalido_fecha));
-            return false;
+        if (fechaNacimiento.length() > 0) {
+            try {
+                DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+                df.setLenient(false);
+                df.parse(fechaNacimiento);
+                textInputLayoutFechaNacimiento.setErrorEnabled(false);
+                return true;
+            } catch (ParseException e) {
+                textInputLayoutFechaNacimiento.setError(getString(R.string.error_campo_invalido_fecha));
+                return false;
+            }
         }
+
+        textInputLayoutFechaNacimiento.setErrorEnabled(false);
+        return true;
     }
 
     //Fecha de Ingreso del Empleado
     private boolean esFechaIngresoValido() {
         String fechaIngreso=editTextFechaIngreso.getText().toString().trim();
 
-        try {
-            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
-            df.setLenient(false);
-            df.parse(fechaIngreso);
-            textInputLayoutFechaIngreso.setErrorEnabled(false);
-            return true;
-        } catch (ParseException e) {
-            textInputLayoutFechaIngreso.setError(getString(R.string.error_campo_invalido_fecha));
-            return false;
+        if (fechaIngreso.length() > 0) {
+            try {
+                DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+                df.setLenient(false);
+                df.parse(fechaIngreso);
+                textInputLayoutFechaIngreso.setErrorEnabled(false);
+                return true;
+            } catch (ParseException e) {
+                textInputLayoutFechaIngreso.setError(getString(R.string.error_campo_invalido_fecha));
+                return false;
+            }
         }
+
+        textInputLayoutFechaIngreso.setErrorEnabled(false);
+        return true;
     }
 
     //Fecha de Ingreso del Empleado
     private boolean esFechaBajaValido() {
         String fechaBaja=editTextFechaBaja.getText().toString().trim();
 
-        try {
-            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
-            df.setLenient(false);
-            df.parse(fechaBaja);
-            textInputLayoutFechaBaja.setErrorEnabled(false);
-            return true;
-        } catch (ParseException e) {
-            textInputLayoutFechaBaja.setError(getString(R.string.error_campo_invalido_fecha));
-            return false;
+        if (fechaBaja.length() > 0) {
+            try {
+                DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+                df.setLenient(false);
+                df.parse(fechaBaja);
+                textInputLayoutFechaBaja.setErrorEnabled(false);
+                return true;
+            } catch (ParseException e) {
+                textInputLayoutFechaBaja.setError(getString(R.string.error_campo_invalido_fecha));
+                return false;
+            }
         }
+
+        textInputLayoutFechaBaja.setErrorEnabled(false);
+        return true;
     }
 
     public void actualizarFecha(int idViewSeleccionadora ,int ano, int mes, int dia) {
@@ -785,7 +803,21 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
 
         editTextFechaIngreso.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.FECHA_INGRESO)));
         editTextFechaBaja.setText(cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.FECHA_BAJA)));
+    }
 
+    private void muestraPantallaDetalleEmpleados() {
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EmpleadoListadoFragment.REQUEST_ACTUALIZAR_ELIMINAR_EMPLEADO) {
+            if (resultCode == Activity.RESULT_OK) {
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
+            }
+        }
     }
 
 }

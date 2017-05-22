@@ -31,7 +31,9 @@ public class EmpleadoServicioLocal extends IntentService {
 
     public static final String ACCION_INSERTAR_EMPLEADO_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_INSERTAR_EMPLEADO_ISERVICE";
     public static final String ACCION_ACTUALIZAR_EMPLEADO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ACTUALIZAR_EMPLEADO_ISERVICE";
-    public static final String EXTRA_MI_EMPLEADO="EXTRA_MI_EMPLEADO";
+    public static final String ACCION_ELIMINAR_EMPLEADO_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ELIMINAR_EMPLEADO_ISERVICE";
+    public static final String EXTRA_MI_EMPLEADO = "extra_mi_empleado";
+    public static final String EXTRA_ID_EMPLEADO = "extra_id_empleado";
 
     public EmpleadoServicioLocal() {
         super("EmpleadoServicioLocal");
@@ -42,12 +44,29 @@ public class EmpleadoServicioLocal extends IntentService {
 
         if (intent != null) {
             final String action = intent.getAction();
+
             if (EmpleadoServicioLocal.ACCION_INSERTAR_EMPLEADO_ISERVICE.equals(action)) {
 
                 Empleado empleado=(Empleado)intent.getSerializableExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO);
 
                 insertarEmpleadoLocal(empleado);
             }
+
+            if (EmpleadoServicioLocal.ACCION_ACTUALIZAR_EMPLEADO_ISERVICE.equals(action)) {
+
+                Empleado empleado=(Empleado)intent.getSerializableExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO);
+
+                actualizarEmpleadoLocal(empleado);
+            }
+
+            if (EmpleadoServicioLocal.ACCION_ELIMINAR_EMPLEADO_ISERVICE.equals(action)) {
+
+                String idEmpleado = intent.getStringExtra(EmpleadoServicioLocal.EXTRA_ID_EMPLEADO);
+
+                eliminarEmpleadoLocal(idEmpleado);
+            }
+
+
         }
     }
 
@@ -103,15 +122,91 @@ public class EmpleadoServicioLocal extends IntentService {
         }
     }
 
+    private void actualizarEmpleadoLocal(Empleado empleado){
+        try {
+            // Se construye la notificación
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                    .setContentTitle("Servicio Local en segundo plano")
+                    .setContentText("Procesando edición de empleado...");
+
+            builder.setProgress( 2, 1, false);
+            startForeground(1, builder.build());
+
+            ContentResolver r = getContentResolver();
+
+            // Lista de operaciones
+            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+
+            // [ACTUALIZACIONES]
+            ops.add(ContentProviderOperation.newUpdate(Empleados.crearUriEmpleado( empleado.getIdEmpleado()))
+                    .withValue(Empleados.NOMBRES, empleado.getNombres())
+                    .withValue(Empleados.APELLIDO_PATERNO, empleado.getApellidoPaterno())
+                    .withValue(Empleados.APELLIDO_MAERNO, empleado.getApellidoMaterno())
+                    .withValue(Empleados.DIRECCION, empleado.getDireccion())
+                    .withValue(Empleados.DNI, empleado.getDNI())
+                    .withValue(Empleados.CELULAR, empleado.getCelular())
+                    .withValue(Empleados.EMAIL, empleado.getEmail())
+                    .withValue(Empleados.FECHA_NACIMIENTO, empleado.getFechaNacimiento())
+                    .withValue(Empleados.ID_CARGO, empleado.getIdCargo())
+                    .withValue(Empleados.FECHA_INGRESO, empleado.getFechaIngreso())
+                    .withValue(Empleados.FECHA_BAJA, empleado.getFechaBaja())
+                    .withValue(Empleados.FOTO, empleado.getFoto())
+                    .build());
+
+            r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
+
+            // Quitar de primer plano
+            builder.setProgress( 2, 2, false);
+            stopForeground(true);
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (OperationApplicationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void eliminarEmpleadoLocal(String idEmpleado){
+        try {
+            // Se construye la notificación
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                    .setContentTitle("Servicio Local en segundo plano")
+                    .setContentText("Procesando eliminación de empleado...");
+
+            builder.setProgress( 2, 1, false);
+            startForeground(1, builder.build());
+
+            ContentResolver r = getContentResolver();
+
+            // Lista de operaciones
+            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+
+            // [ACTUALIZACIONES]
+            ops.add(ContentProviderOperation.newDelete(Empleados.crearUriEmpleado(idEmpleado))
+                    .build());
+
+            r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
+
+            // Quitar de primer plano
+            builder.setProgress( 2, 2, false);
+            stopForeground(true);
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (OperationApplicationException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "Servicio destruido...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Servicio Local destruido...", Toast.LENGTH_SHORT).show();
 
         // Emisión para avisar que se terminó el servicio
         Intent localIntent = new Intent(Constantes.ACTION_PROGRESS_EXIT);
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
-
-        Log.d(TAG, "Servicio destruido...");
     }
 
 }

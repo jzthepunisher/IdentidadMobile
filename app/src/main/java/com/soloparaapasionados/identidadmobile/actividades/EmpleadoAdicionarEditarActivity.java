@@ -21,6 +21,7 @@ public class EmpleadoAdicionarEditarActivity extends AppCompatActivity
         implements DatePickerFragment.OnDateSelectedListener{
 
     public static final String EXTRA_ID_EMPLEADO = "extra_id_empleado";
+    public static final int REQUEST_ADICIONAR_EMPLEADO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

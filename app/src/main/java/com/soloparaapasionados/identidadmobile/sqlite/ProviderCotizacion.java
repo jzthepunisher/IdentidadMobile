@@ -109,8 +109,28 @@ public class ProviderCotizacion extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Implement this to handle requests to delete one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+        SQLiteDatabase bd = helper.getWritableDatabase();
+        String id;
+        int afectados;
+
+        switch (uriMatcher.match(uri)) {
+            case EMPLEADOS_ID:
+                id = Empleados.obtenerIdEmpleado(uri);
+                String seleccion = String.format("%s=? ", Empleados.ID_EMPLEADO);
+                String[] argumentos={id};
+
+                ContentValues values=new ContentValues();
+                values.put(Empleados.ELIMINADO,1);
+
+                afectados = bd.update(Tablas.EMPLEADO, values, seleccion, argumentos);
+                break;
+            default:
+                throw new UnsupportedOperationException(URI_NO_SOPORTADA);
+        }
+
+        notificarCambio(uri);
+
+        return afectados;
     }
 
     @Override
@@ -144,8 +164,6 @@ public class ProviderCotizacion extends ContentProvider {
         resolver = getContext().getContentResolver();
         return true;
     }
-
-
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
@@ -201,7 +219,7 @@ public class ProviderCotizacion extends ContentProvider {
                 String query = "select " + Tablas.EMPLEADO + "." + BaseColumns._ID + "," + Empleados.ID_EMPLEADO + "," + Empleados.NOMBRES;
                 query += "," + Empleados.APELLIDO_PATERNO + "," + Empleados.APELLIDO_MAERNO + "," + Empleados.FOTO;
                 query += "," + Tablas.CARGO + "." + Cargos.DESCRIPCION;
-                query += " from " + EMPLEADO_CARGO + " limit ?,?";
+                query += " from " + EMPLEADO_CARGO + " where " + Empleados.ELIMINADO + " = 0 limit ?,?";
 
                 c = bd.rawQuery(query, new String[]{String.valueOf(offSetActual),String.valueOf(offSet)});
 
@@ -243,10 +261,18 @@ public class ProviderCotizacion extends ContentProvider {
 
                 afectados = bd.update(Tablas.DISPOSITIVO, values, seleccion, argumentos);
                 break;
+            case EMPLEADOS_ID:
+                id = Empleados.obtenerIdEmpleado(uri);
+                seleccion = String.format("%s=? ", Empleados.ID_EMPLEADO);
+                String[] argumentosDos={id};
+
+                afectados = bd.update(Tablas.EMPLEADO, values, seleccion, argumentosDos);
+                break;
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }
 
+        notificarCambio(uri);
 
         return afectados;
     }
