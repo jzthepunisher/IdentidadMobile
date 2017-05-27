@@ -327,7 +327,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ems="7"
-                        android:text="01/11/1986"
+                        android:text=""
                         android:hint="@string/hint_fecha_nacimiento_empleado"
                         android:inputType="date"
                         android:textAppearance="?android:attr/textAppearanceMedium"/>
@@ -407,7 +407,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ems="7"
-                        android:text="01/11/1986"
+                        android:text=""
                         android:hint="@string/hint_fecha_ingreso_empleado"
                         android:inputType="date"
                         android:textAppearance="?android:attr/textAppearanceMedium"/>
@@ -441,7 +441,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ems="7"
-                        android:text="01/11/1986"
+                        android:text=""
                         android:hint="@string/hint_fecha_baja_empleado"
                         android:inputType="date"
                         android:textAppearance="?android:attr/textAppearanceMedium"/>

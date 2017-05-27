@@ -1,10 +1,11 @@
 package com.soloparaapasionados.identidadmobile.sqlite;
 
-
+import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones.Tablas;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Dispositivos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.DispositivosEmpleados;
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -44,17 +45,21 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int CARGOS = 200;
     public static final int EMPLEADOS=300;
     public static final int EMPLEADOS_ID=301;
+    public static final int DISPOSITIVOS_EMPLEADOS=400;
+    public static final int DISPOSITIVOS_EMPLEADOS_ID=401;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        uriMatcher.addURI(AUTORIDAD, "dispositivos"  , DISPOSITIVOS);
-        uriMatcher.addURI(AUTORIDAD, "dispositivos/#", DISPOSITIVOS_ID);
-        uriMatcher.addURI(AUTORIDAD, "cargos"        , CARGOS);
-        uriMatcher.addURI(AUTORIDAD, "empleados"     , EMPLEADOS);
-        uriMatcher.addURI(AUTORIDAD, "empleados/*"   , EMPLEADOS_ID);
+        uriMatcher.addURI(AUTORIDAD, "dispositivos"             , DISPOSITIVOS);
+        uriMatcher.addURI(AUTORIDAD, "dispositivos/#"           , DISPOSITIVOS_ID);
+        uriMatcher.addURI(AUTORIDAD, "cargos"                   , CARGOS);
+        uriMatcher.addURI(AUTORIDAD, "empleados"                , EMPLEADOS);
+        uriMatcher.addURI(AUTORIDAD, "empleados/*"              , EMPLEADOS_ID);
+        uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados"   , DISPOSITIVOS_EMPLEADOS);
+        uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados/#" , DISPOSITIVOS_EMPLEADOS_ID);
     }
     // [/URI_MATCHER]
 
@@ -76,8 +81,19 @@ public class ProviderCotizacion extends ContentProvider {
     private final String[] proyEmpleado = new String[]{
             BaseColumns._ID,
             Tablas.EMPLEADO + "." + Empleados.ID_EMPLEADO,
-            Empleados.NOMBRES,Empleados.APELLIDO_PATERNO,Empleados.APELLIDO_MAERNO,
+            Empleados.NOMBRES,Empleados.APELLIDO_PATERNO,
+            Empleados.APELLIDO_MAERNO,
             Empleados.FOTO};
+
+    private final String[] proyDispositivoEmpleado = new String[]{
+            Tablas.DISPOSITIVO_EMPLEADO + "." + BaseColumns._ID,
+            Tablas.DISPOSITIVO_EMPLEADO + "." + DispositivosEmpleados.IMEI,
+            Tablas.DISPOSITIVO_EMPLEADO + "." + DispositivosEmpleados.ID_EMPLEADO,
+            Tablas.EMPLEADO + "." + Empleados.NOMBRES,
+            Tablas.EMPLEADO + "." + Empleados.APELLIDO_PATERNO,
+            Tablas.EMPLEADO + "." + Empleados.APELLIDO_MAERNO,
+            Tablas.EMPLEADO + "." + Empleados.FOTO,
+            Tablas.CARGO + "." + Cargos.DESCRIPCION};
 
     // [/CAMPOS_AUXILIARES]
 
@@ -86,6 +102,13 @@ public class ProviderCotizacion extends ContentProvider {
             "empleado INNER JOIN cargo " +
                     "ON empleado.id_cargo = cargo.id_cargo";
 
+    private static final String DISPOSITIVO_EMPLEADO =
+            "dispositivo INNER JOIN dispositivo_empleado " +
+                    " ON dispositivo.imei = dispositivo_empleado.imei" +
+            " INNER JOIN empleado " +
+                    " ON dispositivo_empleado.id_empleado = empleado.id_empleado" +
+            " INNER JOIN cargo " +
+                    " ON empleado.id_cargo = cargo.id_cargo";
 
     int offSet=30;
 
@@ -249,6 +272,16 @@ public class ProviderCotizacion extends ContentProvider {
                 builder.setTables(EMPLEADO_CARGO);
                 c = builder.query(bd, null,
                         Empleados.ID_EMPLEADO + "=" + "\'" + id + "\'"
+                                + (!TextUtils.isEmpty(selection) ?
+                                " AND (" + selection + ')' : ""),
+                        selectionArgs, null, null, null);
+                break;
+            case DISPOSITIVOS_EMPLEADOS_ID:
+                // Consultando una Dispositivo Empleado
+                id = DispositivosEmpleados.obtenerIdDispostivoEmpleado(uri);
+                builder.setTables(DISPOSITIVO_EMPLEADO);
+                c = builder.query(bd, proyDispositivoEmpleado,
+                        Tablas.DISPOSITIVO_EMPLEADO + '.' + DispositivosEmpleados.IMEI + "=" + "\'" + id + "\'"
                                 + (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
                         selectionArgs, null, null, null);

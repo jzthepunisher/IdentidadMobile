@@ -2,9 +2,12 @@ package com.soloparaapasionados.identidadmobile.sqlite;
 
 import com.soloparaapasionados.identidadmobile.modelo.Cargo;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
+import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
+
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Dispositivos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.DispositivosEmpleados;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,19 +23,21 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 12;
+    private static final int VERSION_ACTUAL = 20;
 
     private final Context contexto;
 
     interface Tablas {
-        String DISPOSITIVO = "dispositivo";
-        String EMPLEADO    = "empleado";
-        String CARGO       = "cargo";
+        String DISPOSITIVO          = "dispositivo";
+        String EMPLEADO             = "empleado";
+        String CARGO                = "cargo";
+        String DISPOSITIVO_EMPLEADO = "dispositivo_empleado";
     }
 
     interface Referencias {
-        String ID_CARGO = String.format("REFERENCES %s(%s) ",
-                Tablas.CARGO, Cargos.ID_CARGO);
+        String ID_CARGO = String.format("REFERENCES %s(%s) ", Tablas.CARGO, Cargos.ID_CARGO);
+        String IMEI = String.format("REFERENCES %s(%s) ", Tablas.DISPOSITIVO, DispositivosEmpleados.IMEI);
+        String ID_EMPLEADO = String.format("REFERENCES %s(%s) ", Tablas.EMPLEADO, Empleados.ID_EMPLEADO);
     }
 
     public BaseDatosCotizaciones(Context contexto) {
@@ -65,8 +70,16 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 Empleados.FECHA_NACIMIENTO, Empleados.ID_CARGO,Referencias.ID_CARGO, Empleados.FECHA_INGRESO, Empleados.FECHA_BAJA,
                 Empleados.FECHA_CREACION,Empleados.FOTO,Empleados.ELIMINADO));
 
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT NOT NULL %s ,%s TEXT UNIQUE NOT NULL %s" +
+                " , UNIQUE (%s, %s) ON CONFLICT REPLACE)",
+                Tablas.DISPOSITIVO_EMPLEADO, BaseColumns._ID,
+                DispositivosEmpleados.IMEI,Referencias.IMEI,DispositivosEmpleados.ID_EMPLEADO,Referencias.ID_EMPLEADO,
+                DispositivosEmpleados.IMEI,DispositivosEmpleados.ID_EMPLEADO));
+
         mockData(db);
         mockDataEmpleados(db);
+        mockDataDispositivosEmpleados(db);
     }
 
     @Override
@@ -86,6 +99,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.DISPOSITIVO);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.CARGO);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.EMPLEADO);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.DISPOSITIVO_EMPLEADO);
 
         onCreate(db);
     }
@@ -280,9 +294,35 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
     }
 
     public long mockEmpleado(SQLiteDatabase db, Empleado empleado) {
-        return db.insert(
+        return db.insertOrThrow(
                 Tablas.EMPLEADO,
                 null,
                 empleado.toContentValues());
+    }
+
+    private void mockDataDispositivosEmpleados(SQLiteDatabase sqLiteDatabase) {
+
+        DispositivoEmpleado dispositivoEmpleado=new DispositivoEmpleado();
+        dispositivoEmpleado.setImei("352430073391446");
+        dispositivoEmpleado.setIdEmpleado("EM001");
+        mockDispositivoEmpleado(sqLiteDatabase, dispositivoEmpleado);
+
+        dispositivoEmpleado=new DispositivoEmpleado();
+        dispositivoEmpleado.setImei("352430073391446");
+        dispositivoEmpleado.setIdEmpleado("EM003");
+        mockDispositivoEmpleado(sqLiteDatabase, dispositivoEmpleado);
+
+        dispositivoEmpleado=new DispositivoEmpleado();
+        dispositivoEmpleado.setImei("352430073391446");
+        dispositivoEmpleado.setIdEmpleado("EM005");
+        mockDispositivoEmpleado(sqLiteDatabase, dispositivoEmpleado);
+
+    }
+
+    public long mockDispositivoEmpleado(SQLiteDatabase db, DispositivoEmpleado dispositivoEmpleado) {
+        return db.insertOrThrow(
+                Tablas.DISPOSITIVO_EMPLEADO,
+                null,
+                dispositivoEmpleado.toContentValues());
     }
 }

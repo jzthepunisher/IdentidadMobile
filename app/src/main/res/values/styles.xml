@@ -19,6 +19,7 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/colorContraste</item>
     </style>
 
     <style name="ToolbarTheme" parent="AppTheme">

@@ -17,6 +17,11 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
@@ -29,11 +34,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadoSeleccionadoAdaptador;
+import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosListaAdaptador;
+import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosSugerenciaListaAdaptador;
+import com.soloparaapasionados.identidadmobile.helper.DividerItemDecoration;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 
 import java.util.ArrayList;
@@ -42,13 +53,16 @@ import java.util.ArrayList;
  * Created by USUARIO on 27/05/2017.
  */
 
-public class DispositivoAdicionarEditarFragment extends Fragment {
+public class DispositivoAdicionarEditarFragment extends Fragment
+    implements EmpleadosListaAdaptador.OnItemClickListener,
+        LoaderManager.LoaderCallbacks<Cursor>{
 
     private static final String ARGUMENTO_IMEI = "argumento_imei";
 
     TextView editTextIMEI;
     TextView editTextIdCardSim;
     EditText editTextCelular;
+    TextView textViewCantidadEmpleadosAsignados;
 
     SwitchCompat switchCompatMensajeEnviado;
     SwitchCompat switchCompatMensajeRecibido;
@@ -59,6 +73,12 @@ public class DispositivoAdicionarEditarFragment extends Fragment {
 
     CollapsingToolbarLayout collapser;
 
+    private RecyclerView recyclerViewListadoEmpleado;
+    private LinearLayoutManager linearLayoutManager;
+    private EmpleadosListaAdaptador empleadosListaAdaptador;
+
+    LinearLayout linearLayoutAnadirEmpleado;
+
     PendingIntent sentPI, deliveredPI;
     String SENT = "SMS_SENT";
     String DELIVERED = "SMS_DELIVERED";
@@ -66,6 +86,7 @@ public class DispositivoAdicionarEditarFragment extends Fragment {
     BroadcastReceiver smsSentReceiver, smsDeliveredReceiver, smsEntrandoReceiver;
 
     private String mImei;
+    private int offSetInicial=0;
 
     public DispositivoAdicionarEditarFragment() {
 
@@ -102,6 +123,9 @@ public class DispositivoAdicionarEditarFragment extends Fragment {
         sentPI = PendingIntent.getBroadcast(getActivity(), 0,new Intent(SENT), 0);
         deliveredPI = PendingIntent.getBroadcast(getActivity(), 0,new Intent(DELIVERED), 0);
 
+        // Iniciar loader
+        getActivity().getSupportLoaderManager().restartLoader(1, null,  this);
+
         return root;
     }
 
@@ -110,6 +134,7 @@ public class DispositivoAdicionarEditarFragment extends Fragment {
         editTextIMEI=(TextView)root.findViewById(R.id.editTextIMEI);
         editTextIdCardSim=(TextView)root.findViewById(R.id.editTextIdCardSim);
         editTextCelular=(EditText)root.findViewById(R.id.editTextCelular);
+        textViewCantidadEmpleadosAsignados=(TextView)root.findViewById(R.id.textViewCantidadEmpleadosAsignados);
 
         switchCompatMensajeEnviado=(SwitchCompat)root.findViewById(R.id.switchCompatMensajeEnviado);
         switchCompatMensajeRecibido=(SwitchCompat)root.findViewById(R.id.switchCompatMensajeRecibido);
@@ -117,6 +142,38 @@ public class DispositivoAdicionarEditarFragment extends Fragment {
         switchCompatMensajeEnviado.setChecked(false);
         switchCompatMensajeRecibido.setChecked(false);
         switchCompatMensajeValidado.setChecked(false);
+
+        linearLayoutAnadirEmpleado=(LinearLayout) root.findViewById(R.id.linearLayoutAnadirEmpleado);
+
+        // Preparar lista
+        /*recyclerViewListadoEmpleadoAsignados = (RecyclerView) root.findViewById(R.id.recyclerViewListadoEmpleadoAsignados);
+        recyclerViewListadoEmpleadoAsignados.setHasFixedSize(true);
+
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerViewListadoEmpleadoAsignados.setLayoutManager(linearLayoutManager);
+
+        empleadoSeleccionadoAdaptador = new EmpleadoSeleccionadoAdaptador(getActivity(), this);
+        recyclerViewListadoEmpleadoAsignados.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.HORIZONTAL));
+        recyclerViewListadoEmpleadoAsignados.setAdapter(empleadoSeleccionadoAdaptador);*/
+
+        // Preparar lista
+        recyclerViewListadoEmpleado = (RecyclerView) root.findViewById(R.id.recyclerViewListadoEmpleado);
+        recyclerViewListadoEmpleado.setHasFixedSize(true);
+
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerViewListadoEmpleado.setLayoutManager(linearLayoutManager);
+
+        empleadosListaAdaptador = new EmpleadosListaAdaptador(getActivity(), this);
+        recyclerViewListadoEmpleado.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        recyclerViewListadoEmpleado.setAdapter(empleadosListaAdaptador);
+
+        linearLayoutAnadirEmpleado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(),"hola añadir",Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Setear escucha al FAB
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButtonSalvar);
@@ -136,6 +193,12 @@ public class DispositivoAdicionarEditarFragment extends Fragment {
                     }
                 }
         );
+
+    }
+
+    @Override
+    public void onClick(EmpleadosListaAdaptador.ViewHolder holder, String idEmpleado) {
+        //muestraPantallaDetalle(idEmpleado);
     }
 
     @Override
@@ -416,4 +479,38 @@ public class DispositivoAdicionarEditarFragment extends Fragment {
         }
     }
 
+    //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        switch (id){
+            case 1:
+                //return new CursorLoader(getActivity(), ContratoCotizacion.Empleados.crearUriEmpleadoOffSet(String.valueOf(offSetInicial)), null, null, null, null);
+                return new CursorLoader(getActivity(), ContratoCotizacion.DispositivosEmpleados.crearUriDispositivoEmpleado(editTextIMEI.getText().toString()), null, null, null, null);
+          }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        //Creando Adaptador para CargoSpinner
+
+        switch (loader.getId()){
+            case 1:
+                if(data!=null){
+                    if (empleadosListaAdaptador != null) {
+                        empleadosListaAdaptador.swapCursor(data);
+                        textViewCantidadEmpleadosAsignados.setText(String.valueOf(empleadosListaAdaptador.getItemCount()));
+
+                    }
+                }
+                break;
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////
 }

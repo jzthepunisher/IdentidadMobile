@@ -149,9 +149,6 @@ public class EmpleadoListadoFragment extends Fragment
         startActivity(intent);
     }
 
-    private void obtenerDatos(int offSetInicial) {
-        getActivity().getSupportLoaderManager().restartLoader(1, null,this);
-    }
 
     @Override
     public void onClick(EmpleadosListaAdaptador.ViewHolder holder, String idEmpleado) {
