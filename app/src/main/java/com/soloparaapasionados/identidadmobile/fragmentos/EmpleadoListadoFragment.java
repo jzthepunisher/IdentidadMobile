@@ -140,7 +140,6 @@ public class EmpleadoListadoFragment extends Fragment
         // Iniciar loader
         getActivity().getSupportLoaderManager().restartLoader(1, null,  this);
 
-
         return root;
     }
 
@@ -148,7 +147,6 @@ public class EmpleadoListadoFragment extends Fragment
         Intent intent = new Intent(getActivity(), EmpleadoAdicionarEditarActivity.class);
         startActivity(intent);
     }
-
 
     @Override
     public void onClick(EmpleadosListaAdaptador.ViewHolder holder, String idEmpleado) {

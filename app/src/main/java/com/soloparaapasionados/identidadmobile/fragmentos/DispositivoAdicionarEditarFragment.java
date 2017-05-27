@@ -486,7 +486,9 @@ public class DispositivoAdicionarEditarFragment extends Fragment
         switch (id){
             case 1:
                 //return new CursorLoader(getActivity(), ContratoCotizacion.Empleados.crearUriEmpleadoOffSet(String.valueOf(offSetInicial)), null, null, null, null);
-                return new CursorLoader(getActivity(), ContratoCotizacion.DispositivosEmpleados.crearUriDispositivoEmpleado(editTextIMEI.getText().toString()), null, null, null, null);
+                // return new CursorLoader(getActivity(), ContratoCotizacion.DispositivosEmpleados.crearUriDispositivoEmpleado(editTextIMEI.getText().toString()), null, null, null, null);
+                return new CursorLoader(getActivity(), ContratoCotizacion.DispositivosEmpleadosTemporal.crearUriDispositivoEmpleadoTemporal(editTextIMEI.getText().toString()), null, null, null, null);
+
           }
         return null;
     }

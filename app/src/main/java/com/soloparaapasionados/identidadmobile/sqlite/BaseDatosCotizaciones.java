@@ -23,21 +23,22 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 20;
+    private static final int VERSION_ACTUAL = 21;
 
     private final Context contexto;
 
     interface Tablas {
-        String DISPOSITIVO          = "dispositivo";
-        String EMPLEADO             = "empleado";
-        String CARGO                = "cargo";
-        String DISPOSITIVO_EMPLEADO = "dispositivo_empleado";
+        String DISPOSITIVO                   = "dispositivo";
+        String EMPLEADO                      = "empleado";
+        String CARGO                         = "cargo";
+        String DISPOSITIVO_EMPLEADO          = "dispositivo_empleado";
+        String DISPOSITIVO_EMPLEADO_TEMPORAL = "dispositivo_empleado_temporal";
     }
 
     interface Referencias {
-        String ID_CARGO = String.format("REFERENCES %s(%s) ", Tablas.CARGO, Cargos.ID_CARGO);
-        String IMEI = String.format("REFERENCES %s(%s) ", Tablas.DISPOSITIVO, DispositivosEmpleados.IMEI);
-        String ID_EMPLEADO = String.format("REFERENCES %s(%s) ", Tablas.EMPLEADO, Empleados.ID_EMPLEADO);
+        String ID_CARGO    = String.format("REFERENCES %s(%s) ", Tablas.CARGO      , Cargos.ID_CARGO);
+        String IMEI        = String.format("REFERENCES %s(%s) ", Tablas.DISPOSITIVO, DispositivosEmpleados.IMEI);
+        String ID_EMPLEADO = String.format("REFERENCES %s(%s) ", Tablas.EMPLEADO   , Empleados.ID_EMPLEADO);
     }
 
     public BaseDatosCotizaciones(Context contexto) {
@@ -77,6 +78,13 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 DispositivosEmpleados.IMEI,Referencias.IMEI,DispositivosEmpleados.ID_EMPLEADO,Referencias.ID_EMPLEADO,
                 DispositivosEmpleados.IMEI,DispositivosEmpleados.ID_EMPLEADO));
 
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT NOT NULL %s ,%s TEXT UNIQUE NOT NULL %s" +
+                        " , UNIQUE (%s, %s) ON CONFLICT REPLACE)",
+                Tablas.DISPOSITIVO_EMPLEADO_TEMPORAL, BaseColumns._ID,
+                DispositivosEmpleados.IMEI,Referencias.IMEI,DispositivosEmpleados.ID_EMPLEADO,Referencias.ID_EMPLEADO,
+                DispositivosEmpleados.IMEI,DispositivosEmpleados.ID_EMPLEADO));
+
         mockData(db);
         mockDataEmpleados(db);
         mockDataDispositivosEmpleados(db);
@@ -100,6 +108,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.CARGO);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.EMPLEADO);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.DISPOSITIVO_EMPLEADO);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.DISPOSITIVO_EMPLEADO_TEMPORAL);
 
         onCreate(db);
     }

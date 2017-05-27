@@ -52,6 +52,7 @@ public class ContratoCotizacion {
     private static final String RUTA_EMPLEADOS="empleados";
     private static final String RUTA_CARGOS="cargos";
     private static final String RUTA_DISPOSITIVOS_EMPLEADOS="dispositivos_empleados";
+    private static final String RUTA_DISPOSITIVOS_EMPLEADOS_TEMPORAL="dispositivos_empleados_temporal";
     // [/URIS]
 
     // [TIPOS_MIME]
@@ -156,6 +157,19 @@ public class ContratoCotizacion {
         }
 
         public static Uri crearUriDispositivoEmpleado(String id) {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+    }
+
+    //Clase contrato de Dispositivo_Empleado
+    public static class DispositivosEmpleadosTemporal implements ColumnasDispositivoEmpleado{
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_DISPOSITIVOS_EMPLEADOS_TEMPORAL).build();
+
+        public static String obtenerIdDispostivoEmpleadoTemporal(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri crearUriDispositivoEmpleadoTemporal(String id) {
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
     }

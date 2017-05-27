@@ -6,6 +6,7 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Disposi
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.DispositivosEmpleados;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.DispositivosEmpleadosTemporal;
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -47,6 +48,8 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int EMPLEADOS_ID=301;
     public static final int DISPOSITIVOS_EMPLEADOS=400;
     public static final int DISPOSITIVOS_EMPLEADOS_ID=401;
+    public static final int DISPOSITIVOS_EMPLEADOS_TEMPORAL=500;
+    public static final int DISPOSITIVOS_EMPLEADOS_TEMPORAL_ID=501;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
@@ -60,6 +63,8 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "empleados/*"              , EMPLEADOS_ID);
         uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados"   , DISPOSITIVOS_EMPLEADOS);
         uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados/#" , DISPOSITIVOS_EMPLEADOS_ID);
+        uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados_temporal"   , DISPOSITIVOS_EMPLEADOS_TEMPORAL);
+        uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados_temporal/#" , DISPOSITIVOS_EMPLEADOS_TEMPORAL_ID);
     }
     // [/URI_MATCHER]
 
@@ -95,6 +100,16 @@ public class ProviderCotizacion extends ContentProvider {
             Tablas.EMPLEADO + "." + Empleados.FOTO,
             Tablas.CARGO + "." + Cargos.DESCRIPCION};
 
+    private final String[] proyDispositivoEmpleadoTemporal = new String[]{
+            Tablas.DISPOSITIVO_EMPLEADO_TEMPORAL + "." + BaseColumns._ID,
+            Tablas.DISPOSITIVO_EMPLEADO_TEMPORAL + "." + DispositivosEmpleados.IMEI,
+            Tablas.DISPOSITIVO_EMPLEADO_TEMPORAL + "." + DispositivosEmpleados.ID_EMPLEADO,
+            Tablas.EMPLEADO + "." + Empleados.NOMBRES,
+            Tablas.EMPLEADO + "." + Empleados.APELLIDO_PATERNO,
+            Tablas.EMPLEADO + "." + Empleados.APELLIDO_MAERNO,
+            Tablas.EMPLEADO + "." + Empleados.FOTO,
+            Tablas.CARGO + "." + Cargos.DESCRIPCION};
+
     // [/CAMPOS_AUXILIARES]
 
 
@@ -108,6 +123,14 @@ public class ProviderCotizacion extends ContentProvider {
             " INNER JOIN empleado " +
                     " ON dispositivo_empleado.id_empleado = empleado.id_empleado" +
             " INNER JOIN cargo " +
+                    " ON empleado.id_cargo = cargo.id_cargo";
+
+    private static final String DISPOSITIVO_EMPLEADO_TEMPORAL =
+            "dispositivo INNER JOIN dispositivo_empleado_temporal " +
+                    " ON dispositivo.imei = dispositivo_empleado_temporal.imei" +
+                    " INNER JOIN empleado " +
+                    " ON dispositivo_empleado_temporal.id_empleado = empleado.id_empleado" +
+                    " INNER JOIN cargo " +
                     " ON empleado.id_cargo = cargo.id_cargo";
 
     int offSet=30;
@@ -125,6 +148,10 @@ public class ProviderCotizacion extends ContentProvider {
                 return  ContratoCotizacion.generarMime("empleados");
             case EMPLEADOS_ID:
                 return ContratoCotizacion.generarMimeItem("empleados");
+            case DISPOSITIVOS_EMPLEADOS:
+                return  ContratoCotizacion.generarMime("dispositivos_empleados");
+            case DISPOSITIVOS_EMPLEADOS_ID:
+                return ContratoCotizacion.generarMimeItem("dispositivos_empleados");
             default:
                 throw new UnsupportedOperationException("Uri desconocida =>" + uri);
         }
@@ -282,6 +309,29 @@ public class ProviderCotizacion extends ContentProvider {
                 builder.setTables(DISPOSITIVO_EMPLEADO);
                 c = builder.query(bd, proyDispositivoEmpleado,
                         Tablas.DISPOSITIVO_EMPLEADO + '.' + DispositivosEmpleados.IMEI + "=" + "\'" + id + "\'"
+                                + (!TextUtils.isEmpty(selection) ?
+                                " AND (" + selection + ')' : ""),
+                        selectionArgs, null, null, null);
+                break;
+
+            case DISPOSITIVOS_EMPLEADOS_TEMPORAL_ID:
+                // Consultando una Dispositivo Empleado
+                id = DispositivosEmpleadosTemporal.obtenerIdDispostivoEmpleadoTemporal(uri);
+
+                String query = "delete from " +  Tablas.DISPOSITIVO_EMPLEADO_TEMPORAL;
+
+                bd.execSQL(query);
+
+                query = "INSERT INTO " +  Tablas.DISPOSITIVO_EMPLEADO_TEMPORAL + "(" + DispositivosEmpleadosTemporal.IMEI + "," +  DispositivosEmpleadosTemporal.ID_EMPLEADO +")";
+                query += " SELECT " + DispositivosEmpleados.IMEI + "," +  DispositivosEmpleados.ID_EMPLEADO ;
+                query += " from " + Tablas.DISPOSITIVO_EMPLEADO ;
+                query += " where " + Tablas.DISPOSITIVO_EMPLEADO + '.' + DispositivosEmpleados.IMEI + "=" + "\'" + id + "\'";
+
+                bd.execSQL(query);
+
+                builder.setTables(DISPOSITIVO_EMPLEADO_TEMPORAL);
+                c = builder.query(bd, proyDispositivoEmpleadoTemporal,
+                        Tablas.DISPOSITIVO_EMPLEADO_TEMPORAL + '.' + DispositivosEmpleadosTemporal.IMEI + "=" + "\'" + id + "\'"
                                 + (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
                         selectionArgs, null, null, null);
