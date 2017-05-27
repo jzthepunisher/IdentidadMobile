@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <activity
-            android:name=".MainActivity"
+            android:name=".actividades.DispostivoAdicionarEditarActivity"
             android:label="@string/title_activity_dispostivo_registro"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
