@@ -491,7 +491,8 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
             return false;
         }
 
-        Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
+        //Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
+        Pattern patron = Pattern.compile("^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$");
         if (!patron.matcher(nombreEmpleado).matches()) {
             textInputLayoutNombresEmpleado.setError(getString(R.string.error_campo_invalido_nombre_empleado));
             textInputLayoutNombresEmpleado.requestFocus();
@@ -513,7 +514,7 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
     private boolean esApelllidoPaternoValido() {
         String apelllidoPaterno=editTextApellidoPaternoEmpleado.getText().toString().trim();
 
-        Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
+        Pattern patron = Pattern.compile("^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$");
         if (apelllidoPaterno.length() > 0  ){
             if (!patron.matcher(apelllidoPaterno).matches()) {
                 textInputLayoutApellidoPaternoEmpleado.setError(getString(R.string.error_campo_invalido_apellido_paterno_empleado));
@@ -533,11 +534,11 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
         return true;
     }
 
-    //Apellido Paterno del Empleado
+    //Apellido Materno del Empleado
     private boolean esApelllidoMaternoValido() {
         String apelllidoMaterno=editTextApellidoMaternoEmpleado.getText().toString().trim();
 
-        Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
+        Pattern patron = Pattern.compile("^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$");
 
         if (apelllidoMaterno.length() > 0  ){
             if (!patron.matcher(apelllidoMaterno).matches()) {

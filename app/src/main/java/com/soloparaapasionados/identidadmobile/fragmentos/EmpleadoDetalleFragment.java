@@ -14,6 +14,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,20 +106,8 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
         return root;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_edit:
-                muestraPantallaEdicion();
-                break;
-            case R.id.action_delete:
-                // Obtención del manejador de fragmentos
-                FragmentManager fragmentManager = getFragmentManager();
-                new SimpleDialog().show(fragmentManager, "SimpleDialog");
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
+
 
     private void muestraPantallaEdicion() {
         Intent intent = new Intent(getActivity(), EmpleadoAdicionarEditarActivity.class);
@@ -137,19 +126,6 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
         getActivity().finish();
     }
 
-    private class DeleteLawyerTask extends AsyncTask<Void, Void, Integer> {
-
-        @Override
-        protected Integer doInBackground(Void... voids) {
-            return mLawyersDbHelper.deleteLawyer(mLawyerId);
-        }
-
-        @Override
-        protected void onPostExecute(Integer integer) {
-            showLawyersScreen(integer > 0);
-        }
-
-    }
 */
 
     //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>

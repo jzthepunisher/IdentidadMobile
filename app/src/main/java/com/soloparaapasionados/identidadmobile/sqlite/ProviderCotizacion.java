@@ -176,7 +176,7 @@ public class ProviderCotizacion extends ContentProvider {
         // string auxiliar para los ids
         String id;
 
-        Cursor c;
+        Cursor c=null;
 
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
@@ -206,22 +206,41 @@ public class ProviderCotizacion extends ContentProvider {
             case EMPLEADOS:
                 // Obtener filtro
                 int offSetActual=0;
-                offSetActual=Empleados.tieneOffSet(uri)? Integer.valueOf( uri.getQueryParameter("off_set")) : 0;
 
-                //String clausulaWhere=BaseColumns._ID  + ">=" + "" + offSetActual + " AND " +  BaseColumns._ID + " <= " + (offSetActual + this.offSet);
-                //String clausulaWhere=" 1 = 1 limit " + offSetActual + "," + this.offSet;
+                if (Empleados.tieneOffSet(uri)){
+                    offSetActual=Empleados.tieneOffSet(uri)? Integer.valueOf( uri.getQueryParameter("off_set")) : 0;
 
-                // Consultando todos los Empleados con offset
-                //builder.setTables(Tablas.EMPLEADO);
-                //c = builder.query(bd, proyEmpleado,
-                //        clausulaWhere , null, null, null,null);
+                    //String clausulaWhere=BaseColumns._ID  + ">=" + "" + offSetActual + " AND " +  BaseColumns._ID + " <= " + (offSetActual + this.offSet);
+                    //String clausulaWhere=" 1 = 1 limit " + offSetActual + "," + this.offSet;
 
-                String query = "select " + Tablas.EMPLEADO + "." + BaseColumns._ID + "," + Empleados.ID_EMPLEADO + "," + Empleados.NOMBRES;
-                query += "," + Empleados.APELLIDO_PATERNO + "," + Empleados.APELLIDO_MAERNO + "," + Empleados.FOTO;
-                query += "," + Tablas.CARGO + "." + Cargos.DESCRIPCION;
-                query += " from " + EMPLEADO_CARGO + " where " + Empleados.ELIMINADO + " = 0 limit ?,?";
+                    // Consultando todos los Empleados con offset
+                    //builder.setTables(Tablas.EMPLEADO);
+                    //c = builder.query(bd, proyEmpleado,
+                    //        clausulaWhere , null, null, null,null);
 
-                c = bd.rawQuery(query, new String[]{String.valueOf(offSetActual),String.valueOf(offSet)});
+                    String query = "select " + Tablas.EMPLEADO + "." + BaseColumns._ID + "," + Empleados.ID_EMPLEADO + "," + Empleados.NOMBRES;
+                    query += "," + Empleados.APELLIDO_PATERNO + "," + Empleados.APELLIDO_MAERNO + "," + Empleados.FOTO;
+                    query += "," + Tablas.CARGO + "." + Cargos.DESCRIPCION;
+                    query += " from " + EMPLEADO_CARGO + " where " + Empleados.ELIMINADO + " = 0 limit ?,?";
+
+                    c = bd.rawQuery(query, new String[]{String.valueOf(offSetActual),String.valueOf(offSet)});
+                }
+
+                if (Empleados.tieneFiltroBusqueda(uri)){
+                    String parametroConsulta="";
+                    parametroConsulta=String.valueOf( uri.getQueryParameter(Empleados.PARAMETRO_FILTRO_BUSQUEDA)) ;
+
+                    String query = "select " + Tablas.EMPLEADO + "." + BaseColumns._ID + "," + Empleados.ID_EMPLEADO + "," + Empleados.NOMBRES;
+                    query += "," + Empleados.APELLIDO_PATERNO + "," + Empleados.APELLIDO_MAERNO + "," + Empleados.FOTO;
+                    query += "," + Tablas.CARGO + "." + Cargos.DESCRIPCION;
+                    query += " from " + EMPLEADO_CARGO + " where " + Empleados.ELIMINADO + " = 0 ";
+                    query += " and (  (" + Empleados.NOMBRES + " like \'%" + parametroConsulta + "%\' ";
+                    query += "           or " + Empleados.APELLIDO_PATERNO + " like \'%" + parametroConsulta + "%\' ";
+                    query += "           or " + Empleados.APELLIDO_MAERNO + " like \'%" + parametroConsulta + "%\'  ) ";
+                    query += "        or  ((" + Empleados.NOMBRES + " || " + "\' \'" + " || " + Empleados.APELLIDO_PATERNO + " || " + "\' \'" + " || " + Empleados.APELLIDO_MAERNO + ") like \'%" + parametroConsulta + "%\' ) ) ";
+                    query += " limit ?,?";
+                    c = bd.rawQuery(query, new String[]{String.valueOf(offSetActual),String.valueOf(offSet)});
+                }
 
                 break;
             case EMPLEADOS_ID:

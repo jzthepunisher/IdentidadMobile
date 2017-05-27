@@ -44,6 +44,11 @@ implements SimpleDialog.OnSimpleDialogListener {
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,14 +57,11 @@ implements SimpleDialog.OnSimpleDialogListener {
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_edit:
+                muestraPantallaEdicion();
+                break;
             case R.id.action_delete:
                 // Obtención del manejador de fragmentos
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -69,13 +71,31 @@ implements SimpleDialog.OnSimpleDialogListener {
         return super.onOptionsItemSelected(item);
     }
 
+    private void muestraPantallaEdicion() {
+        Intent intent = new Intent(this, EmpleadoAdicionarEditarActivity.class);
+        intent.putExtra(EmpleadoAdicionarEditarActivity.EXTRA_ID_EMPLEADO, idEmpleado);
+        startActivityForResult(intent, EmpleadoListadoFragment.REQUEST_ACTUALIZAR_ELIMINAR_EMPLEADO);
+    }
+   /* @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                // Obtención del manejador de fragmentos
+                //FragmentManager fragmentManager = getSupportFragmentManager();
+                //new SimpleDialog().show(fragmentManager, "SimpleDialog");
+                //break;
+            default:
+                return false;
+        }
+        return super.onOptionsItemSelected(item);
+    }*/
+
     private void eliminarEmpleadoLocalmente(){
         Intent intent = new Intent(this, EmpleadoServicioLocal.class);
         intent.setAction(EmpleadoServicioLocal.ACCION_ELIMINAR_EMPLEADO_ISERVICE);
         intent.putExtra(EmpleadoServicioLocal.EXTRA_ID_EMPLEADO, idEmpleado);
         startService(intent);
     }
-
 
     @Override
     public void onPossitiveButtonClick() {
@@ -91,7 +111,6 @@ implements SimpleDialog.OnSimpleDialogListener {
                 Toast.LENGTH_LONG)
                 .show();
     }
-
 
     private void muestraPantallaListadoEmpleado () {
         setResult(Activity.RESULT_OK );

@@ -29,20 +29,26 @@ import com.soloparaapasionados.identidadmobile.actividades.EmpleadoAdicionarEdit
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoDetalleActivity;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoListadoActivity;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosListaAdaptador;
+import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosSugerenciaListaAdaptador;
 import com.soloparaapasionados.identidadmobile.helper.DividerItemDecoration;
 import com.soloparaapasionados.identidadmobile.observadores.MiObervador;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 
 public class EmpleadoListadoFragment extends Fragment
-        implements EmpleadosListaAdaptador.OnItemClickListener,LoaderManager.LoaderCallbacks<Cursor>{
+        implements EmpleadosListaAdaptador.OnItemClickListener,
+        EmpleadosSugerenciaListaAdaptador.OnItemClickListener,
+        LoaderManager.LoaderCallbacks<Cursor>{
 
     private RecyclerView recyclerViewListadoEmpleado;
+    private RecyclerView recyclerViewListadoEmpleadoSugerencia;
     private LinearLayoutManager linearLayoutManager;
     private EmpleadosListaAdaptador empleadosListaAdaptador;
+    private EmpleadosSugerenciaListaAdaptador empleadosListaAdaptadorsSugerencia;
     private SwipeRefreshLayout swipeRefreshLayoutEmpleadoListado;
     private FloatingActionButton floatingActionButtonAdicionar;
     private int offSetInicial=0;
 
+    public static final String EXTRA_FILTRO_BUSQUEDA="extra_filtro_busqueda";
     public static final int REQUEST_ACTUALIZAR_ELIMINAR_EMPLEADO = 2;
     private boolean aptoParaCargar;
 
@@ -70,6 +76,18 @@ public class EmpleadoListadoFragment extends Fragment
         empleadosListaAdaptador = new EmpleadosListaAdaptador(getActivity(), this);
         recyclerViewListadoEmpleado.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerViewListadoEmpleado.setAdapter(empleadosListaAdaptador);
+
+        //Preparar lista de Empleados de Sugerencias
+        recyclerViewListadoEmpleadoSugerencia = (RecyclerView) root.findViewById(R.id.recyclerViewListadoEmpleadoSugerencia);
+        recyclerViewListadoEmpleadoSugerencia.setHasFixedSize(true);
+
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerViewListadoEmpleadoSugerencia.setLayoutManager(linearLayoutManager);
+
+        empleadosListaAdaptadorsSugerencia = new EmpleadosSugerenciaListaAdaptador(getActivity(), this);
+        recyclerViewListadoEmpleadoSugerencia.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        recyclerViewListadoEmpleadoSugerencia.setAdapter(empleadosListaAdaptadorsSugerencia);
+
 
         floatingActionButtonAdicionar = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButtonAdicionar);
         floatingActionButtonAdicionar.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +158,11 @@ public class EmpleadoListadoFragment extends Fragment
         muestraPantallaDetalle(idEmpleado);
     }
 
+    @Override
+    public void onClick(EmpleadosSugerenciaListaAdaptador.ViewHolder holder, String idEmpleado) {
+        muestraPantallaDetalle(idEmpleado);
+    }
+
     //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -147,6 +170,9 @@ public class EmpleadoListadoFragment extends Fragment
         switch (id){
             case 1:
                 return new CursorLoader(getActivity(), Empleados.crearUriEmpleadoOffSet(String.valueOf(offSetInicial)), null, null, null, null);
+            case 2:
+                String filtroBusqueda= args.getString(EXTRA_FILTRO_BUSQUEDA);
+                return new  CursorLoader(getActivity(), Empleados.crearUriEmpleadoConFiltroBusqueda(filtroBusqueda), null, null, null, null);
         }
         return null;
     }
@@ -162,6 +188,13 @@ public class EmpleadoListadoFragment extends Fragment
                         empleadosListaAdaptador.swapCursor(data);
                         aptoParaCargar=true;
                         //swipeRefreshLayoutEmpleadoListado.setRefreshing(false);
+                    }
+                }
+                break;
+            case 2:
+                if(data!=null){
+                    if (empleadosListaAdaptador != null) {
+                        empleadosListaAdaptadorsSugerencia.swapCursor(data);
                     }
                 }
                 break;
@@ -195,11 +228,31 @@ public class EmpleadoListadoFragment extends Fragment
         }
     }
 
-
-
     private void muestraMensajeSalvadoSatisfactorio() {
         Toast.makeText(getActivity(),
                 "Empleado guardado correctamente", Toast.LENGTH_SHORT).show();
+    }
+
+    public void muestraSugerenciaEmpleados(){
+        this.recyclerViewListadoEmpleadoSugerencia.setVisibility(View.VISIBLE);
+        this.recyclerViewListadoEmpleado.setVisibility(View.GONE);
+    }
+
+    public void ocultaSugerenciaEmpleados(){
+        this.recyclerViewListadoEmpleadoSugerencia.setVisibility(View.GONE);
+        this.recyclerViewListadoEmpleado.setVisibility(View.VISIBLE);
+    }
+
+    public void filtrarEmpleados(String consultaBusqueda){
+        // Iniciar loader
+        Bundle bundle=new Bundle();
+        bundle.putString(EXTRA_FILTRO_BUSQUEDA,consultaBusqueda);
+        getActivity().getSupportLoaderManager().restartLoader(2,bundle,  this);
+    }
+
+    public void limpiarSugerenciaEmpleados(){
+        // Iniciar loader
+        empleadosListaAdaptador.swapCursor(null);
     }
 
 }

@@ -93,8 +93,10 @@ public class ContratoCotizacion {
     public static class Empleados implements ColumnasEmpleado {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_EMPLEADOS).build();
-        public static final String PARAMETRO_CONSULTA = "off_set";
 
+        public static final String PARAMETRO_CONSULTA = "off_set";
+        public static final String PARAMETRO_FILTRO_BUSQUEDA = "filtro_busqueda";
+        //public static final String FILTRO_CLIENTE = "nombres_completos";
 
         public static String obtenerIdEmpleado(Uri uri) {
             return uri.getPathSegments().get(1);
@@ -108,8 +110,16 @@ public class ContratoCotizacion {
             return URI_CONTENIDO.buildUpon().appendQueryParameter("off_set",offSet).build();
         }
 
+        public static Uri crearUriEmpleadoConFiltroBusqueda(String filtro) {
+            return URI_CONTENIDO.buildUpon().appendQueryParameter(PARAMETRO_FILTRO_BUSQUEDA,filtro).build();
+        }
+
         public static boolean tieneOffSet(Uri uri) {
             return uri != null && uri.getQueryParameter(PARAMETRO_CONSULTA) != null;
+        }
+
+        public static boolean tieneFiltroBusqueda(Uri uri) {
+            return uri != null && uri.getQueryParameter(PARAMETRO_FILTRO_BUSQUEDA) != null;
         }
     }
 
