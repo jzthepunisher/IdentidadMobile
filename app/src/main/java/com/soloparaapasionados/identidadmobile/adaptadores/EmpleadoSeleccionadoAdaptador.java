@@ -1,13 +1,12 @@
 package com.soloparaapasionados.identidadmobile.adaptadores;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +17,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
-import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
+
 
 /**
  * Created by USUARIO on 27/05/2017.
@@ -33,6 +30,9 @@ import java.util.ListIterator;
 public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<EmpleadoSeleccionadoAdaptador.ViewHolder> {
     private final Context contexto;
     private List<Empleado> empleados = new ArrayList<>();
+
+    HashMap<String,Integer> elementosSeleccionadosListado ;
+    HashMap<String,Integer> elementosSeleccionados ;
 
     private EmpleadoSeleccionadoAdaptador.OnItemClickListener escucha;
 
@@ -74,6 +74,9 @@ public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<Empleado
     public EmpleadoSeleccionadoAdaptador(Context contexto, EmpleadoSeleccionadoAdaptador.OnItemClickListener escucha) {
         this.contexto = contexto;
         this.escucha = escucha;
+
+        this.elementosSeleccionadosListado = new HashMap<String,Integer>();
+        this.elementosSeleccionados= new HashMap<String,Integer>();
     }
 
     @Override
@@ -86,10 +89,14 @@ public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<Empleado
     public void onBindViewHolder(EmpleadoSeleccionadoAdaptador.ViewHolder holder, int position) {
         Empleado empleado= empleados.get(position);
 
+        /*if (!elementosSeleccionados.containsKey(empleado.getIdEmpleado())) {
+            elementosSeleccionados.put(empleado.getIdEmpleado(), position);
+        }*/
+
         String s,nombresCompletos;
 
         // Asignación UI
-        nombresCompletos = empleado.getApellidoPaterno();
+        nombresCompletos = String.valueOf(position) + ' ' + empleado.getApellidoPaterno();
         nombresCompletos += " " + empleado.getApellidoMaterno();
         nombresCompletos += " " +  empleado.getNombres();
 
@@ -134,8 +141,32 @@ public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<Empleado
         return empleados;
     }
 
-    public void adicionarIem( Empleado empleado) {
-        empleados.add(empleado);
+    public void adicionarIem( Empleado empleado,int posicionListaEmpleado) {
+
+        buscaIndiceData(empleado);
+
         notifyDataSetChanged();
     }
+
+    private void buscaIndiceData(Empleado empleado){
+        int tamanoData=empleados.size();
+        int indiceSeleccionado=-1;
+
+        for(int indice=0;indice<tamanoData;indice++) {
+            Empleado empleadoElemento = empleados.get(indice);
+            if (empleadoElemento.getIdEmpleado().equals(empleado.getIdEmpleado())){
+                indiceSeleccionado=indice;
+               break;
+            }
+        }
+
+        if (indiceSeleccionado==-1){
+            empleados.add(empleado);
+        }else {
+            empleados.remove(indiceSeleccionado);
+        }
+
+
+    }
+
 }

@@ -194,10 +194,12 @@ public class EmpleadoListadoFragment extends Fragment
     }
 
     @Override
-    public void onClick(EmpleadosListaAdaptador.ViewHolder holder, String idEmpleado,int position) {
+    public void onClick(EmpleadosListaAdaptador.ViewHolder holder, String idEmpleado,int posicion) {
         if (mImei!=null){
-            Empleado empleado= empleadosListaAdaptador.obtenerEmpleado(position);
-            empleadoSeleccionadoAdaptador.adicionarIem(empleado);
+            Empleado empleado= empleadosListaAdaptador.obtenerEmpleado(posicion);
+            empleadoSeleccionadoAdaptador.adicionarIem(empleado,posicion);
+            empleadosListaAdaptador.cambiaSeleccion(posicion);
+
             if (empleadoSeleccionadoAdaptador.getItemCount()>0){
                 this.recyclerViewEmpleadoSeleccionados.setVisibility(View.VISIBLE);
                 //linearLayoutManagerHorizontal.scrollToPositionWithOffset(empleadoSeleccionadoAdaptador.getItemCount(), 0);

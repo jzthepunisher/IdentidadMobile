@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,9 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
 public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosListaAdaptador.ViewHolder> {
     private final Context contexto;
     private Cursor items;
+
+    private SparseBooleanArray elementosSeleccionados;
+    private static int indiceSeleccionadoActual = -1;
 
     private OnItemClickListener escucha;
 
@@ -78,12 +82,14 @@ public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosLista
     public EmpleadosListaAdaptador(Context contexto, OnItemClickListener escucha) {
         this.contexto = contexto;
         this.escucha = escucha;
+
+        this.elementosSeleccionados = new SparseBooleanArray();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_empleado, parent, false);
-        return new ViewHolder(v);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_empleado, parent, false);
+        return new ViewHolder(itemView);
     }
 
     @Override
@@ -100,6 +106,9 @@ public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosLista
         holder.textViewNombresEmpleado.setText(nombresCompletos);
 
         holder.textViewDescripcionCargoEmpleado.setText(items.getString(items.getColumnIndex(Cargos.DESCRIPCION)));
+
+        // change the row state to activated
+        holder.itemView.setActivated(elementosSeleccionados.get(position, false));
 
         s = items.getString(items.getColumnIndex(Empleados.FOTO));
 
@@ -138,5 +147,17 @@ public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosLista
 
     public Cursor getCursor() {
         return items;
+    }
+
+    public void cambiaSeleccion(int posicion) {
+        indiceSeleccionadoActual = posicion;
+        if (elementosSeleccionados.get(posicion, false)) {
+            elementosSeleccionados.delete(posicion);
+            //animationItemsIndex.delete(posicion);
+        } else {
+            elementosSeleccionados.put(posicion, true);
+            //animationItemsIndex.put(posicion, true);
+        }
+        notifyItemChanged(posicion);
     }
 }
