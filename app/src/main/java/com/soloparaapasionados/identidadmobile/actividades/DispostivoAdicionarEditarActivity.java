@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -50,6 +51,8 @@ public class DispostivoAdicionarEditarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dispositivo_adicionar_editar);
 
+        setupWindowAnimations();
+
         //Establec el toolbar de la actividad.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,6 +72,10 @@ public class DispostivoAdicionarEditarActivity extends AppCompatActivity {
                     .add(R.id.dispositivo_adicionar_editar_container, dispositivoAdicionarEditarFragment)
                     .commit();
         }
+    }
+    private void setupWindowAnimations() {
+        getWindow().setReenterTransition(new Explode());
+        getWindow().setExitTransition(new Explode().setDuration(500));
     }
 
    /* @Override

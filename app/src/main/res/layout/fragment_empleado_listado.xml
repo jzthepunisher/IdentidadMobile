@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:animateLayoutChanges="true"
         android:padding="0dp">
 
     <android.support.v7.widget.RecyclerView
@@ -13,7 +14,6 @@
         android:id="@+id/recyclerViewEmpleadoSeleccionados"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:visibility="gone"
         android:layout_below="@+id/recyclerViewListadoEmpleado" />
 
@@ -30,7 +30,6 @@
         android:id="@+id/recyclerViewListadoEmpleadoSugerencia"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent"
         android:visibility="gone"
         android:layout_below="@+id/recyclerViewListadoEmpleado" />
 

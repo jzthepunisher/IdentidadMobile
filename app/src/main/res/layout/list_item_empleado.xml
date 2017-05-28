@@ -7,6 +7,8 @@
     android:minHeight="?listPreferredItemHeight"
     android:background="@drawable/bg_list_row"
     android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:clickable="true"
+    android:focusable="true"
     android:paddingRight="@dimen/activity_horizontal_margin">
 
     <ImageView

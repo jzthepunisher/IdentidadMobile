@@ -141,9 +141,16 @@ public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<Empleado
         return empleados;
     }
 
-    public void adicionarIem( Empleado empleado,int posicionListaEmpleado) {
+    public void adicionarIem(Empleado empleado) {
 
         buscaIndiceData(empleado);
+
+        notifyDataSetChanged();
+    }
+
+    public void adicionarIem(String idEmpleado) {
+
+        buscaIndiceData(idEmpleado);
 
         notifyDataSetChanged();
     }
@@ -166,7 +173,28 @@ public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<Empleado
             empleados.remove(indiceSeleccionado);
         }
 
+    }
+
+    private void buscaIndiceData(String idEmpleado){
+        int tamanoData=empleados.size();
+        int indiceSeleccionado=-1;
+
+        for(int indice=0;indice<tamanoData;indice++) {
+            Empleado empleadoElemento = empleados.get(indice);
+            if (empleadoElemento.getIdEmpleado().equals(idEmpleado)){
+                indiceSeleccionado=indice;
+                break;
+            }
+        }
+
+        if (indiceSeleccionado==-1){
+            //empleados.add(empleado);
+        }else {
+            empleados.remove(indiceSeleccionado);
+        }
 
     }
+
+
 
 }

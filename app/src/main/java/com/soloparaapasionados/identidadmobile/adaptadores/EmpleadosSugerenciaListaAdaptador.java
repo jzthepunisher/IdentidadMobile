@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 
 /**
@@ -26,11 +28,13 @@ public class EmpleadosSugerenciaListaAdaptador
         extends RecyclerView.Adapter<EmpleadosSugerenciaListaAdaptador.ViewHolder> {
     private final Context contexto;
     private Cursor items;
+    private static int indiceSeleccionadoActual = -1;
+    private SparseBooleanArray elementosSeleccionados;
 
     private EmpleadosSugerenciaListaAdaptador.OnItemClickListener escucha;
 
     public interface OnItemClickListener {
-        public void onClick(EmpleadosSugerenciaListaAdaptador.ViewHolder holder, String idEmpleado);
+        public void onClick(EmpleadosSugerenciaListaAdaptador.ViewHolder holder, String idEmpleado,int posicion);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -50,7 +54,7 @@ public class EmpleadosSugerenciaListaAdaptador
 
         @Override
         public void onClick(View view) {
-            escucha.onClick(this, obtenerIdEmpleado(getAdapterPosition()));
+            escucha.onClick(this, obtenerIdEmpleado(getAdapterPosition()),getAdapterPosition());
         }
     }
 
@@ -66,6 +70,8 @@ public class EmpleadosSugerenciaListaAdaptador
     public EmpleadosSugerenciaListaAdaptador(Context contexto, EmpleadosSugerenciaListaAdaptador.OnItemClickListener escucha) {
         this.contexto = contexto;
         this.escucha = escucha;
+
+        this.elementosSeleccionados = new SparseBooleanArray();
     }
 
     @Override
@@ -126,5 +132,27 @@ public class EmpleadosSugerenciaListaAdaptador
 
     public Cursor getCursor() {
         return items;
+    }
+
+    public Empleado obtenerEmpleado(int posicion) {
+        if (items != null) {
+            if (items.moveToPosition(posicion)) {
+                Empleado empleado=new Empleado(items);
+                return empleado;
+            }
+        }
+        return null;
+    }
+
+    public void cambiaSeleccion(int posicion) {
+        indiceSeleccionadoActual = posicion;
+        if (elementosSeleccionados.get(posicion, false)) {
+            elementosSeleccionados.delete(posicion);
+            //animationItemsIndex.delete(posicion);
+        } else {
+            elementosSeleccionados.put(posicion, true);
+            //animationItemsIndex.put(posicion, true);
+        }
+        notifyItemChanged(posicion);
     }
 }

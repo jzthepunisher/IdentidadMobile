@@ -12,6 +12,6 @@
     <color name="md_white_1000">#ffffff</color>
 
     <color name="bg_action_mode">#757575</color>
-    <color name="row_activated">#e0e0e0</color>
+    <color name="row_activated">#BDBDBD</color>
     <color name="colorContraste">#EDEDED</color>
 </resources>

@@ -1,6 +1,7 @@
 package com.soloparaapasionados.identidadmobile.fragmentos;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentProviderOperation;
@@ -81,6 +82,7 @@ public class DispositivoAdicionarEditarFragment extends Fragment
     private EmpleadosListaAdaptador empleadosListaAdaptador;
 
     LinearLayout linearLayoutAnadirEmpleado;
+    LinearLayout linearLayoutContenedor;
 
     PendingIntent sentPI, deliveredPI;
     String SENT = "SMS_SENT";
@@ -148,18 +150,7 @@ public class DispositivoAdicionarEditarFragment extends Fragment
         switchCompatMensajeValidado.setChecked(false);
 
         linearLayoutAnadirEmpleado=(LinearLayout) root.findViewById(R.id.linearLayoutAnadirEmpleado);
-
-        // Preparar lista
-        /*recyclerViewListadoEmpleadoAsignados = (RecyclerView) root.findViewById(R.id.recyclerViewListadoEmpleadoAsignados);
-        recyclerViewListadoEmpleadoAsignados.setHasFixedSize(true);
-
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerViewListadoEmpleadoAsignados.setLayoutManager(linearLayoutManager);
-
-        empleadoSeleccionadoAdaptador = new EmpleadoSeleccionadoAdaptador(getActivity(), this);
-        recyclerViewListadoEmpleadoAsignados.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.HORIZONTAL));
-        recyclerViewListadoEmpleadoAsignados.setAdapter(empleadoSeleccionadoAdaptador);*/
+        linearLayoutContenedor=(LinearLayout) root.findViewById(R.id.linearLayoutContenedor);
 
         // Preparar lista
         recyclerViewListadoEmpleado = (RecyclerView) root.findViewById(R.id.recyclerViewListadoEmpleado);
@@ -202,9 +193,14 @@ public class DispositivoAdicionarEditarFragment extends Fragment
     }
 
     private void muestraListadoEmpleado(String imei){
+
         Intent intent = new Intent(getActivity(), EmpleadoListadoActivity.class);
         intent.putExtra(DispostivoAdicionarEditarActivity.EXTRA_IMEI, imei);
-        startActivityForResult(intent, REQUEST_SELECCION_EMPLEADO);
+
+        ActivityOptions options0 = ActivityOptions.makeSceneTransitionAnimation(getActivity());
+        //getActivity().startActivity(intent, options0.toBundle());
+
+        startActivityForResult(intent, REQUEST_SELECCION_EMPLEADO, options0.toBundle());
     }
 
     @Override

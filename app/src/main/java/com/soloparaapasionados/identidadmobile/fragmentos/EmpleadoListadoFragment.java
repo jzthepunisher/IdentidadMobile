@@ -14,6 +14,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -50,7 +51,7 @@ public class EmpleadoListadoFragment extends Fragment
     private LinearLayoutManager linearLayoutManagerHorizontal;
 
     private EmpleadosListaAdaptador empleadosListaAdaptador;
-    private EmpleadosSugerenciaListaAdaptador empleadosListaAdaptadorsSugerencia;
+    private EmpleadosSugerenciaListaAdaptador empleadosSugerenciaListaAdaptador;
     private EmpleadoSeleccionadoAdaptador empleadoSeleccionadoAdaptador;
 
     private SwipeRefreshLayout swipeRefreshLayoutEmpleadoListado;
@@ -91,7 +92,6 @@ public class EmpleadoListadoFragment extends Fragment
         setHasOptionsMenu(true);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -116,9 +116,9 @@ public class EmpleadoListadoFragment extends Fragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerViewListadoEmpleadoSugerencia.setLayoutManager(linearLayoutManager);
 
-        empleadosListaAdaptadorsSugerencia = new EmpleadosSugerenciaListaAdaptador(getActivity(), this);
+        empleadosSugerenciaListaAdaptador = new EmpleadosSugerenciaListaAdaptador(getActivity(), this);
         recyclerViewListadoEmpleadoSugerencia.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        recyclerViewListadoEmpleadoSugerencia.setAdapter(empleadosListaAdaptadorsSugerencia);
+        recyclerViewListadoEmpleadoSugerencia.setAdapter(empleadosSugerenciaListaAdaptador);
 
         //Preparar lista de Empleados de Seleccionados
         recyclerViewEmpleadoSeleccionados = (RecyclerView) root.findViewById(R.id.recyclerViewEmpleadoSeleccionados);
@@ -130,9 +130,8 @@ public class EmpleadoListadoFragment extends Fragment
 
         empleadoSeleccionadoAdaptador = new EmpleadoSeleccionadoAdaptador(getActivity(), this);
         recyclerViewEmpleadoSeleccionados.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        recyclerViewEmpleadoSeleccionados.setItemAnimator(new DefaultItemAnimator());
         recyclerViewEmpleadoSeleccionados.setAdapter(empleadoSeleccionadoAdaptador);
-
-
 
         floatingActionButtonAdicionar = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButtonAdicionar);
         floatingActionButtonAdicionar.setOnClickListener(new View.OnClickListener() {
@@ -182,11 +181,14 @@ public class EmpleadoListadoFragment extends Fragment
             }
         });
 
+
         // Iniciar loader
         getActivity().getSupportLoaderManager().restartLoader(1, null,  this);
 
         return root;
     }
+
+
 
     private void muestraPatallaAdicionarEditar() {
         Intent intent = new Intent(getActivity(), EmpleadoAdicionarEditarActivity.class);
@@ -197,7 +199,7 @@ public class EmpleadoListadoFragment extends Fragment
     public void onClick(EmpleadosListaAdaptador.ViewHolder holder, String idEmpleado,int posicion) {
         if (mImei!=null){
             Empleado empleado= empleadosListaAdaptador.obtenerEmpleado(posicion);
-            empleadoSeleccionadoAdaptador.adicionarIem(empleado,posicion);
+            empleadoSeleccionadoAdaptador.adicionarIem(empleado);
             empleadosListaAdaptador.cambiaSeleccion(posicion);
 
             if (empleadoSeleccionadoAdaptador.getItemCount()>0){
@@ -213,9 +215,20 @@ public class EmpleadoListadoFragment extends Fragment
     }
 
     @Override
-    public void onClick(EmpleadosSugerenciaListaAdaptador.ViewHolder holder, String idEmpleado) {
+    public void onClick(EmpleadosSugerenciaListaAdaptador.ViewHolder holder, String idEmpleado,int posicion) {
         if (mImei!=null){
+            Empleado empleado= empleadosSugerenciaListaAdaptador.obtenerEmpleado(posicion);
+            empleadoSeleccionadoAdaptador.adicionarIem(empleado);
+            empleadosSugerenciaListaAdaptador.cambiaSeleccion(posicion);
+            empleadosListaAdaptador.buscaIndiceData(idEmpleado);
 
+            if (empleadoSeleccionadoAdaptador.getItemCount()>0){
+                this.recyclerViewEmpleadoSeleccionados.setVisibility(View.VISIBLE);
+                //linearLayoutManagerHorizontal.scrollToPositionWithOffset(empleadoSeleccionadoAdaptador.getItemCount(), 0);
+                recyclerViewEmpleadoSeleccionados.scrollToPosition(empleadoSeleccionadoAdaptador.getItemCount()-1);
+            }else{
+                this.recyclerViewEmpleadoSeleccionados.setVisibility(View.GONE);
+            }
         }else{
             muestraPantallaDetalle(idEmpleado);
         }
@@ -223,8 +236,18 @@ public class EmpleadoListadoFragment extends Fragment
     }
 
     @Override
-    public void onClick(EmpleadoSeleccionadoAdaptador.ViewHolder holder, String idEmpleado,int position) {
+    public void onClick(EmpleadoSeleccionadoAdaptador.ViewHolder holder, String idEmpleado,int posicion) {
         if (mImei!=null){
+
+            empleadoSeleccionadoAdaptador.adicionarIem(idEmpleado);
+            empleadosListaAdaptador.buscaIndiceData(idEmpleado);
+
+            if (empleadoSeleccionadoAdaptador.getItemCount()>0){
+                this.recyclerViewEmpleadoSeleccionados.setVisibility(View.VISIBLE);
+                recyclerViewEmpleadoSeleccionados.scrollToPosition(empleadoSeleccionadoAdaptador.getItemCount()-1);
+            }else{
+                this.recyclerViewEmpleadoSeleccionados.setVisibility(View.GONE);
+            }
 
         }else{
             muestraPantallaDetalle(idEmpleado);
@@ -263,7 +286,7 @@ public class EmpleadoListadoFragment extends Fragment
             case 2:
                 if(data!=null){
                     if (empleadosListaAdaptador != null) {
-                        empleadosListaAdaptadorsSugerencia.swapCursor(data);
+                        empleadosSugerenciaListaAdaptador.swapCursor(data);
                     }
                 }
                 break;

@@ -57,6 +57,7 @@ public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosLista
         @Override
         public void onClick(View view) {
             escucha.onClick(this, obtenerIdEmpleado(getAdapterPosition()),getAdapterPosition());
+
         }
     }
 
@@ -159,5 +160,36 @@ public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosLista
             //animationItemsIndex.put(posicion, true);
         }
         notifyItemChanged(posicion);
+    }
+
+    public void buscaIndiceData(String idEmpleado){
+        int tamanoData=items.getCount();
+        int indiceSeleccionado=-1;
+        String idEmpleadoElemento;
+
+        for(int indice=0;indice<tamanoData;indice++) {
+            items.moveToPosition(indice);
+            idEmpleadoElemento = items.getString(items.getColumnIndex(Empleados.ID_EMPLEADO));
+            if (idEmpleadoElemento.equals(idEmpleado)){
+                indiceSeleccionado=indice;
+                break;
+            }
+        }
+
+        if (indiceSeleccionado==-1){
+            //empleados.add(empleado);
+        }else {
+
+            if (elementosSeleccionados.get(indiceSeleccionado, false)) {
+                //elementosSeleccionados.delete(indiceSeleccionado);
+                elementosSeleccionados.delete(indiceSeleccionado);
+            } else {
+                elementosSeleccionados.put(indiceSeleccionado, true);
+            }
+
+            //notifyDataSetChanged();
+            notifyItemChanged(indiceSeleccionado);
+        }
+
     }
 }

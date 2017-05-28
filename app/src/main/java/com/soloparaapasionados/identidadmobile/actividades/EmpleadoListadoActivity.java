@@ -6,14 +6,22 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
@@ -31,6 +39,7 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empleado_listado);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,7 +63,42 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.empleados_listado_container, empleadoListadoFragment).commit();
         }
 
+        Window window = getWindow();
+        // Elegir transiciones
+        int position=2;
+        switch (position) {
+            // EXPLODE
+            case 0:
+                Explode t0 = new Explode();
+                window.setEnterTransition(t0);
+                break;
+            // SLIDE
+            case 1:
+                Slide t1 = new Slide();
+                t1.setSlideEdge(Gravity.END);
+                window.setEnterTransition(t1);
+                break;
+            // FADE
+            case 2:
+                Fade t2 = new Fade();
+                window.setEnterTransition(t2);
+                break;
+            // PERSONALIZADA
+            case 3:
+                Transition t3 = TransitionInflater.from(this)
+                        .inflateTransition(R.transition.detail_enter_transition);
+                window.setEnterTransition(t3);
+                break;
+            // POR DEFECTO
+            case 5:
+                window.setEnterTransition(null);
+                break;
+
+        }
+
     }
+
+
 
     private void setToolbar() {
         // Añadir la Toolbar

@@ -40,6 +40,7 @@
             android:name=".actividades.EmpleadoListadoActivity"
             android:label="@string/title_activity_empleado_listado"
             android:launchMode="singleTop"
+            android:parentActivityName=".actividades.DispostivoAdicionarEditarActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>
@@ -61,6 +62,10 @@
             <!-- Points to searchable activity so the whole app can invoke search. -->
             <meta-data android:name="android.app.default_searchable"
                 android:value=".SearchableDictionary" />
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".actividades.DispostivoAdicionarEditarActivity" />
 
         </activity>
 
