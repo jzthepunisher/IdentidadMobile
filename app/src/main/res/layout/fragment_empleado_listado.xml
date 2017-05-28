@@ -10,23 +10,30 @@
 
     <android.support.v7.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/recyclerViewListadoEmpleado"
+        android:id="@+id/recyclerViewEmpleadoSeleccionados"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/app_bar"
-        />
+        android:layout_height="wrap_content"
+
+        android:visibility="gone"
+        android:layout_below="@+id/recyclerViewListadoEmpleado" />
 
     <android.support.v7.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/recyclerViewListadoEmpleado"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/app_bar" />
+
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/recyclerViewListadoEmpleadoSugerencia"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorAccent"
         android:visibility="gone"
-        android:layout_below="@+id/recyclerViewListadoEmpleado"
-        />
+        android:layout_below="@+id/recyclerViewListadoEmpleado" />
+
     </LinearLayout>
 
 

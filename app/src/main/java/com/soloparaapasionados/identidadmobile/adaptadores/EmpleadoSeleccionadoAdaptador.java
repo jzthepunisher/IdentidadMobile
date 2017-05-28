@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +17,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by USUARIO on 27/05/2017.
@@ -24,12 +32,12 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Emplead
 
 public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<EmpleadoSeleccionadoAdaptador.ViewHolder> {
     private final Context contexto;
-    private Cursor items;
+    private List<Empleado> empleados = new ArrayList<>();
 
     private EmpleadoSeleccionadoAdaptador.OnItemClickListener escucha;
 
     public interface OnItemClickListener {
-        public void onClick(EmpleadoSeleccionadoAdaptador.ViewHolder holder, String idEmpleado);
+        public void onClick(EmpleadoSeleccionadoAdaptador.ViewHolder holder, String idEmpleado,int position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -49,14 +57,15 @@ public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<Empleado
 
         @Override
         public void onClick(View view) {
-            escucha.onClick(this, obtenerIdEmpleado(getAdapterPosition()));
+            escucha.onClick(this, obtenerIdEmpleado(getAdapterPosition()),getAdapterPosition());
         }
     }
 
     private String obtenerIdEmpleado(int posicion) {
-        if (items != null) {
-            if (items.moveToPosition(posicion)) {
-                return items.getString(items.getColumnIndex(Empleados.ID_EMPLEADO));
+        if (empleados != null) {
+            Empleado empleado =empleados.get(posicion);
+            if (empleado!=null){
+                return empleado.getIdEmpleado();
             }
         }
         return null;
@@ -75,18 +84,18 @@ public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<Empleado
 
     @Override
     public void onBindViewHolder(EmpleadoSeleccionadoAdaptador.ViewHolder holder, int position) {
-        items.moveToPosition(position);
+        Empleado empleado= empleados.get(position);
 
         String s,nombresCompletos;
 
         // Asignación UI
-        nombresCompletos = items.getString(items.getColumnIndex(Empleados.APELLIDO_PATERNO));
-        nombresCompletos += " " + items.getString(items.getColumnIndex(Empleados.APELLIDO_MAERNO));
-        nombresCompletos += " " + items.getString(items.getColumnIndex(Empleados.NOMBRES));
+        nombresCompletos = empleado.getApellidoPaterno();
+        nombresCompletos += " " + empleado.getApellidoMaterno();
+        nombresCompletos += " " +  empleado.getNombres();
 
         holder.textViewNombresEmpleado.setText(nombresCompletos);
 
-        s = items.getString(items.getColumnIndex(Empleados.FOTO));
+        s = empleado.getFoto();
 
         final ImageView imageViewFotoEmpleado = holder.imageViewFotoEmpleado;
         //Glide.with(contexto).load(s).error(R.drawable.ic_account_circle_black_24dp).centerCrop().into(holder.imageViewFotoEmpleado);
@@ -109,19 +118,24 @@ public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<Empleado
 
     @Override
     public int getItemCount() {
-        if (items != null)
-            return items.getCount();
+        if (empleados != null)
+            return empleados.size();
         return 0;
     }
 
-    public void swapCursor(Cursor nuevoCursor) {
-        if (nuevoCursor != null) {
-            items = nuevoCursor;
+    public void swapData(List<Empleado> nuevoEmpleados) {
+        if (nuevoEmpleados != null) {
+            empleados = nuevoEmpleados;
             notifyDataSetChanged();
         }
     }
 
-    public Cursor getCursor() {
-        return items;
+    public List<Empleado> getData() {
+        return empleados;
+    }
+
+    public void adicionarIem( Empleado empleado) {
+        empleados.add(empleado);
+        notifyDataSetChanged();
     }
 }

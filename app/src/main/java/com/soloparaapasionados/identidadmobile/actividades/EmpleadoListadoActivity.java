@@ -21,7 +21,9 @@ import com.soloparaapasionados.identidadmobile.fragmentos.EmpleadoListadoFragmen
 
 public class EmpleadoListadoActivity extends AppCompatActivity {
 
+
     public static final String EXTRA_ID_EMPLEADO = "extra_id_empleado";
+    private String mImei=null;
     EmpleadoListadoFragment empleadoListadoFragment;
     DrawerLayout navigationDrawerLayout;
 
@@ -42,11 +44,13 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
         }
         setupNavigationDrawerContent(navigationView);
 
+        mImei = getIntent().getStringExtra(DispostivoAdicionarEditarActivity.EXTRA_IMEI);
+
         empleadoListadoFragment = (EmpleadoListadoFragment)
                 getSupportFragmentManager().findFragmentById(R.id.empleados_listado_container);
 
         if (empleadoListadoFragment == null) {
-            empleadoListadoFragment = EmpleadoListadoFragment.newInstance();
+            empleadoListadoFragment = EmpleadoListadoFragment.newInstance(mImei);
             getSupportFragmentManager().beginTransaction().add(R.id.empleados_listado_container, empleadoListadoFragment).commit();
         }
 

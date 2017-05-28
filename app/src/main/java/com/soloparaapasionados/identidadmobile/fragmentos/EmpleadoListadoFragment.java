@@ -28,28 +28,40 @@ import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoAdicionarEditarActivity;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoDetalleActivity;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoListadoActivity;
+import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadoSeleccionadoAdaptador;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosListaAdaptador;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosSugerenciaListaAdaptador;
 import com.soloparaapasionados.identidadmobile.helper.DividerItemDecoration;
+import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.observadores.MiObervador;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 
 public class EmpleadoListadoFragment extends Fragment
         implements EmpleadosListaAdaptador.OnItemClickListener,
         EmpleadosSugerenciaListaAdaptador.OnItemClickListener,
+        EmpleadoSeleccionadoAdaptador.OnItemClickListener,
         LoaderManager.LoaderCallbacks<Cursor>{
 
     private RecyclerView recyclerViewListadoEmpleado;
     private RecyclerView recyclerViewListadoEmpleadoSugerencia;
+    private RecyclerView recyclerViewEmpleadoSeleccionados;
+
     private LinearLayoutManager linearLayoutManager;
+    private LinearLayoutManager linearLayoutManagerHorizontal;
+
     private EmpleadosListaAdaptador empleadosListaAdaptador;
     private EmpleadosSugerenciaListaAdaptador empleadosListaAdaptadorsSugerencia;
+    private EmpleadoSeleccionadoAdaptador empleadoSeleccionadoAdaptador;
+
     private SwipeRefreshLayout swipeRefreshLayoutEmpleadoListado;
     private FloatingActionButton floatingActionButtonAdicionar;
     private int offSetInicial=0;
 
     public static final String EXTRA_FILTRO_BUSQUEDA="extra_filtro_busqueda";
     public static final int REQUEST_ACTUALIZAR_ELIMINAR_EMPLEADO = 2;
+    public static final String ARGUMENTO_IMEI="argumento_imei";
+    public String mImei=null;
+
     private boolean aptoParaCargar;
 
     public EmpleadoListadoFragment() {
@@ -59,6 +71,26 @@ public class EmpleadoListadoFragment extends Fragment
     public static EmpleadoListadoFragment newInstance() {
         return new EmpleadoListadoFragment();
     }
+
+    public static EmpleadoListadoFragment newInstance (String imei) {
+        EmpleadoListadoFragment fragment = new EmpleadoListadoFragment();
+        Bundle args = new Bundle();
+        args.putString(ARGUMENTO_IMEI, imei);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            mImei = getArguments().getString(ARGUMENTO_IMEI);
+        }
+
+        setHasOptionsMenu(true);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,6 +119,19 @@ public class EmpleadoListadoFragment extends Fragment
         empleadosListaAdaptadorsSugerencia = new EmpleadosSugerenciaListaAdaptador(getActivity(), this);
         recyclerViewListadoEmpleadoSugerencia.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerViewListadoEmpleadoSugerencia.setAdapter(empleadosListaAdaptadorsSugerencia);
+
+        //Preparar lista de Empleados de Seleccionados
+        recyclerViewEmpleadoSeleccionados = (RecyclerView) root.findViewById(R.id.recyclerViewEmpleadoSeleccionados);
+        recyclerViewEmpleadoSeleccionados.setHasFixedSize(true);
+
+        linearLayoutManagerHorizontal = new LinearLayoutManager(getActivity());
+        linearLayoutManagerHorizontal.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerViewEmpleadoSeleccionados.setLayoutManager(linearLayoutManagerHorizontal);
+
+        empleadoSeleccionadoAdaptador = new EmpleadoSeleccionadoAdaptador(getActivity(), this);
+        recyclerViewEmpleadoSeleccionados.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        recyclerViewEmpleadoSeleccionados.setAdapter(empleadoSeleccionadoAdaptador);
+
 
 
         floatingActionButtonAdicionar = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButtonAdicionar);
@@ -149,13 +194,40 @@ public class EmpleadoListadoFragment extends Fragment
     }
 
     @Override
-    public void onClick(EmpleadosListaAdaptador.ViewHolder holder, String idEmpleado) {
-        muestraPantallaDetalle(idEmpleado);
+    public void onClick(EmpleadosListaAdaptador.ViewHolder holder, String idEmpleado,int position) {
+        if (mImei!=null){
+            Empleado empleado= empleadosListaAdaptador.obtenerEmpleado(position);
+            empleadoSeleccionadoAdaptador.adicionarIem(empleado);
+            if (empleadoSeleccionadoAdaptador.getItemCount()>0){
+                this.recyclerViewEmpleadoSeleccionados.setVisibility(View.VISIBLE);
+                //linearLayoutManagerHorizontal.scrollToPositionWithOffset(empleadoSeleccionadoAdaptador.getItemCount(), 0);
+                recyclerViewEmpleadoSeleccionados.scrollToPosition(empleadoSeleccionadoAdaptador.getItemCount()-1);
+            }else{
+                this.recyclerViewEmpleadoSeleccionados.setVisibility(View.GONE);
+            }
+        }else{
+            muestraPantallaDetalle(idEmpleado);
+        }
     }
 
     @Override
     public void onClick(EmpleadosSugerenciaListaAdaptador.ViewHolder holder, String idEmpleado) {
-        muestraPantallaDetalle(idEmpleado);
+        if (mImei!=null){
+
+        }else{
+            muestraPantallaDetalle(idEmpleado);
+        }
+
+    }
+
+    @Override
+    public void onClick(EmpleadoSeleccionadoAdaptador.ViewHolder holder, String idEmpleado,int position) {
+        if (mImei!=null){
+
+        }else{
+            muestraPantallaDetalle(idEmpleado);
+        }
+
     }
 
     //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>

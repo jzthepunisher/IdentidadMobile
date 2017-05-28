@@ -106,15 +106,11 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
         return root;
     }
 
-
-
-
     private void muestraPantallaEdicion() {
         Intent intent = new Intent(getActivity(), EmpleadoAdicionarEditarActivity.class);
         intent.putExtra(EmpleadoAdicionarEditarActivity.EXTRA_ID_EMPLEADO, idEmpleado);
         startActivityForResult(intent, EmpleadoListadoFragment.REQUEST_ACTUALIZAR_ELIMINAR_EMPLEADO);
     }
-
 
 /*
 

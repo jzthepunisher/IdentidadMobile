@@ -41,6 +41,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.actividades.DispostivoAdicionarEditarActivity;
+import com.soloparaapasionados.identidadmobile.actividades.EmpleadoDetalleActivity;
+import com.soloparaapasionados.identidadmobile.actividades.EmpleadoListadoActivity;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadoSeleccionadoAdaptador;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosListaAdaptador;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosSugerenciaListaAdaptador;
@@ -87,6 +90,7 @@ public class DispositivoAdicionarEditarFragment extends Fragment
 
     private String mImei;
     private int offSetInicial=0;
+    public static final int REQUEST_SELECCION_EMPLEADO = 3;
 
     public DispositivoAdicionarEditarFragment() {
 
@@ -171,7 +175,8 @@ public class DispositivoAdicionarEditarFragment extends Fragment
         linearLayoutAnadirEmpleado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(),"hola añadir",Toast.LENGTH_SHORT).show();
+                mImei=editTextIMEI.getText().toString();
+                muestraListadoEmpleado(mImei);
             }
         });
 
@@ -196,8 +201,14 @@ public class DispositivoAdicionarEditarFragment extends Fragment
 
     }
 
+    private void muestraListadoEmpleado(String imei){
+        Intent intent = new Intent(getActivity(), EmpleadoListadoActivity.class);
+        intent.putExtra(DispostivoAdicionarEditarActivity.EXTRA_IMEI, imei);
+        startActivityForResult(intent, REQUEST_SELECCION_EMPLEADO);
+    }
+
     @Override
-    public void onClick(EmpleadosListaAdaptador.ViewHolder holder, String idEmpleado) {
+    public void onClick(EmpleadosListaAdaptador.ViewHolder holder, String idEmpleado,int position) {
         //muestraPantallaDetalle(idEmpleado);
     }
 

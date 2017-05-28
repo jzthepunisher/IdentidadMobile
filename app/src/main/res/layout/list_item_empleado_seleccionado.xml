@@ -26,8 +26,8 @@
         android:layout_marginTop="@dimen/padding_top"
         android:layout_below="@+id/imageViewFotoEmpleado"
         android:text="New Text"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textStyle="normal"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         tools:text="Carlos Giron" />
 
 </RelativeLayout>

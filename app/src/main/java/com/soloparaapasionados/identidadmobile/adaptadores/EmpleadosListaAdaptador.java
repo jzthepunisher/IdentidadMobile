@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
@@ -31,7 +32,7 @@ public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosLista
     private OnItemClickListener escucha;
 
     public interface OnItemClickListener {
-        public void onClick(ViewHolder holder, String idEmpleado);
+        public void onClick(ViewHolder holder, String idEmpleado,int position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -51,7 +52,7 @@ public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosLista
 
         @Override
         public void onClick(View view) {
-            escucha.onClick(this, obtenerIdEmpleado(getAdapterPosition()));
+            escucha.onClick(this, obtenerIdEmpleado(getAdapterPosition()),getAdapterPosition());
         }
     }
 
@@ -59,6 +60,16 @@ public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosLista
         if (items != null) {
             if (items.moveToPosition(posicion)) {
                 return items.getString(items.getColumnIndex(Empleados.ID_EMPLEADO));
+            }
+        }
+        return null;
+    }
+
+    public Empleado obtenerEmpleado(int posicion) {
+        if (items != null) {
+            if (items.moveToPosition(posicion)) {
+                Empleado empleado=new Empleado(items);
+                return empleado;
             }
         }
         return null;

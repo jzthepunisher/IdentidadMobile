@@ -3,6 +3,7 @@ package com.soloparaapasionados.identidadmobile.modelo;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 
 import java.io.Serializable;
@@ -30,6 +31,24 @@ public class Empleado implements Serializable {
 
     public Empleado(){
     }
+
+    public Empleado(Cursor cursor){
+        IdEmpleado=cursor.getString(cursor.getColumnIndex(Empleados.ID_EMPLEADO));
+        Nombres=cursor.getString(cursor.getColumnIndex(Empleados.NOMBRES));
+        ApellidoPaterno=cursor.getString(cursor.getColumnIndex(Empleados.APELLIDO_PATERNO));
+        ApellidoMaterno=cursor.getString(cursor.getColumnIndex(Empleados.APELLIDO_MAERNO));
+        //Direccion=cursor.getString(cursor.getColumnIndex(Empleados.DIRECCION));
+        //DNI=cursor.getString(cursor.getColumnIndex(Empleados.DNI));
+        //Celular=cursor.getString(cursor.getColumnIndex(Empleados.CELULAR));
+        //Email=cursor.getString(cursor.getColumnIndex(Empleados.EMAIL));
+        //FechaNacimiento=cursor.getString(cursor.getColumnIndex(Empleados.FECHA_NACIMIENTO));
+        //IdCargo=cursor.getString(cursor.getColumnIndexOrThrow(Empleados.ID_CARGO));
+        //FechaIngreso=cursor.getString(cursor.getColumnIndex(Empleados.FECHA_INGRESO));
+        //FechaBaja=cursor.getString(cursor.getColumnIndex(Empleados.FECHA_BAJA));
+        //FechaCreacion=cursor.getString(cursor.getColumnIndex(Empleados.FECHA_CREACION));
+        Foto=cursor.getString(cursor.getColumnIndex(Empleados.FOTO));
+    }
+
     public String getIdEmpleado() {
         return IdEmpleado;
     }
@@ -143,7 +162,6 @@ public class Empleado implements Serializable {
     }
 
     public ContentValues toContentValues() {
-
         ContentValues values = new ContentValues();
         values.put(Empleados.ID_EMPLEADO, IdEmpleado);
         values.put(Empleados.NOMBRES, Nombres);
@@ -159,7 +177,6 @@ public class Empleado implements Serializable {
         values.put(Empleados.FECHA_BAJA, FechaBaja);
         values.put(Empleados.FECHA_CREACION, FechaCreacion);
         values.put(Empleados.FOTO, Foto);
-
         return values;
     }
 
