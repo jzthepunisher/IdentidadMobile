@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -34,27 +36,27 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
     private String mImei=null;
     EmpleadoListadoFragment empleadoListadoFragment;
     DrawerLayout navigationDrawerLayout;
+    CollapsingToolbarLayout coordinatorLayoutListadoEmpleado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empleado_listado);
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         navigationDrawerLayout = (DrawerLayout) findViewById(R.id.navigationDrawerLayout);
-        setToolbar();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         if (navigationView != null) {
             setupNavigationDrawerContent(navigationView);
         }
+
         setupNavigationDrawerContent(navigationView);
 
         mImei = getIntent().getStringExtra(DispostivoAdicionarEditarActivity.EXTRA_IMEI);
-
+        setToolbar();
         empleadoListadoFragment = (EmpleadoListadoFragment)
                 getSupportFragmentManager().findFragmentById(R.id.empleados_listado_container);
 
@@ -98,13 +100,10 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
 
     }
 
-
-
     private void setToolbar() {
         // Añadir la Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Listado de Empleados B");
 
         if (getSupportActionBar() != null){
             // Habilitar up button
@@ -112,6 +111,16 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         }
 
+        String tituloActividad;
+        if (mImei!=null){
+            tituloActividad= "Selecciona empleados";
+            toolbar.setTitle(tituloActividad);
+            //toolbar.setSubtitle("hola");
+        }else {
+            tituloActividad= "Listado de Empleados";
+            toolbar.setTitle(tituloActividad);
+            //toolbar.setSubtitle("hola");
+        }
     }
 
     @Override
@@ -198,7 +207,7 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
                 public boolean onNavigationItemSelected(MenuItem menuItem) {
                     //textView = (TextView) findViewById(R.id.textView);
                     switch (menuItem.getItemId()) {
-                        case R.id.item_navigation_drawer_inbox:
+                        case R.id.item_navigation_empleado_crud:
                             menuItem.setChecked(true);
 
                             Toast.makeText(EmpleadoListadoActivity.this, "Launching " + menuItem.getTitle().toString(), Toast.LENGTH_SHORT).show();
@@ -207,7 +216,7 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
                             startActivity(intent);
 
                             return true;
-                        case R.id.item_navigation_drawer_starred:
+                        case R.id.item_navigation_telefono_crud:
                             menuItem.setChecked(true);
 
                             Toast.makeText(EmpleadoListadoActivity.this, "Launching " + menuItem.getTitle().toString(), Toast.LENGTH_SHORT).show();

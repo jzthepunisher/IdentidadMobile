@@ -96,7 +96,7 @@ public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<Empleado
         String s,nombresCompletos;
 
         // Asignación UI
-        nombresCompletos = String.valueOf(position) + ' ' + empleado.getApellidoPaterno();
+        nombresCompletos = empleado.getApellidoPaterno();
         nombresCompletos += " " + empleado.getApellidoMaterno();
         nombresCompletos += " " +  empleado.getNombres();
 
@@ -194,7 +194,5 @@ public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<Empleado
         }
 
     }
-
-
 
 }

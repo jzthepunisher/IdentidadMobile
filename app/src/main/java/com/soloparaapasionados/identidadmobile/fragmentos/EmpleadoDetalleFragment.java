@@ -55,7 +55,6 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
 
    // private LawyersDbHelper mLawyersDbHelper;
 
-
     public EmpleadoDetalleFragment() {
         // Required empty public constructor
     }

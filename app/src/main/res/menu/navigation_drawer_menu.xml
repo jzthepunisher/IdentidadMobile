@@ -4,13 +4,13 @@
     <group android:checkableBehavior="single">
         <item
             android:checked="true"
-            android:id="@+id/item_navigation_drawer_inbox"
-            android:icon="@drawable/ic_call_black_24dp"
-            android:title="Inbox" />
+            android:id="@+id/item_navigation_empleado_crud"
+            android:icon="@drawable/ic_assignment_ind_black_24dp"
+            android:title="Empleados" />
         <item
-            android:id="@+id/item_navigation_drawer_starred"
-            android:icon="@drawable/ic_contacts_black_24dp"
-            android:title="Starred" />
+            android:id="@+id/item_navigation_telefono_crud"
+            android:icon="@drawable/ic_phone_android_black_24dp"
+            android:title="Smartphone" />
         <item
             android:id="@+id/item_navigation_drawer_sent_mail"
             android:icon="@drawable/ic_credit_card_black_24dp"

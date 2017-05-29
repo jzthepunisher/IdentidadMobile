@@ -56,7 +56,6 @@ public class DispostivoAdicionarEditarActivity extends AppCompatActivity {
         //Establec el toolbar de la actividad.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Registro de Dispositivo");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String imei = getIntent().getStringExtra(DispostivoAdicionarEditarActivity.EXTRA_IMEI);

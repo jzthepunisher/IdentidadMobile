@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -140,6 +142,7 @@ public class EmpleadoListadoFragment extends Fragment
                 muestraPatallaAdicionarEditar();
             }
         });
+        setIcono();
 
         /*swipeRefreshLayoutEmpleadoListado = (SwipeRefreshLayout) root.findViewById(R.id.SwipeRefreshLayoutEmpleadoListado);
         swipeRefreshLayoutEmpleadoListado.setOnRefreshListener(
@@ -188,7 +191,22 @@ public class EmpleadoListadoFragment extends Fragment
         return root;
     }
 
+    private void setIcono() {
 
+        int iconoFloatingActionButton;
+        if (mImei!=null){
+            iconoFloatingActionButton=R.drawable.ic_check_circle_white_24dp;
+        }else {
+            iconoFloatingActionButton=R.drawable.ic_person_add_white_24dp;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            floatingActionButtonAdicionar.setImageDrawable(getResources().getDrawable(iconoFloatingActionButton, getActivity().getTheme()));
+        } else {
+            floatingActionButtonAdicionar.setImageDrawable(getResources().getDrawable(iconoFloatingActionButton));
+        }
+
+    }
 
     private void muestraPatallaAdicionarEditar() {
         Intent intent = new Intent(getActivity(), EmpleadoAdicionarEditarActivity.class);

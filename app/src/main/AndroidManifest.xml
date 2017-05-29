@@ -12,6 +12,7 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
+
         <activity
             android:name=".actividades.DispostivoAdicionarEditarActivity"
             android:label="@string/title_activity_dispostivo_registro"
@@ -27,6 +28,7 @@
             android:name=".actividades.EmpleadoActivity"
             android:label="@string/actividad_titulo_registrar_empleado"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".actividades.EmpleadoAdicionarEditarActivity"
             android:label="@string/title_activity_empleado_adicionar_editar"
