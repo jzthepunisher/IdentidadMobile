@@ -146,8 +146,8 @@ public class EmpleadoListadoFragment extends Fragment
             @Override
             public void onClick(View view) {
                 if (mImei!=null){
-                    cerrarActivity();
                     grabarDispositivoEmpleado(empleadoSeleccionadoAdaptador.getData());
+                    cerrarActivity();
                 }else{
                     muestraPatallaAdicionarEditar();
                 }

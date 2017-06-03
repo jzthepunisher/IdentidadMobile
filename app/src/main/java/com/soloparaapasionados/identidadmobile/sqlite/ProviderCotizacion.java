@@ -238,7 +238,7 @@ public class ProviderCotizacion extends ContentProvider {
                 valuesDos.put(DispositivosEmpleados.ID_EMPLEADO,idEmpleado);
 
                 bd.insertOrThrow(Tablas.DISPOSITIVO_EMPLEADO, null,valuesDos);
-
+                notificarCambio(uri);
                 return DispositivosEmpleados.crearUriDispositivoEmpleado(id,idEmpleado);
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);

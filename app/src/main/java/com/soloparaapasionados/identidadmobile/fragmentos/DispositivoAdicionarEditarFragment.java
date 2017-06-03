@@ -210,7 +210,8 @@ public class DispositivoAdicionarEditarFragment extends Fragment
         if (Activity.RESULT_OK == resultCode) {
             switch (requestCode) {
                 case REQUEST_SELECCION_EMPLEADO:
-
+                    // Iniciar loader
+                   // getActivity().getSupportLoaderManager().restartLoader(1, null,  this);
                     break;
             }
         }

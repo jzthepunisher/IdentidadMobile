@@ -84,10 +84,17 @@ public class DispositivoServicioLocal extends IntentService {
 
             String miFechaCadena=new SimpleDateFormat("dd/MM/yyyy").format(miFecha);
 
-            for ( Empleado empleado : dispositivoEmpleado.getEmpleados() ) {
-                String imei;
-                String idEmpleado;
 
+            String imei;
+            imei=dispositivoEmpleado.getImei();
+            ops.add(ContentProviderOperation.newDelete(ContratoCotizacion.DispositivosEmpleadosTemporal.crearUriDispositivoEmpleadoTemporal(imei))
+                    .build());
+            ops.add(ContentProviderOperation.newDelete(ContratoCotizacion.DispositivosEmpleados.crearUriDispositivoEmpleado(imei))
+                    .build());
+
+            for ( Empleado empleado : dispositivoEmpleado.getEmpleados() ) {
+
+                String idEmpleado;
                 imei=dispositivoEmpleado.getImei();
                 idEmpleado=empleado.getIdEmpleado();
 
