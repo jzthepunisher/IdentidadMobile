@@ -38,6 +38,10 @@
             android:name=".ServicioLocal.EmpleadoServicioLocal"
             android:exported="false" />
 
+        <service
+            android:name=".ServicioLocal.DispositivoServicioLocal"
+            android:exported="false" />
+
         <activity
             android:name=".actividades.EmpleadoListadoActivity"
             android:label="@string/title_activity_empleado_listado"

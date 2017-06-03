@@ -43,6 +43,7 @@ import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.actividades.DispostivoAdicionarEditarActivity;
+import com.soloparaapasionados.identidadmobile.actividades.EmpleadoAdicionarEditarActivity;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoDetalleActivity;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoListadoActivity;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadoSeleccionadoAdaptador;
@@ -197,10 +198,22 @@ public class DispositivoAdicionarEditarFragment extends Fragment
         Intent intent = new Intent(getActivity(), EmpleadoListadoActivity.class);
         intent.putExtra(DispostivoAdicionarEditarActivity.EXTRA_IMEI, imei);
 
-        ActivityOptions options0 = ActivityOptions.makeSceneTransitionAnimation(getActivity());
+        //ActivityOptions options0 = ActivityOptions.makeSceneTransitionAnimation(getActivity());
         //getActivity().startActivity(intent, options0.toBundle());
 
-        startActivityForResult(intent, REQUEST_SELECCION_EMPLEADO, options0.toBundle());
+        //startActivityForResult(intent, REQUEST_SELECCION_EMPLEADO, options0.toBundle());
+        startActivityForResult(intent, REQUEST_SELECCION_EMPLEADO);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (Activity.RESULT_OK == resultCode) {
+            switch (requestCode) {
+                case REQUEST_SELECCION_EMPLEADO:
+
+                    break;
+            }
+        }
     }
 
     @Override

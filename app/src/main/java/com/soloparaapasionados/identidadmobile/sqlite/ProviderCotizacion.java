@@ -62,7 +62,7 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "empleados"                , EMPLEADOS);
         uriMatcher.addURI(AUTORIDAD, "empleados/*"              , EMPLEADOS_ID);
         uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados"   , DISPOSITIVOS_EMPLEADOS);
-        uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados/#" , DISPOSITIVOS_EMPLEADOS_ID);
+        uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados/*" , DISPOSITIVOS_EMPLEADOS_ID);
         uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados_temporal"   , DISPOSITIVOS_EMPLEADOS_TEMPORAL);
         uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados_temporal/#" , DISPOSITIVOS_EMPLEADOS_TEMPORAL_ID);
     }
@@ -152,6 +152,10 @@ public class ProviderCotizacion extends ContentProvider {
                 return  ContratoCotizacion.generarMime("dispositivos_empleados");
             case DISPOSITIVOS_EMPLEADOS_ID:
                 return ContratoCotizacion.generarMimeItem("dispositivos_empleados");
+            case DISPOSITIVOS_EMPLEADOS_TEMPORAL:
+                return  ContratoCotizacion.generarMime("dispositivos_empleados_temporal");
+            case DISPOSITIVOS_EMPLEADOS_TEMPORAL_ID:
+                return ContratoCotizacion.generarMimeItem("dispositivos_empleados_temporal");
             default:
                 throw new UnsupportedOperationException("Uri desconocida =>" + uri);
         }
@@ -174,6 +178,25 @@ public class ProviderCotizacion extends ContentProvider {
 
                 afectados = bd.update(Tablas.EMPLEADO, values, seleccion, argumentos);
                 break;
+            case DISPOSITIVOS_EMPLEADOS_TEMPORAL_ID:
+                // Consultando una Dispositivo Empleado
+                id = DispositivosEmpleadosTemporal.obtenerIdDispostivoEmpleadoTemporal(uri);
+                seleccion = String.format("%s=? ", DispositivosEmpleadosTemporal.IMEI);
+                String[] argumentosDos={id};
+
+                afectados = bd.delete(Tablas.DISPOSITIVO_EMPLEADO_TEMPORAL,seleccion,argumentosDos);
+
+                break;
+            case DISPOSITIVOS_EMPLEADOS_ID:
+                // Consultando una Dispositivo Empleado
+                id = DispositivosEmpleados.obtenerIdDispostivoEmpleado(uri);
+                seleccion = String.format("%s=? ", DispositivosEmpleados.IMEI);
+                String[] argumentosTres={id};
+
+                afectados = bd.delete(Tablas.DISPOSITIVO_EMPLEADO,seleccion,argumentosTres);
+
+                break;
+
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }
@@ -202,6 +225,21 @@ public class ProviderCotizacion extends ContentProvider {
                 bd.insertOrThrow(Tablas.EMPLEADO,null,values);
                 notificarCambio(uri);
                 return Empleados.crearUriEmpleado(id);
+            case DISPOSITIVOS_EMPLEADOS_ID:
+                String[] claves = DispositivosEmpleados.obtenerIdDispositivoEmpleado(uri);
+                String imei=claves[0];
+                String idEmpleado=claves[1];
+
+                /*String seleccion = String.format("%s=? AND %s=?",
+                        DispositivosEmpleados.IMEI, DispositivosEmpleados.ID_EMPLEADO);*/
+
+                ContentValues valuesDos = new ContentValues();
+                valuesDos.put(DispositivosEmpleados.IMEI,imei);
+                valuesDos.put(DispositivosEmpleados.ID_EMPLEADO,idEmpleado);
+
+                bd.insertOrThrow(Tablas.DISPOSITIVO_EMPLEADO, null,valuesDos);
+
+                return DispositivosEmpleados.crearUriDispositivoEmpleado(id,idEmpleado);
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }

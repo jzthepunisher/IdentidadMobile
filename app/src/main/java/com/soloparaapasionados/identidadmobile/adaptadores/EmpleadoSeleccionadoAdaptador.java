@@ -31,8 +31,8 @@ public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<Empleado
     private final Context contexto;
     private List<Empleado> empleados = new ArrayList<>();
 
-    HashMap<String,Integer> elementosSeleccionadosListado ;
-    HashMap<String,Integer> elementosSeleccionados ;
+    //HashMap<String,Integer> elementosSeleccionadosListado ;
+    //HashMap<String,Integer> elementosSeleccionados ;
 
     private EmpleadoSeleccionadoAdaptador.OnItemClickListener escucha;
 
@@ -75,8 +75,8 @@ public class EmpleadoSeleccionadoAdaptador extends RecyclerView.Adapter<Empleado
         this.contexto = contexto;
         this.escucha = escucha;
 
-        this.elementosSeleccionadosListado = new HashMap<String,Integer>();
-        this.elementosSeleccionados= new HashMap<String,Integer>();
+        //this.elementosSeleccionadosListado = new HashMap<String,Integer>();
+        //this.elementosSeleccionados= new HashMap<String,Integer>();
     }
 
     @Override

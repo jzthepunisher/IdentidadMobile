@@ -159,9 +159,17 @@ public class ContratoCotizacion {
         public static Uri crearUriDispositivoEmpleado(String id) {
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
+
+        public static Uri crearUriDispositivoEmpleado(String imei,String idEmpleado) {
+            return URI_CONTENIDO.buildUpon().appendPath(imei + "%s" + idEmpleado).build();
+        }
+
+        public static String[] obtenerIdDispositivoEmpleado(Uri uri) {
+            return uri.getLastPathSegment().split("%s");
+        }
     }
 
-    //Clase contrato de Dispositivo_Empleado
+    //Clase contrato de Dispositivo_Empleado Temporal
     public static class DispositivosEmpleadosTemporal implements ColumnasDispositivoEmpleado{
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_DISPOSITIVOS_EMPLEADOS_TEMPORAL).build();
 

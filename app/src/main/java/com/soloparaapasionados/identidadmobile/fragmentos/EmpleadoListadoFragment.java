@@ -28,6 +28,8 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.ServicioLocal.DispositivoServicioLocal;
+import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoAdicionarEditarActivity;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoDetalleActivity;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoListadoActivity;
@@ -35,9 +37,13 @@ import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadoSeleccionadoA
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosListaAdaptador;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosSugerenciaListaAdaptador;
 import com.soloparaapasionados.identidadmobile.helper.DividerItemDecoration;
+import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.observadores.MiObervador;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
+
+import java.util.List;
 
 public class EmpleadoListadoFragment extends Fragment
         implements EmpleadosListaAdaptador.OnItemClickListener,
@@ -139,7 +145,13 @@ public class EmpleadoListadoFragment extends Fragment
         floatingActionButtonAdicionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                muestraPatallaAdicionarEditar();
+                if (mImei!=null){
+                    cerrarActivity();
+                    grabarDispositivoEmpleado(empleadoSeleccionadoAdaptador.getData());
+                }else{
+                    muestraPatallaAdicionarEditar();
+                }
+
             }
         });
         setIcono();
@@ -211,6 +223,38 @@ public class EmpleadoListadoFragment extends Fragment
     private void muestraPatallaAdicionarEditar() {
         Intent intent = new Intent(getActivity(), EmpleadoAdicionarEditarActivity.class);
         startActivity(intent);
+    }
+
+    private void cerrarActivity() {
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
+    }
+
+    private void grabarDispositivoEmpleado(List<Empleado> empleados){
+        if (empleados.size()>0){
+            eliminarDispositivoEmpleadoTemporalLocalmente();
+            insertarDispositivoEmpleadoTemporalLocalmente(empleados);
+            //DispositivoEmpleado
+        }
+    }
+
+    private void eliminarDispositivoEmpleadoTemporalLocalmente(){
+        Intent intent = new Intent(getActivity(), DispositivoServicioLocal.class);
+        intent.setAction(DispositivoServicioLocal.ACCION_ELIMINAR_DISPOSITIVO_EMPLEADO_TEMPORAL_ISERVICE);
+        intent.putExtra(DispositivoServicioLocal.EXTRA_ID_DISPOSITIVO, mImei);
+        getActivity().startService(intent);
+    }
+
+    private void  insertarDispositivoEmpleadoTemporalLocalmente(List<Empleado> empleados){
+
+        DispositivoEmpleado dispositivoEmpleado= new DispositivoEmpleado();
+        dispositivoEmpleado.setImei(mImei);
+        dispositivoEmpleado.setEmpleados(empleados);
+
+        Intent intent = new Intent(getActivity(), DispositivoServicioLocal.class);
+        intent.setAction(DispositivoServicioLocal.ACCION_INSERTAR_DISPOSITIVO_EMPLEADO_TEMPORAL_ISERVICE);
+        intent.putExtra(DispositivoServicioLocal.EXTRA_MI_DISPOSITIVO_EMPLEADO, dispositivoEmpleado);
+        getActivity().startService(intent);
     }
 
     @Override

@@ -156,5 +156,6 @@
     <string name="search_etiqueta">Boxer</string>
     <string name="search_hint">Busca el empleado</string>
     <string name="settings_descripcion">Descripcion de empleados</string>
+    <string name="hint_fecha_hora_ubicacion">Fecha Hora Ultima Ubicacion</string>
 
 </resources>
