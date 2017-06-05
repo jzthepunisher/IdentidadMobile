@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.soloparaapasionados.identidadmobile">
 
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
@@ -40,6 +43,10 @@
 
         <service
             android:name=".ServicioLocal.DispositivoServicioLocal"
+            android:exported="false" />
+
+        <service
+            android:name=".ServicioRemoto.EmpleadoServicioRemoto"
             android:exported="false" />
 
         <activity

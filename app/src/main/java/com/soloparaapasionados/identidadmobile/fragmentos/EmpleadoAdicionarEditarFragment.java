@@ -277,6 +277,7 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
 
         }
     }
+
     private int getIndex(Cursor cursor, String columnName, String searchString) {
 
         //Log.d(LOG_TAG, "getIndex(" + searchString + ")");

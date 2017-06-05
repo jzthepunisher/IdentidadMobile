@@ -25,11 +25,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.ServicioLocal.DispositivoServicioLocal;
 import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
+import com.soloparaapasionados.identidadmobile.ServicioRemoto.EmpleadoServicioRemoto;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoAdicionarEditarActivity;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoDetalleActivity;
 import com.soloparaapasionados.identidadmobile.actividades.EmpleadoListadoActivity;
@@ -64,6 +66,7 @@ public class EmpleadoListadoFragment extends Fragment
 
     private SwipeRefreshLayout swipeRefreshLayoutEmpleadoListado;
     private FloatingActionButton floatingActionButtonAdicionar;
+    private TextView textViewListadoEmpleadosVacio;
     private int offSetInicial=0;
 
     public static final String EXTRA_FILTRO_BUSQUEDA="extra_filtro_busqueda";
@@ -140,6 +143,8 @@ public class EmpleadoListadoFragment extends Fragment
         recyclerViewEmpleadoSeleccionados.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerViewEmpleadoSeleccionados.setItemAnimator(new DefaultItemAnimator());
         recyclerViewEmpleadoSeleccionados.setAdapter(empleadoSeleccionadoAdaptador);
+
+        textViewListadoEmpleadosVacio=(TextView)root.findViewById(R.id.textViewListadoEmpleadosVacio);
 
         floatingActionButtonAdicionar = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButtonAdicionar);
         floatingActionButtonAdicionar.setOnClickListener(new View.OnClickListener() {
@@ -337,12 +342,20 @@ public class EmpleadoListadoFragment extends Fragment
 
         switch (loader.getId()){
             case 1:
-                if(data!=null){
-                    if (empleadosListaAdaptador != null) {
+                if(data!=null)
+                {
+                    if (empleadosListaAdaptador != null && data.getCount()>0) {
                         empleadosListaAdaptador.swapCursor(data);
                         aptoParaCargar=true;
                         //swipeRefreshLayoutEmpleadoListado.setRefreshing(false);
+                        textViewListadoEmpleadosVacio.setVisibility(View.GONE);
+                        recyclerViewListadoEmpleado.setVisibility(View.VISIBLE);
                     }
+                }
+                else
+                {
+                    textViewListadoEmpleadosVacio.setVisibility(View.VISIBLE);
+                    recyclerViewListadoEmpleado.setVisibility(View.GONE);
                 }
                 break;
             case 2:

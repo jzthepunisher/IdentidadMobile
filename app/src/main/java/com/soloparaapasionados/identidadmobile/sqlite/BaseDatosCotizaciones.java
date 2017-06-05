@@ -23,7 +23,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 21;
+    private static final int VERSION_ACTUAL = 22;
 
     private final Context contexto;
 
@@ -86,8 +86,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 DispositivosEmpleados.IMEI,DispositivosEmpleados.ID_EMPLEADO));
 
         mockData(db);
-        mockDataEmpleados(db);
-        mockDataDispositivosEmpleados(db);
+        //mockDataEmpleados(db);
+        //mockDataDispositivosEmpleados(db);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.soloparaapasionados.identidadmobile.sqlite;
 
+import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
+import com.soloparaapasionados.identidadmobile.ServicioRemoto.EmpleadoServicioRemoto;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones.Tablas;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Dispositivos;
@@ -12,6 +14,7 @@ import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -296,15 +299,10 @@ public class ProviderCotizacion extends ContentProvider {
                 int offSetActual=0;
 
                 if (Empleados.tieneOffSet(uri)){
+
+                    leerEmpleadosRemotamente();
+
                     offSetActual=Empleados.tieneOffSet(uri)? Integer.valueOf( uri.getQueryParameter("off_set")) : 0;
-
-                    //String clausulaWhere=BaseColumns._ID  + ">=" + "" + offSetActual + " AND " +  BaseColumns._ID + " <= " + (offSetActual + this.offSet);
-                    //String clausulaWhere=" 1 = 1 limit " + offSetActual + "," + this.offSet;
-
-                    // Consultando todos los Empleados con offset
-                    //builder.setTables(Tablas.EMPLEADO);
-                    //c = builder.query(bd, proyEmpleado,
-                    //        clausulaWhere , null, null, null,null);
 
                     String query = "select " + Tablas.EMPLEADO + "." + BaseColumns._ID + "," + Empleados.ID_EMPLEADO + "," + Empleados.NOMBRES;
                     query += "," + Empleados.APELLIDO_PATERNO + "," + Empleados.APELLIDO_MAERNO + "," + Empleados.FOTO;
@@ -327,6 +325,7 @@ public class ProviderCotizacion extends ContentProvider {
                     query += "           or " + Empleados.APELLIDO_MAERNO + " like \'%" + parametroConsulta + "%\'  ) ";
                     query += "        or  ((" + Empleados.NOMBRES + " || " + "\' \'" + " || " + Empleados.APELLIDO_PATERNO + " || " + "\' \'" + " || " + Empleados.APELLIDO_MAERNO + ") like \'%" + parametroConsulta + "%\' ) ) ";
                     query += " limit ?,?";
+
                     c = bd.rawQuery(query, new String[]{String.valueOf(offSetActual),String.valueOf(offSet)});
                 }
 
@@ -438,4 +437,12 @@ public class ProviderCotizacion extends ContentProvider {
             db.endTransaction();
         }
     }
+
+    private void leerEmpleadosRemotamente(){
+        Intent intent = new Intent(getContext(), EmpleadoServicioRemoto.class);
+        intent.setAction(EmpleadoServicioRemoto.ACCION_LEER_EMPLEADO_ISERVICE);
+        //intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
+        getContext().startService(intent);
+    }
+
 }
