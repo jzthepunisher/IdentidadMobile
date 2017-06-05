@@ -1,5 +1,6 @@
 package com.soloparaapasionados.identidadmobile.ServicioRemoto;
 
+import android.app.Activity;
 import android.app.IntentService;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -11,9 +12,12 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.Gson;
 import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
 import com.soloparaapasionados.identidadmobile.aplicacion.Constantes;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
@@ -22,11 +26,16 @@ import com.soloparaapasionados.identidadmobile.web.VolleySingleton;
 import com.soloparaapasionados.identidadmobile.web.request.GsonRequest;
 import com.soloparaapasionados.identidadmobile.web.request.ListaEmpleados;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by USUARIO on 04/06/2017.
@@ -36,9 +45,9 @@ public class EmpleadoServicioRemoto extends IntentService {
     private static final String TAG = EmpleadoServicioLocal.class.getSimpleName();
 
     public static final String ACCION_LEER_EMPLEADO_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_LEER_EMPLEADO_ISERVICE";
-    //public static final String ACCION_ACTUALIZAR_EMPLEADO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ACTUALIZAR_EMPLEADO_ISERVICE";
+    public static final String ACCION_INSERTAR_EMPLEADO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_INSERTAR_EMPLEADO_ISERVICE";
     //public static final String ACCION_ELIMINAR_EMPLEADO_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ELIMINAR_EMPLEADO_ISERVICE";
-    //public static final String EXTRA_MI_EMPLEADO = "extra_mi_empleado";
+    public static final String EXTRA_MI_EMPLEADO = "extra_mi_empleado";
     //public static final String EXTRA_ID_EMPLEADO = "extra_id_empleado";
 
     public EmpleadoServicioRemoto() {
@@ -56,6 +65,13 @@ public class EmpleadoServicioRemoto extends IntentService {
                 //Empleado empleado=(Empleado)intent.getSerializableExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO);
 
                 leerEmpleadosRemoto();
+            }
+
+            if (EmpleadoServicioRemoto.ACCION_INSERTAR_EMPLEADO_ISERVICE.equals(action)) {
+
+                Empleado empleado=(Empleado)intent.getSerializableExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO);
+
+                insertarEmpleadoRemoto(empleado);
             }
 
             /*if (EmpleadoServicioRemoto.ACCION_INSERTAR_EMPLEADO_ISERVICE.equals(action)) {
@@ -138,6 +154,23 @@ public class EmpleadoServicioRemoto extends IntentService {
         } catch (OperationApplicationException e) {
             e.printStackTrace();
         }*/
+    }
+
+    private void insertarEmpleadoRemoto(Empleado empleado){
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setContentTitle("Servicio Remoto en segundo plano")
+                .setContentText("Procesando inserción de registros de empleado ...");
+
+        builder.setProgress( 2, 1, false);
+        startForeground( 1, builder.build());
+
+        solicitudEmpleadosPost(empleado);
+
+        // Quitar de primer plano
+        builder.setProgress( 2, 2, false);
+        stopForeground(true);
     }
 
     private void insertarEmpleadoLocal(Empleado empleado){
@@ -368,5 +401,110 @@ public class EmpleadoServicioRemoto extends IntentService {
             //Instrucciones
         }
     }
+
+    public void solicitudEmpleadosPost(Empleado empleado) {
+
+        Gson gson = new Gson();
+        JSONObject jsonObject=null;
+
+        String jsonString=gson.toJson(empleado);
+
+        try {
+            // Crear nuevo objeto Json basado en el mapa
+            jsonObject = new JSONObject(jsonString);
+        }catch (JSONException e){
+            Log.d(TAG, e.getMessage());
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                Constantes.EMPLEADOS_POST,
+                jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Procesar la respuesta del servidor
+                        procesarRespuestaEmpleadoPost(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "Error Volley: " + error.getMessage());
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Accept", "application/json");
+                return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8" ;
+            }
+        };
+
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+
+        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(jsonObjectRequest);
+    }
+
+    /**
+     * Interpreta los resultados de la respuesta y así
+     * realizar las operaciones correspondientes
+     *
+     * @param response Objeto Json con la respuesta
+     */
+    private void procesarRespuestaEmpleadoPost(JSONObject response) {
+        try {
+            // Obtener estado
+            String estado = response.getString("Estado");
+            // Obtener mensaje
+            String mensaje = response.getString("Mensaje");
+
+            switch (estado) {
+                case "1":
+                    // Mostrar mensaje
+                    Toast.makeText(getBaseContext(),mensaje,Toast.LENGTH_LONG).show();
+                    // Enviar código de éxito
+                    //getActivity().setResult(Activity.RESULT_OK);
+                    // Terminar actividad
+                    //getActivity().finish();
+                    break;
+
+                case "2":
+                    // Mostrar mensaje
+                    Toast.makeText( getBaseContext(), mensaje, Toast.LENGTH_LONG).show();
+                    // Enviar código de falla
+                    //getActivity().setResult(Activity.RESULT_CANCELED);
+                    // Terminar actividad
+                    //getActivity().finish();
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 }

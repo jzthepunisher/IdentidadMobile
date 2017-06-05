@@ -3,6 +3,7 @@ package com.soloparaapasionados.identidadmobile.sqlite;
 import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.EmpleadoServicioRemoto;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
+import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones.Tablas;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Dispositivos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
@@ -227,6 +228,9 @@ public class ProviderCotizacion extends ContentProvider {
                 id = values.getAsString(Empleados.ID_EMPLEADO);
                 bd.insertOrThrow(Tablas.EMPLEADO,null,values);
                 notificarCambio(uri);
+
+                insertarEmpleadoRemotamente(values);
+
                 return Empleados.crearUriEmpleado(id);
             case DISPOSITIVOS_EMPLEADOS_ID:
                 String[] claves = DispositivosEmpleados.obtenerIdDispositivoEmpleado(uri);
@@ -442,6 +446,14 @@ public class ProviderCotizacion extends ContentProvider {
         Intent intent = new Intent(getContext(), EmpleadoServicioRemoto.class);
         intent.setAction(EmpleadoServicioRemoto.ACCION_LEER_EMPLEADO_ISERVICE);
         //intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
+        getContext().startService(intent);
+    }
+
+    private void insertarEmpleadoRemotamente(ContentValues values){
+        Intent intent = new Intent(getContext(), EmpleadoServicioRemoto.class);
+        intent.setAction(EmpleadoServicioRemoto.ACCION_INSERTAR_EMPLEADO_ISERVICE);
+        Empleado empleado=new Empleado(values);
+        intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
         getContext().startService(intent);
     }
 

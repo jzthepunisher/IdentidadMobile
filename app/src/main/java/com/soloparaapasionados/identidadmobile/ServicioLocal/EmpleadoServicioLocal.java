@@ -66,7 +66,6 @@ public class EmpleadoServicioLocal extends IntentService {
                 eliminarEmpleadoLocal(idEmpleado);
             }
 
-
         }
     }
 

@@ -49,6 +49,23 @@ public class Empleado implements Serializable {
         Foto=cursor.getString(cursor.getColumnIndex(Empleados.FOTO));
     }
 
+    public Empleado(ContentValues contentValues){
+        IdEmpleado=contentValues.getAsString(Empleados.ID_EMPLEADO);
+        Nombres=contentValues.getAsString(Empleados.NOMBRES);
+        ApellidoPaterno=contentValues.getAsString(Empleados.APELLIDO_PATERNO);
+        ApellidoMaterno=contentValues.getAsString(Empleados.APELLIDO_MAERNO);
+        Direccion=contentValues.getAsString(Empleados.DIRECCION);
+        DNI=contentValues.getAsString(Empleados.DNI);
+        Celular=contentValues.getAsString(Empleados.CELULAR);
+        Email=contentValues.getAsString(Empleados.EMAIL);
+        FechaNacimiento=contentValues.getAsString(Empleados.FECHA_NACIMIENTO);
+        IdCargo=contentValues.getAsString(Empleados.ID_CARGO);
+        FechaIngreso=contentValues.getAsString(Empleados.FECHA_INGRESO);
+        FechaBaja=contentValues.getAsString(Empleados.FECHA_BAJA);
+        FechaCreacion=contentValues.getAsString(Empleados.FECHA_CREACION);
+        Foto=contentValues.getAsString(Empleados.FOTO);
+    }
+
     public String getIdEmpleado() {
         return IdEmpleado;
     }
@@ -179,5 +196,6 @@ public class Empleado implements Serializable {
         values.put(Empleados.FOTO, Foto);
         return values;
     }
+
 
 }

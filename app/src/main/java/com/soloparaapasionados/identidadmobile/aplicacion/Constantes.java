@@ -36,10 +36,11 @@ public class Constantes {
     //private static final String IP = "yodeseoapirest.somee.com";
 
     public static final String EMPLEADOS_GET = "http://" + IP + PUERTO_HOST + "/api/empleados";
+    public static final String EMPLEADOS_POST = "http://" + IP + PUERTO_HOST + "/api/empleados";
     public static final String GET_BY_ID = "http://" + IP + PUERTO_HOST + "/api/metas/5";
     public static final String UPDATE = "http://" + IP + PUERTO_HOST + "/I%20Wish/actualizar_meta.php";
     public static final String DELETE = "http://" + IP + PUERTO_HOST + "/I%20Wish/borrar_meta.php";
-    public static final String INSERT = "http://" + IP + PUERTO_HOST + "/api/metas";
+
 
 
 }
