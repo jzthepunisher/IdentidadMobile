@@ -25,6 +25,7 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 import com.soloparaapasionados.identidadmobile.web.VolleySingleton;
 import com.soloparaapasionados.identidadmobile.web.request.GsonRequest;
 import com.soloparaapasionados.identidadmobile.web.request.ListaEmpleados;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.EstadoRegistro;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -416,6 +417,8 @@ public class EmpleadoServicioRemoto extends IntentService {
             Log.d(TAG, e.getMessage());
         }
 
+
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST,
                 Constantes.EMPLEADOS_POST,
@@ -480,11 +483,14 @@ public class EmpleadoServicioRemoto extends IntentService {
             String estado = response.getString("Estado");
             // Obtener mensaje
             String mensaje = response.getString("Mensaje");
+            // Obtener idEmpleado
+            String idEmpleado = response.getString("IdEmpleado");
 
             switch (estado) {
                 case "1":
                     // Mostrar mensaje
                     Toast.makeText(getBaseContext(),mensaje,Toast.LENGTH_LONG).show();
+                    actualizarEstadoEmpleado(idEmpleado,EstadoRegistro.REGISTRADO_REMOTALMENTE);
                     // Enviar código de éxito
                     //getActivity().setResult(Activity.RESULT_OK);
                     // Terminar actividad
@@ -506,5 +512,12 @@ public class EmpleadoServicioRemoto extends IntentService {
 
     }
 
+    private void actualizarEstadoEmpleado(String idEmpleado,String estadoRegistro){
+        Intent intent = new Intent(this, EmpleadoServicioLocal.class);
+        intent.setAction(EmpleadoServicioLocal.ACCION_ACTUALIZAR_ESTADO_EMPLEADO_ISERVICE);
+        intent.putExtra(EmpleadoServicioLocal.EXTRA_ID_EMPLEADO, idEmpleado);
+        intent.putExtra(EmpleadoServicioLocal.EXTRA_ESTADO_EMPLEADO, estadoRegistro);
+        startService(intent);
+    }
 
 }

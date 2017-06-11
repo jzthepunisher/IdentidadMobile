@@ -16,6 +16,7 @@ import com.soloparaapasionados.identidadmobile.aplicacion.Constantes;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.EstadoRegistro;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,8 +33,10 @@ public class EmpleadoServicioLocal extends IntentService {
     public static final String ACCION_INSERTAR_EMPLEADO_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_INSERTAR_EMPLEADO_ISERVICE";
     public static final String ACCION_ACTUALIZAR_EMPLEADO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ACTUALIZAR_EMPLEADO_ISERVICE";
     public static final String ACCION_ELIMINAR_EMPLEADO_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ELIMINAR_EMPLEADO_ISERVICE";
+    public static final String ACCION_ACTUALIZAR_ESTADO_EMPLEADO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ACTUALIZAR_ESTADO_EMPLEADO_ISERVICE";
     public static final String EXTRA_MI_EMPLEADO = "extra_mi_empleado";
     public static final String EXTRA_ID_EMPLEADO = "extra_id_empleado";
+    public static final String EXTRA_ESTADO_EMPLEADO = "extra_estado_empleado";
 
     public EmpleadoServicioLocal() {
         super("EmpleadoServicioLocal");
@@ -64,6 +67,14 @@ public class EmpleadoServicioLocal extends IntentService {
                 String idEmpleado = intent.getStringExtra(EmpleadoServicioLocal.EXTRA_ID_EMPLEADO);
 
                 eliminarEmpleadoLocal(idEmpleado);
+            }
+
+            if (EmpleadoServicioLocal.ACCION_ACTUALIZAR_ESTADO_EMPLEADO_ISERVICE.equals(action)) {
+
+                String idEmpleado = intent.getStringExtra(EmpleadoServicioLocal.EXTRA_ID_EMPLEADO);
+                String estadoRegistro = intent.getStringExtra(EmpleadoServicioLocal.EXTRA_ESTADO_EMPLEADO);
+
+                actualizarEstadoEmpleadoLocal(idEmpleado,estadoRegistro);
             }
 
         }
@@ -184,6 +195,40 @@ public class EmpleadoServicioLocal extends IntentService {
 
             // [ACTUALIZACIONES]
             ops.add(ContentProviderOperation.newDelete(Empleados.crearUriEmpleado(idEmpleado))
+                    .build());
+
+            r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
+
+            // Quitar de primer plano
+            builder.setProgress( 2, 2, false);
+            stopForeground(true);
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (OperationApplicationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void actualizarEstadoEmpleadoLocal(String idEmpleado,String estadoRegistro){
+        try {
+            // Se construye la notificación
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                    .setContentTitle("Servicio Local en segundo plano")
+                    .setContentText("Procesando eliminación de empleado...");
+
+            builder.setProgress( 2, 1, false);
+            startForeground(1, builder.build());
+
+            ContentResolver r = getContentResolver();
+
+            // Lista de operaciones
+            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+
+            // [ACTUALIZACIONES]
+            ops.add(ContentProviderOperation.newUpdate(Empleados.crearUriEmpleadoConEstado(idEmpleado, estadoRegistro))
+                    .withValue(Empleados.ESTADO, estadoRegistro)
                     .build());
 
             r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);

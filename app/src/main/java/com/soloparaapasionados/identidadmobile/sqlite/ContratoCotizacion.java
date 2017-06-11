@@ -34,6 +34,13 @@ public class ContratoCotizacion {
         String FECHA_CREACION   = "fecha_creacion";
         String FOTO             = "foto";
         String ELIMINADO        = "eliminado";
+        String ESTADO           = "estado";
+    }
+
+    public interface EstadoRegistro{
+        String REGISTRADO_LOCALMENTE= "registrado.localmente";
+        String REGISTRANDO_REMOTAMENTE= "registrando.remotamente";
+        String REGISTRADO_REMOTALMENTE= "registrado.remotamente";
     }
 
     interface ColumnasCargo{
@@ -103,6 +110,7 @@ public class ContratoCotizacion {
 
         public static final String PARAMETRO_CONSULTA = "off_set";
         public static final String PARAMETRO_FILTRO_BUSQUEDA = "filtro_busqueda";
+        public static final String PARAMETRO_ESTADO_REGISTRO = "estado_registro";
         //public static final String FILTRO_CLIENTE = "nombres_completos";
 
         public static String obtenerIdEmpleado(Uri uri) {
@@ -121,12 +129,20 @@ public class ContratoCotizacion {
             return URI_CONTENIDO.buildUpon().appendQueryParameter(PARAMETRO_FILTRO_BUSQUEDA,filtro).build();
         }
 
+        public static Uri crearUriEmpleadoConEstado(String idEmpleado,String estadoEmpleado) {
+            return URI_CONTENIDO.buildUpon().appendPath(idEmpleado).appendQueryParameter(PARAMETRO_ESTADO_REGISTRO,estadoEmpleado).build();
+        }
+
         public static boolean tieneOffSet(Uri uri) {
             return uri != null && uri.getQueryParameter(PARAMETRO_CONSULTA) != null;
         }
 
         public static boolean tieneFiltroBusqueda(Uri uri) {
             return uri != null && uri.getQueryParameter(PARAMETRO_FILTRO_BUSQUEDA) != null;
+        }
+
+        public static boolean tieneEstadoRegistro(Uri uri) {
+            return uri != null && uri.getQueryParameter(PARAMETRO_ESTADO_REGISTRO) != null;
         }
     }
 

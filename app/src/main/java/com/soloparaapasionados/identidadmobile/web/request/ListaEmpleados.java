@@ -12,6 +12,7 @@ public class ListaEmpleados {
     // Encapsulamiento de Posts
     private String Estado;
     private String Mensaje;
+    private String idEmpleado;
     private List<Empleado> Items;
 
 
@@ -25,6 +26,14 @@ public class ListaEmpleados {
 
     public String getMensaje() {
         return Mensaje;
+    }
+
+    public String getIdEmpleado() {
+        return idEmpleado;
+    }
+
+    public void setIdEmpleado(String idEmpleado) {
+        this.idEmpleado = idEmpleado;
     }
 
     public List<Empleado> getItems() {

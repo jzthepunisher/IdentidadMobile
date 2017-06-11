@@ -10,6 +10,7 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Emplead
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.DispositivosEmpleados;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.DispositivosEmpleadosTemporal;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.EstadoRegistro;
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -229,6 +230,7 @@ public class ProviderCotizacion extends ContentProvider {
                 bd.insertOrThrow(Tablas.EMPLEADO,null,values);
                 notificarCambio(uri);
 
+                actualizaIntentoInsercionEmpleadoRemotamente(bd,id);
                 insertarEmpleadoRemotamente(values);
 
                 return Empleados.crearUriEmpleado(id);
@@ -409,7 +411,19 @@ public class ProviderCotizacion extends ContentProvider {
                 seleccion = String.format("%s=? ", Empleados.ID_EMPLEADO);
                 String[] argumentosDos={id};
 
-                afectados = bd.update(Tablas.EMPLEADO, values, seleccion, argumentosDos);
+                if (Empleados.tieneEstadoRegistro(uri)){
+                    String estado =Empleados.tieneEstadoRegistro(uri)? uri.getQueryParameter(ContratoCotizacion.Empleados.PARAMETRO_ESTADO_REGISTRO) : "";
+                    values=new ContentValues();
+                    values.put(Empleados.ESTADO,estado);
+
+                    afectados = bd.update(Tablas.EMPLEADO, values, seleccion, argumentosDos);
+                }
+                else
+                {
+                    afectados = bd.update(Tablas.EMPLEADO, values, seleccion, argumentosDos);
+                }
+
+
                 break;
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
@@ -455,6 +469,18 @@ public class ProviderCotizacion extends ContentProvider {
         Empleado empleado=new Empleado(values);
         intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
         getContext().startService(intent);
+    }
+
+    private void actualizaIntentoInsercionEmpleadoRemotamente(SQLiteDatabase bd,String idEmpleado){
+
+        String seleccion = String.format("%s=? ", Empleados.ID_EMPLEADO);
+        String[] argumentos={idEmpleado};
+
+        ContentValues values=new ContentValues();
+        values.put(Empleados.ESTADO, EstadoRegistro.REGISTRANDO_REMOTAMENTE);
+
+        int afectados=0;
+        afectados = bd.update(Tablas.EMPLEADO, values, seleccion, argumentos);
     }
 
 }

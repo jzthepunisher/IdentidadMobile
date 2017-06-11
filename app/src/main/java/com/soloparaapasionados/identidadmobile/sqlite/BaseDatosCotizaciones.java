@@ -23,7 +23,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 22;
+    private static final int VERSION_ACTUAL = 23;
 
     private final Context contexto;
 
@@ -64,12 +64,12 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                         "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL,%s TEXT NULL,%s TEXT NULL," +
                         "%s TEXT NULL ,%s TEXT NULL,%s TEXT NULL,%s TEXT NULL,"+
                         "%s DATETIME NULL ,%s TEXT NULL %s ,%s DATETIME NULL,%s DATETIME NULL,"+
-                        "%s DATETIME NULL ,%s TEXT NULL,%s BOOLEAN DEFAULT 0)",
+                        "%s DATETIME NULL ,%s TEXT NULL,%s BOOLEAN DEFAULT 0,%s TEXT DEFAULT 'Registrado.Localmente')",
                 Tablas.EMPLEADO, BaseColumns._ID,
                 Empleados.ID_EMPLEADO,Empleados.NOMBRES, Empleados.APELLIDO_PATERNO,Empleados.APELLIDO_MAERNO,
                 Empleados.DIRECCION, Empleados.DNI, Empleados.CELULAR, Empleados.EMAIL,
                 Empleados.FECHA_NACIMIENTO, Empleados.ID_CARGO,Referencias.ID_CARGO, Empleados.FECHA_INGRESO, Empleados.FECHA_BAJA,
-                Empleados.FECHA_CREACION,Empleados.FOTO,Empleados.ELIMINADO));
+                Empleados.FECHA_CREACION,Empleados.FOTO,Empleados.ELIMINADO,Empleados.ESTADO));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "%s TEXT NOT NULL %s ,%s TEXT UNIQUE NOT NULL %s" +
