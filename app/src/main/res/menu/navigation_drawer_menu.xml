@@ -12,7 +12,7 @@
             android:icon="@drawable/ic_phone_android_black_24dp"
             android:title="Smartphone" />
         <item
-            android:id="@+id/item_navigation_drawer_sent_mail"
+            android:id="@+id/item_navigation_geocerca"
             android:icon="@drawable/ic_credit_card_black_24dp"
             android:title="Sent mail" />
         <item

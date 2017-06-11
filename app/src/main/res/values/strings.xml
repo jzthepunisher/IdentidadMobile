@@ -158,5 +158,8 @@
     <string name="settings_descripcion">Descripcion de empleados</string>
     <string name="hint_fecha_hora_ubicacion">Fecha Hora Ultima Ubicacion</string>
     <string name="mensaje_listado_vacio">No hay datos que mostrar</string>
+    <string name="title_activity_geo_cerca_adicionar_editar_detalle">
+        GeoCercaAdicionarEditarDetalleActivity
+    </string>
 
 </resources>

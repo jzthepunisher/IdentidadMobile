@@ -65,7 +65,7 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.empleados_listado_container, empleadoListadoFragment).commit();
         }
 
-        Window window = getWindow();
+        /*Window window = getWindow();
         // Elegir transiciones
         int position=2;
         switch (position) {
@@ -96,7 +96,7 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
                 window.setEnterTransition(null);
                 break;
 
-        }
+        }*/
 
     }
 
@@ -225,10 +225,13 @@ public class EmpleadoListadoActivity extends AppCompatActivity {
                             startActivity(intent2);
 
                             return true;
-                        case R.id.item_navigation_drawer_sent_mail:
+                        case R.id.item_navigation_geocerca:
                             menuItem.setChecked(true);
-                            //textView.setText(menuItem.getTitle());
+
                             navigationDrawerLayout.closeDrawer(GravityCompat.START);
+                            Intent intent3 = new Intent(EmpleadoListadoActivity.this, GeoCercaAdicionarEditarDetalleActivity.class);
+                            startActivity(intent3);
+
                             return true;
                         case R.id.item_navigation_drawer_drafts:
                             menuItem.setChecked(true);

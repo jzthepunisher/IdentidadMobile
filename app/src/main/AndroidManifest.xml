@@ -2,9 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.soloparaapasionados.identidadmobile">
 
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
@@ -16,10 +14,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
 
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+
+        <meta-data android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyAfO3Jg6lX7MqlV8JtRqCDSk55Oh540Et4"/>
+
+
+
         <activity
             android:name=".actividades.DispostivoAdicionarEditarActivity"
             android:label="@string/title_activity_dispostivo_registro"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name=".sqlite.ProviderCotizacion"
@@ -31,20 +44,17 @@
             android:name=".actividades.EmpleadoActivity"
             android:label="@string/actividad_titulo_registrar_empleado"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".actividades.EmpleadoAdicionarEditarActivity"
             android:label="@string/title_activity_empleado_adicionar_editar"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".ServicioLocal.EmpleadoServicioLocal"
             android:exported="false" />
-
         <service
             android:name=".ServicioLocal.DispositivoServicioLocal"
             android:exported="false" />
-
         <service
             android:name=".ServicioRemoto.EmpleadoServicioRemoto"
             android:exported="false" />
@@ -55,9 +65,9 @@
             android:launchMode="singleTop"
             android:parentActivityName=".actividades.DispostivoAdicionarEditarActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -73,21 +83,21 @@
                 android:resource="@xml/searchable" />
 
             <!-- Points to searchable activity so the whole app can invoke search. -->
-            <meta-data android:name="android.app.default_searchable"
+            <meta-data
+                android:name="android.app.default_searchable"
                 android:value=".SearchableDictionary" />
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actividades.DispostivoAdicionarEditarActivity" />
-
         </activity>
-
         <activity
             android:name=".actividades.EmpleadoDetalleActivity"
             android:label="@string/title_activity_empleado_detalle"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".actividades.GeoCercaAdicionarEditarDetalleActivity"
+            android:label="@string/title_activity_geo_cerca_adicionar_editar_detalle"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
