@@ -4,10 +4,12 @@ import com.soloparaapasionados.identidadmobile.modelo.Cargo;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 
+import com.soloparaapasionados.identidadmobile.modelo.Turno;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Dispositivos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.DispositivosEmpleados;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,7 +25,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 23;
+    private static final int VERSION_ACTUAL = 25;
 
     private final Context contexto;
 
@@ -33,6 +35,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         String CARGO                         = "cargo";
         String DISPOSITIVO_EMPLEADO          = "dispositivo_empleado";
         String DISPOSITIVO_EMPLEADO_TEMPORAL = "dispositivo_empleado_temporal";
+        String TURNO                         = "turno";
     }
 
     interface Referencias {
@@ -85,7 +88,15 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 DispositivosEmpleados.IMEI,Referencias.IMEI,DispositivosEmpleados.ID_EMPLEADO,Referencias.ID_EMPLEADO,
                 DispositivosEmpleados.IMEI,DispositivosEmpleados.ID_EMPLEADO));
 
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL," +
+                        "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL)",
+                Tablas.TURNO, BaseColumns._ID,
+                Turnos.ID_TURNO,Turnos.DESCRIPCION,
+                Turnos.HORA_INICIO,Turnos.HORA_FIN));
+
         mockData(db);
+        mockDataTurnos(db);
         //mockDataEmpleados(db);
         //mockDataDispositivosEmpleados(db);
     }
@@ -109,6 +120,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.EMPLEADO);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.DISPOSITIVO_EMPLEADO);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.DISPOSITIVO_EMPLEADO_TEMPORAL);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.TURNO);
 
         onCreate(db);
     }
@@ -295,6 +307,13 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     }
 
+    // Insertar datos ficticios para prueba inicial
+    private void mockDataTurnos(SQLiteDatabase sqLiteDatabase) {
+        mockTurno(sqLiteDatabase, new Turno("01", "Turno Mañana","08:00:00","16:00:00"));
+        mockTurno(sqLiteDatabase, new Turno("02", "Turno Tarde","16:00:00","00:00:00"));
+        mockTurno(sqLiteDatabase, new Turno("03", "Turno Noche","00:00:00","08:00:00"));
+    }
+
     public long mockLawyer(SQLiteDatabase db, Cargo cargo) {
         return db.insert(
                 Tablas.CARGO,
@@ -333,5 +352,12 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 Tablas.DISPOSITIVO_EMPLEADO,
                 null,
                 dispositivoEmpleado.toContentValues());
+    }
+
+    public long mockTurno(SQLiteDatabase db, Turno turno) {
+        return db.insert(
+                Tablas.TURNO,
+                null,
+                turno.toContentValues());
     }
 }

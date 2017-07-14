@@ -86,9 +86,11 @@ public class EmpleadoListadoFragment extends Fragment
 
     public static EmpleadoListadoFragment newInstance (String imei) {
         EmpleadoListadoFragment fragment = new EmpleadoListadoFragment();
+
         Bundle args = new Bundle();
         args.putString(ARGUMENTO_IMEI, imei);
         fragment.setArguments(args);
+
         return fragment;
     }
 

@@ -11,6 +11,7 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.DispositivosEmpleados;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.DispositivosEmpleadosTemporal;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.EstadoRegistro;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos;
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -55,6 +56,8 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int DISPOSITIVOS_EMPLEADOS_ID=401;
     public static final int DISPOSITIVOS_EMPLEADOS_TEMPORAL=500;
     public static final int DISPOSITIVOS_EMPLEADOS_TEMPORAL_ID=501;
+    public static final int TURNOS = 600;
+    public static final int TURNOS_ID = 601;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
@@ -70,6 +73,8 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados/*" , DISPOSITIVOS_EMPLEADOS_ID);
         uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados_temporal"   , DISPOSITIVOS_EMPLEADOS_TEMPORAL);
         uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados_temporal/#" , DISPOSITIVOS_EMPLEADOS_TEMPORAL_ID);
+        uriMatcher.addURI(AUTORIDAD, "turnos"                     , TURNOS);
+        uriMatcher.addURI(AUTORIDAD, "turnos/*"                   , TURNOS_ID);
     }
     // [/URI_MATCHER]
 
@@ -114,6 +119,13 @@ public class ProviderCotizacion extends ContentProvider {
             Tablas.EMPLEADO + "." + Empleados.APELLIDO_MAERNO,
             Tablas.EMPLEADO + "." + Empleados.FOTO,
             Tablas.CARGO + "." + Cargos.DESCRIPCION};
+
+    private final String[] proyTurno = new String[]{
+            BaseColumns._ID,
+            Tablas.TURNO + "." + Turnos.ID_TURNO,
+            Tablas.TURNO + "." + Turnos.DESCRIPCION,
+            Tablas.TURNO + "." + Turnos.HORA_INICIO,
+            Tablas.TURNO + "." + Turnos.HORA_FIN};
 
     // [/CAMPOS_AUXILIARES]
 
@@ -161,6 +173,10 @@ public class ProviderCotizacion extends ContentProvider {
                 return  ContratoCotizacion.generarMime("dispositivos_empleados_temporal");
             case DISPOSITIVOS_EMPLEADOS_TEMPORAL_ID:
                 return ContratoCotizacion.generarMimeItem("dispositivos_empleados_temporal");
+            case TURNOS:
+                return  ContratoCotizacion.generarMime("turnos");
+            case TURNOS_ID:
+                return ContratoCotizacion.generarMimeItem("turnos");
             default:
                 throw new UnsupportedOperationException("Uri desconocida =>" + uri);
         }
@@ -379,7 +395,12 @@ public class ProviderCotizacion extends ContentProvider {
                                 " AND (" + selection + ')' : ""),
                         selectionArgs, null, null, null);
                 break;
-
+            case TURNOS:
+                // Consultando todos los cargos
+                builder.setTables(Tablas.TURNO);
+                c = builder.query(bd, proyTurno,
+                        null, null, null, null,null);
+                break;
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }

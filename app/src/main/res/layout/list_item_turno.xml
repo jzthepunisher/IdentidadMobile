@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?listPreferredItemHeight"
+    android:background="@drawable/bg_list_row"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingRight="@dimen/activity_horizontal_margin">
+
+    <ImageView
+        android:id="@+id/imageViewTurno"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerVertical="true"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_access_time_black_24dp" />
+
+    <TextView
+        android:id="@+id/textViewDescripcionTurno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="72dp"
+        android:layout_marginTop="@dimen/padding_top_item"
+        android:text="New Text"
+        android:textAppearance="?android:attr/textAppearanceListItem"
+        android:textStyle="bold"
+
+        tools:text="Turno Mañana " />
+    <!--android:textAppearance="?textAppearanceListItem"-->
+    <TextView
+        android:id="@+id/textViewInicioFinTurno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="72dp"
+        android:layout_marginTop="@dimen/padding_top_item_small"
+        android:layout_below="@+id/textViewDescripcionTurno"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Coordinador"
+        tools:text="Inicio : 8:00 a.m. | Fin : 16:00 p.m." />
+
+
+</RelativeLayout>

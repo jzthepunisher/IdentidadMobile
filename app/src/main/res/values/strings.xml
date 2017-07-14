@@ -161,5 +161,7 @@
     <string name="title_activity_geo_cerca_adicionar_editar_detalle">
         GeoCercaAdicionarEditarDetalleActivity
     </string>
+    <string name="title_activity_unidad_reaccion_asignacion">Asignación de Unidad Reacción
+    </string>
 
 </resources>

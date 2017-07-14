@@ -10,8 +10,10 @@
     <dimen name="card_margin">16dp</dimen>
     <dimen name="margen_superior_lista">4dp</dimen>
     <dimen name="padding_bottom">8dp</dimen>
+    <dimen name="padding_top_item">12dp</dimen>
     <dimen name="padding_top_item_small">4dp</dimen>
     <dimen name="padding_top">8dp</dimen>
     <dimen name="app_bar_height">256dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="ancho_panel_lista">412dp</dimen>
 </resources>

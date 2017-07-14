@@ -37,6 +37,13 @@ public class ContratoCotizacion {
         String ESTADO           = "estado";
     }
 
+    interface ColumnasTurno{
+        String ID_TURNO    = "id_turno";
+        String DESCRIPCION = "descripcion";
+        String HORA_INICIO = "hora_inicio";
+        String HORA_FIN    = "hora_fin";
+    }
+
     public interface EstadoRegistro{
         String REGISTRADO_LOCALMENTE= "registrado.localmente";
         String REGISTRANDO_REMOTAMENTE= "registrando.remotamente";
@@ -49,17 +56,19 @@ public class ContratoCotizacion {
     }
 
     interface ColumnasDispositivoEmpleado{
-        String IMEI                = "imei";
+        String IMEI             = "imei";
         String ID_EMPLEADO      = "id_empleado";
     }
     // [URIS]
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
     public static final Uri URI_BASE = Uri.parse("content://" + AUTORIDAD);
+
     private static final String RUTA_DISPOSITIVOS="dispositivos";
     private static final String RUTA_EMPLEADOS="empleados";
     private static final String RUTA_CARGOS="cargos";
     private static final String RUTA_DISPOSITIVOS_EMPLEADOS="dispositivos_empleados";
     private static final String RUTA_DISPOSITIVOS_EMPLEADOS_TEMPORAL="dispositivos_empleados_temporal";
+    private static final String RUTA_TURNOS="turnos";
     // [/URIS]
 
     // [TIPOS_MIME]
@@ -198,4 +207,23 @@ public class ContratoCotizacion {
         }
     }
 
+
+
+    //Clase contrato de Cargo
+    public static class Turnos implements ColumnasTurno {
+
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_TURNOS).build();
+
+        public static String obtenerIdTurno(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri crearUriTurno(String id) {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+
+        public static Uri crearUriTurnoLista() {
+            return URI_CONTENIDO;
+        }
+    }
 }

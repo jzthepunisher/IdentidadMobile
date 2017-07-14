@@ -22,12 +22,12 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
-
-        <meta-data android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAfO3Jg6lX7MqlV8JtRqCDSk55Oh540Et4"/>
-
-
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyAfO3Jg6lX7MqlV8JtRqCDSk55Oh540Et4" />
 
         <activity
             android:name=".actividades.DispostivoAdicionarEditarActivity"
@@ -65,11 +65,11 @@
             android:launchMode="singleTop"
             android:parentActivityName=".actividades.DispostivoAdicionarEditarActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
 
             <!-- Receives the search request. -->
             <intent-filter>
@@ -93,11 +93,23 @@
         <activity
             android:name=".actividades.EmpleadoDetalleActivity"
             android:label="@string/title_activity_empleado_detalle"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".actividades.GeoCercaAdicionarEditarDetalleActivity"
             android:label="@string/title_activity_geo_cerca_adicionar_editar_detalle"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".actividades.MapaTermicoAgrupacionActivity" />
+        <activity
+            android:name=".actividades.UnidadReaccionAsignacionActivity"
+            android:label="@string/title_activity_unidad_reaccion_asignacion"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>
