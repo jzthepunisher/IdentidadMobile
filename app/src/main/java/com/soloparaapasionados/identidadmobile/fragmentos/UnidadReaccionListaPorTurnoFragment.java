@@ -13,11 +13,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosListaAdaptador;
 import com.soloparaapasionados.identidadmobile.adaptadores.TurnoListaAdaptador;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos;
+
 
 
 public class UnidadReaccionListaPorTurnoFragment extends Fragment
@@ -27,7 +30,8 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     private LinearLayoutManager linearLayoutManager;
     private TurnoListaAdaptador turnoListaAdaptador;
 
-
+    private String ARGUMENTO_ID_TURNO="argumento_id_turno";
+    String idTurno;
     public UnidadReaccionListaPorTurnoFragment() {
         // Required empty public constructor
     }
@@ -68,7 +72,10 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
 
     @Override
     public void onClick(TurnoListaAdaptador.ViewHolder holder, String idTurno, int position) {
+        Toast.makeText(getActivity()," Hola " + idTurno + "position : " + position,Toast.LENGTH_SHORT).show();
 
+        // Iniciar loader
+        getActivity().getSupportLoaderManager().restartLoader(2, null,  this);
     }
     //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>
     @Override
@@ -76,6 +83,10 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
         switch (id){
             case 1:
                 return new CursorLoader(getActivity(), Turnos.crearUriTurnoLista(), null, null, null, null);
+            case 2:
+                idTurno = args.getString(ARGUMENTO_ID_TURNO);
+
+                return new CursorLoader(getActivity(), Turnos.crearUriTurno_UnidadesReaccionUbicacion(idTurno), null, null, null, null);
         }
         return null;
     }
@@ -89,6 +100,12 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
                     if (turnoListaAdaptador != null && data.getCount()>0) {
                         turnoListaAdaptador.swapCursor(data);
 
+                        idTurno = data.getString(data.getColumnIndex(Turnos.ID_TURNO));
+
+                        Bundle bundle= new Bundle();
+                        bundle.putString(ARGUMENTO_ID_TURNO,idTurno);
+                        // Iniciar loader
+                        getActivity().getSupportLoaderManager().restartLoader(2, bundle,  this);
                     }
                 }
                 break;
@@ -100,4 +117,8 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
 
     }
     /////////////////////////////////////////////////////////////////////////////////////////////
+
+    public interface OnTurnoItemClickListener {
+        public void onClick( String idTurno, int position);
+    }
 }

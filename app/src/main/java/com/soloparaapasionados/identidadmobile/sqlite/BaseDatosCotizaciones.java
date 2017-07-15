@@ -4,12 +4,18 @@ import com.soloparaapasionados.identidadmobile.modelo.Cargo;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 
+import com.soloparaapasionados.identidadmobile.modelo.TipoUnidadReaccion;
 import com.soloparaapasionados.identidadmobile.modelo.Turno;
+import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicacion;
+import com.soloparaapasionados.identidadmobile.modelo.UnidadReaccion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Dispositivos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cargos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.DispositivosEmpleados;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposUnidadReaccion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.UnidadesReaccion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_UnidadesReaccionUbicacion;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,23 +31,29 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 25;
+    private static final int VERSION_ACTUAL = 32;
 
     private final Context contexto;
 
     interface Tablas {
-        String DISPOSITIVO                   = "dispositivo";
-        String EMPLEADO                      = "empleado";
-        String CARGO                         = "cargo";
-        String DISPOSITIVO_EMPLEADO          = "dispositivo_empleado";
-        String DISPOSITIVO_EMPLEADO_TEMPORAL = "dispositivo_empleado_temporal";
-        String TURNO                         = "turno";
+        String DISPOSITIVO                     = "dispositivo";
+        String EMPLEADO                        = "empleado";
+        String CARGO                           = "cargo";
+        String DISPOSITIVO_EMPLEADO            = "dispositivo_empleado";
+        String DISPOSITIVO_EMPLEADO_TEMPORAL   = "dispositivo_empleado_temporal";
+        String TURNO                           = "turno";
+        String TIPO_UNIDAD_REACCION            = "tipo_unidad_reaccion";
+        String UNIDAD_REACCION                 = "unidad_reaccion";
+        String TURNO_UNIDAD_REACCION_UBICACION = "turno_unidad_reaccion_ubicacion";
     }
 
     interface Referencias {
-        String ID_CARGO    = String.format("REFERENCES %s(%s) ", Tablas.CARGO      , Cargos.ID_CARGO);
-        String IMEI        = String.format("REFERENCES %s(%s) ", Tablas.DISPOSITIVO, DispositivosEmpleados.IMEI);
-        String ID_EMPLEADO = String.format("REFERENCES %s(%s) ", Tablas.EMPLEADO   , Empleados.ID_EMPLEADO);
+        String ID_CARGO                = String.format("REFERENCES %s(%s) ", Tablas.CARGO               , Cargos.ID_CARGO);
+        String IMEI                    = String.format("REFERENCES %s(%s) ", Tablas.DISPOSITIVO         , DispositivosEmpleados.IMEI);
+        String ID_EMPLEADO             = String.format("REFERENCES %s(%s) ", Tablas.EMPLEADO            , Empleados.ID_EMPLEADO);
+        String ID_TIPO_UNIDAD_REACCION = String.format("REFERENCES %s(%s) ", Tablas.TIPO_UNIDAD_REACCION, TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION);
+        String ID_TURNO                = String.format("REFERENCES %s(%s) ", Tablas.TURNO               , Turnos.ID_TURNO);
+        String ID_UNIDAD_REACCION      = String.format("REFERENCES %s(%s) ", Tablas.UNIDAD_REACCION     , UnidadesReaccion.ID_UNIDAD_REACCION);
     }
 
     public BaseDatosCotizaciones(Context contexto) {
@@ -95,8 +107,38 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 Turnos.ID_TURNO,Turnos.DESCRIPCION,
                 Turnos.HORA_INICIO,Turnos.HORA_FIN));
 
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL)",
+                Tablas.TIPO_UNIDAD_REACCION, BaseColumns._ID,
+                TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION,TiposUnidadReaccion.DESCRIPCION));
+
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL %s,"+
+                        "%s TEXT NOT NULL,%s TEXT NOT NULL," +
+                        "%s TEXT NULL,%s TEXT NULL," +
+                        "%s TEXT NULL)",
+                Tablas.UNIDAD_REACCION, BaseColumns._ID,
+                UnidadesReaccion.ID_UNIDAD_REACCION,TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION,Referencias.ID_TIPO_UNIDAD_REACCION,
+                UnidadesReaccion.DESCRIPCION,UnidadesReaccion.PLACA,
+                UnidadesReaccion.MARCA,UnidadesReaccion.MODELO,
+                UnidadesReaccion.COLOR));
+
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT NOT NULL %s,%s TEXT NOT NULL %s,"+
+                        "%s REAL NULL,%s REAL NULL," +
+                        "%s TEXT NULL," +
+                        " UNIQUE (%s, %s) ON CONFLICT REPLACE)",
+                Tablas.TURNO_UNIDAD_REACCION_UBICACION, BaseColumns._ID,
+                Turnos_UnidadesReaccionUbicacion.ID_TURNO,Referencias.ID_TURNO,Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION,Referencias.ID_UNIDAD_REACCION,
+                Turnos_UnidadesReaccionUbicacion.LATITUD,Turnos_UnidadesReaccionUbicacion.LONGITUD,
+                Turnos_UnidadesReaccionUbicacion.DIRECCION,
+                Turnos_UnidadesReaccionUbicacion.ID_TURNO,Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION));
+
         mockData(db);
         mockDataTurnos(db);
+        mockDataTiposUnidadReaccion(db);
+        mockDataUnidadesReaccion(db);
+        mockDataTurno_UnidadesReaccionUbicacion(db);
         //mockDataEmpleados(db);
         //mockDataDispositivosEmpleados(db);
     }
@@ -121,6 +163,9 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.DISPOSITIVO_EMPLEADO);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.DISPOSITIVO_EMPLEADO_TEMPORAL);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.TURNO);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.TIPO_UNIDAD_REACCION);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.UNIDAD_REACCION);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.TURNO_UNIDAD_REACCION_UBICACION);
 
         onCreate(db);
     }
@@ -314,6 +359,69 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         mockTurno(sqLiteDatabase, new Turno("03", "Turno Noche","00:00:00","08:00:00"));
     }
 
+    private void mockDataTiposUnidadReaccion(SQLiteDatabase sqLiteDatabase) {
+        mockTipoUnidadReaccion(sqLiteDatabase, new TipoUnidadReaccion("01", "Halcón"));
+        mockTipoUnidadReaccion(sqLiteDatabase, new TipoUnidadReaccion("02", "Cóndor"));
+    }
+
+    private void mockDataUnidadesReaccion(SQLiteDatabase sqLiteDatabase) {
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("01", "01","Halcón 1","XP-8709","Honda","Terreno","Azul"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("02", "01","Halcón 2","ER-3122","Honda","Terreno","Azul"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("03", "01","Halcón 3","YU-4444","Honda","Terreno","Azul"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("04", "01","Halcón 4","IO-5555","Honda","Terreno","Azul"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("05", "01","Halcón 5","OP-6666","Honda","Terreno","Azul"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("06", "01","Halcón 6","AS-7777","Honda","Terreno","Azul"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("07", "01","Halcón 7","SD-8888","Honda","Terreno","Azul"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("08", "01","Halcón 8","DF-9999","Honda","Terreno","Azul"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("09", "01","Halcón 9","GH-5564","Honda","Terreno","Azul"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("10", "01","Halcón 10","JK-4443","Honda","Terreno","Azul"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("11", "01","Halcón 11","KJ-6777","Honda","Terreno","Azul"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("12", "01","Halcón 12","VC-8666","Honda","Terreno","Azul"));
+
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("13", "02","Cóndor 13","XP-8709","Nissan","Terreno","Blanco"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("14", "02","Cóndor 14","ER-3122","Nissan","Terreno","Blanco"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("15", "02","Cóndor 15","YU-4444","Nissan","Terreno","Blanco"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("16", "02","Cóndor 16","IO-5555","Nissan","Terreno","Blanco"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("17", "02","Cóndor 17","OP-6666","Nissan","Terreno","Blanco"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("18", "02","Cóndor 18","AS-7777","Nissan","Terreno","Blanco"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("19", "02","Cóndor 19","SD-8888","Nissan","Terreno","Blanco"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("20", "02","Cóndor 20","DF-9999","Nissan","Terreno","Blanco"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("21", "02","Cóndor 21","GH-5564","Nissan","Terreno","Blanco"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("22", "02","Cóndor 22","JK-4443","Nissan","Terreno","Blanco"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("23", "02","Cóndor 23","KJ-6777","Nissan","Terreno","Blanco"));
+        mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("24", "02","Cóndor 24","VC-8666","Nissan","Terreno","Blanco"));
+
+    }
+
+    private void mockDataTurno_UnidadesReaccionUbicacion(SQLiteDatabase sqLiteDatabase) {
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("01","01",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("01","02",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("01","03",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("01","04",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("01","05",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("01","06",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("01","07",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("01","08",Double.valueOf(0),Double.valueOf(0),""));
+
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("02","01",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("02","02",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("02","03",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("02","04",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("02","05",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("02","06",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("02","07",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("02","08",Double.valueOf(0),Double.valueOf(0),""));
+
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("03","13",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("03","14",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("03","15",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("03","16",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("03","17",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("03","18",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("03","19",Double.valueOf(0),Double.valueOf(0),""));
+        mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("03","20",Double.valueOf(0),Double.valueOf(0),""));
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////
     public long mockLawyer(SQLiteDatabase db, Cargo cargo) {
         return db.insert(
                 Tablas.CARGO,
@@ -359,5 +467,26 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 Tablas.TURNO,
                 null,
                 turno.toContentValues());
+    }
+
+    public long mockTipoUnidadReaccion(SQLiteDatabase db, TipoUnidadReaccion tipoUnidadReaccion) {
+        return db.insert(
+                Tablas.TIPO_UNIDAD_REACCION,
+                null,
+                tipoUnidadReaccion.toContentValues());
+    }
+
+    public long mockUnidadReaccion(SQLiteDatabase db, UnidadReaccion unidadReaccion) {
+        return db.insert(
+                Tablas.UNIDAD_REACCION,
+                null,
+                unidadReaccion.toContentValues());
+    }
+
+    public long mockTurno_UnidadesReaccionUbicacion(SQLiteDatabase db, Turno_UnidadReaccionUbicacion turno_unidadReaccionUbicacion) {
+        return db.insert(
+                Tablas.TURNO_UNIDAD_REACCION_UBICACION,
+                null,
+                turno_unidadReaccionUbicacion.toContentValues());
     }
 }

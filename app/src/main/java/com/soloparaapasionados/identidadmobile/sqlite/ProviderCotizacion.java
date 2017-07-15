@@ -58,6 +58,7 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int DISPOSITIVOS_EMPLEADOS_TEMPORAL_ID=501;
     public static final int TURNOS = 600;
     public static final int TURNOS_ID = 601;
+    public static final int TURNOS_ID_UNIDADES_REACCION_UBICACION = 602;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
@@ -75,6 +76,7 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "dispositivos_empleados_temporal/#" , DISPOSITIVOS_EMPLEADOS_TEMPORAL_ID);
         uriMatcher.addURI(AUTORIDAD, "turnos"                     , TURNOS);
         uriMatcher.addURI(AUTORIDAD, "turnos/*"                   , TURNOS_ID);
+        uriMatcher.addURI(AUTORIDAD, "turnos/*/unidades_reaccion" , TURNOS_ID_UNIDADES_REACCION_UBICACION);
     }
     // [/URI_MATCHER]
 

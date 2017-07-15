@@ -44,6 +44,30 @@ public class ContratoCotizacion {
         String HORA_FIN    = "hora_fin";
     }
 
+    interface ColumnasTipoUnidadReaccion{
+        String ID_TIPO_UNIDAD_REACCION    = "id_tipo_unidad_reaccion";
+        String DESCRIPCION = "descripcion";
+    }
+
+    interface ColumnasUnidadReaccion{
+        String ID_UNIDAD_REACCION      = "id_unidad_reaccion";
+        String ID_TIPO_UNIDAD_REACCION = "id_tipo_unidad_reaccion";
+        String DESCRIPCION             = "descripcion";
+        String PLACA                   = "placa";
+        String MARCA                   = "marca";
+        String MODELO                  = "modelo";
+        String COLOR                   = "color";
+    }
+
+    interface ColumnasTurno_UnidadReaccionUbicacion
+    {
+        String ID_TURNO           = "id_turno";
+        String ID_UNIDAD_REACCION = "id_unidad_reaccion";
+        String LATITUD            = "latitud";
+        String LONGITUD           = "longitud";
+        String DIRECCION          = "direccion";
+    }
+
     public interface EstadoRegistro{
         String REGISTRADO_LOCALMENTE= "registrado.localmente";
         String REGISTRANDO_REMOTAMENTE= "registrando.remotamente";
@@ -69,6 +93,8 @@ public class ContratoCotizacion {
     private static final String RUTA_DISPOSITIVOS_EMPLEADOS="dispositivos_empleados";
     private static final String RUTA_DISPOSITIVOS_EMPLEADOS_TEMPORAL="dispositivos_empleados_temporal";
     private static final String RUTA_TURNOS="turnos";
+    private static final String RUTA_TIPOS_UNIDAD_REACCION="tipos_unidad_reaccion";
+    private static final String RUTA_UNIDADES_REACCION="unidades_reaccion";
     // [/URIS]
 
     // [TIPOS_MIME]
@@ -207,9 +233,7 @@ public class ContratoCotizacion {
         }
     }
 
-
-
-    //Clase contrato de Cargo
+    //Clase contrato de Turno
     public static class Turnos implements ColumnasTurno {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_TURNOS).build();
@@ -222,8 +246,41 @@ public class ContratoCotizacion {
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
 
+        public static Uri crearUriTurno_UnidadesReaccionUbicacion(String id) {
+            return URI_CONTENIDO.buildUpon().appendPath(id).appendPath(RUTA_UNIDADES_REACCION).build();
+        }
+
         public static Uri crearUriTurnoLista() {
             return URI_CONTENIDO;
         }
     }
+
+    //Clase contrato de Turno
+    public static class TiposUnidadReaccion implements ColumnasTipoUnidadReaccion {
+
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_TIPOS_UNIDAD_REACCION).build();
+
+        public static String obtenerIdTipoUnidadReaccion(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri crearUriTipoUnidadReaccion(String id) {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+
+        public static Uri crearUriTipoUnidadReaccionLista() {
+            return URI_CONTENIDO;
+        }
+    }
+
+    //Clase contrato de Turno
+    public static class UnidadesReaccion implements ColumnasUnidadReaccion {
+
+    }
+
+    //Clase contrato de TurnoUnidadReaccionUbicacion
+    public static class Turnos_UnidadesReaccionUbicacion implements ColumnasTurno_UnidadReaccionUbicacion {
+
+    }
+
 }
