@@ -18,17 +18,23 @@ import android.widget.Toast;
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosListaAdaptador;
 import com.soloparaapasionados.identidadmobile.adaptadores.TurnoListaAdaptador;
+import com.soloparaapasionados.identidadmobile.adaptadores.UnidadReaccionPorTurnoAdaptador;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos;
 
 
 
 public class UnidadReaccionListaPorTurnoFragment extends Fragment
-        implements TurnoListaAdaptador.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor>{
+        implements TurnoListaAdaptador.OnItemClickListener, UnidadReaccionPorTurnoAdaptador.OnItemClickListener,
+         LoaderManager.LoaderCallbacks<Cursor>{
 
     private RecyclerView recyclerViewTurnos;
     private LinearLayoutManager linearLayoutManager;
     private TurnoListaAdaptador turnoListaAdaptador;
+
+    private RecyclerView recyclerViewUbicacionUnidadReaccionPorTurno;
+    //private LinearLayoutManager linearLayoutManager;
+    private UnidadReaccionPorTurnoAdaptador unidadReaccionPorTurnoAdaptador;
 
     private String ARGUMENTO_ID_TURNO="argumento_id_turno";
     String idTurno;
@@ -54,7 +60,7 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
         // Inflate the layout for this fragment
         View root =  inflater.inflate(R.layout.fragment_unidad_reaccion_lista_por_turno, container, false);
 
-        // Preparar lista
+        // Preparar lista de Turnos
         recyclerViewTurnos = (RecyclerView) root.findViewById(R.id.recyclerViewTurnos);
         recyclerViewTurnos.setHasFixedSize(true);
 
@@ -63,6 +69,16 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
 
         turnoListaAdaptador = new TurnoListaAdaptador(getActivity(), this);
         recyclerViewTurnos.setAdapter(turnoListaAdaptador);
+
+        // Preparar lista las Ubicaciones de Unidades de Reaccion por Turno
+        recyclerViewUbicacionUnidadReaccionPorTurno = (RecyclerView) root.findViewById(R.id.recyclerViewUbicacionUnidadReaccionPorTurno);
+        recyclerViewUbicacionUnidadReaccionPorTurno.setHasFixedSize(true);
+
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerViewUbicacionUnidadReaccionPorTurno.setLayoutManager(linearLayoutManager);
+
+        unidadReaccionPorTurnoAdaptador = new UnidadReaccionPorTurnoAdaptador(getActivity(), this);
+        recyclerViewUbicacionUnidadReaccionPorTurno.setAdapter(unidadReaccionPorTurnoAdaptador);
 
         // Iniciar loader
         getActivity().getSupportLoaderManager().restartLoader(1, null,  this);
@@ -74,8 +90,16 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     public void onClick(TurnoListaAdaptador.ViewHolder holder, String idTurno, int position) {
         Toast.makeText(getActivity()," Hola " + idTurno + "position : " + position,Toast.LENGTH_SHORT).show();
 
+        Bundle bundle= new Bundle();
+        bundle.putString(ARGUMENTO_ID_TURNO,idTurno);
         // Iniciar loader
-        getActivity().getSupportLoaderManager().restartLoader(2, null,  this);
+        getActivity().getSupportLoaderManager().restartLoader(2, bundle,  this);
+    }
+
+    @Override
+    public void onClick(UnidadReaccionPorTurnoAdaptador.ViewHolder holder, String idUnidadReaccion, int position) {
+
+        Toast.makeText(getActivity()," Hola 2 " + idTurno + " Unidad Reaccion :" + idUnidadReaccion +  "position : " + position,Toast.LENGTH_SHORT).show();
     }
     //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>
     @Override
@@ -100,12 +124,22 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
                     if (turnoListaAdaptador != null && data.getCount()>0) {
                         turnoListaAdaptador.swapCursor(data);
 
+                        data.moveToFirst();
+
                         idTurno = data.getString(data.getColumnIndex(Turnos.ID_TURNO));
 
                         Bundle bundle= new Bundle();
                         bundle.putString(ARGUMENTO_ID_TURNO,idTurno);
                         // Iniciar loader
                         getActivity().getSupportLoaderManager().restartLoader(2, bundle,  this);
+                    }
+                }
+                break;
+            case 2:
+                if(data!=null)
+                {
+                    if (unidadReaccionPorTurnoAdaptador != null && data.getCount()>0) {
+                        unidadReaccionPorTurnoAdaptador.swapCursor(data);
                     }
                 }
                 break;
@@ -116,6 +150,7 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
+
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     public interface OnTurnoItemClickListener {

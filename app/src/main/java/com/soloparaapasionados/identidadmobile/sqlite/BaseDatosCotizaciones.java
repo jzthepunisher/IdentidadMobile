@@ -31,7 +31,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 32;
+    private static final int VERSION_ACTUAL = 36;
 
     private final Context contexto;
 
@@ -108,9 +108,11 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 Turnos.HORA_INICIO,Turnos.HORA_FIN));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL)",
+                        "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL," +
+                        "%s TEXT NOT NULL)",
                 Tablas.TIPO_UNIDAD_REACCION, BaseColumns._ID,
-                TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION,TiposUnidadReaccion.DESCRIPCION));
+                TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION,TiposUnidadReaccion.DESCRIPCION,
+                TiposUnidadReaccion.FOTO));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL %s,"+
@@ -360,8 +362,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
     }
 
     private void mockDataTiposUnidadReaccion(SQLiteDatabase sqLiteDatabase) {
-        mockTipoUnidadReaccion(sqLiteDatabase, new TipoUnidadReaccion("01", "Halcón"));
-        mockTipoUnidadReaccion(sqLiteDatabase, new TipoUnidadReaccion("02", "Cóndor"));
+        mockTipoUnidadReaccion(sqLiteDatabase, new TipoUnidadReaccion("01", "Halcón","ic_motorcycle_black_24dp.png"));
+        mockTipoUnidadReaccion(sqLiteDatabase, new TipoUnidadReaccion("02", "Cóndor","ic_directions_car_black_24dp.png"));
     }
 
     private void mockDataUnidadesReaccion(SQLiteDatabase sqLiteDatabase) {

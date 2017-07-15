@@ -12,6 +12,10 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Disposi
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.DispositivosEmpleadosTemporal;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.EstadoRegistro;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposUnidadReaccion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.UnidadesReaccion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_UnidadesReaccionUbicacion;
+
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -129,6 +133,17 @@ public class ProviderCotizacion extends ContentProvider {
             Tablas.TURNO + "." + Turnos.HORA_INICIO,
             Tablas.TURNO + "." + Turnos.HORA_FIN};
 
+    private final String[] proyTurno_UnidadReaccionUbicacion = new String[]{
+            Tablas.UNIDAD_REACCION + "." + BaseColumns._ID,
+            Tablas.TIPO_UNIDAD_REACCION + "." + TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION,
+            Tablas.TIPO_UNIDAD_REACCION + "." + TiposUnidadReaccion.FOTO,
+            Tablas.UNIDAD_REACCION + "." + UnidadesReaccion.ID_UNIDAD_REACCION,
+            Tablas.UNIDAD_REACCION + "." + UnidadesReaccion.DESCRIPCION,
+            Tablas.UNIDAD_REACCION + "." + UnidadesReaccion.PLACA,
+            Tablas.TURNO_UNIDAD_REACCION_UBICACION + "." + Turnos_UnidadesReaccionUbicacion.DIRECCION,
+            Tablas.TURNO_UNIDAD_REACCION_UBICACION + "." + Turnos_UnidadesReaccionUbicacion.LATITUD,
+            Tablas.TURNO_UNIDAD_REACCION_UBICACION + "." + Turnos_UnidadesReaccionUbicacion.LONGITUD};
+
     // [/CAMPOS_AUXILIARES]
 
 
@@ -151,6 +166,14 @@ public class ProviderCotizacion extends ContentProvider {
                     " ON dispositivo_empleado_temporal.id_empleado = empleado.id_empleado" +
                     " INNER JOIN cargo " +
                     " ON empleado.id_cargo = cargo.id_cargo";
+
+    private static final String TURNO_UNIDAD_REACCION_UBICACION =
+            "tipo_unidad_reaccion INNER JOIN unidad_reaccion " +
+                    "ON tipo_unidad_reaccion.id_tipo_unidad_reaccion = unidad_reaccion.id_tipo_unidad_reaccion" +
+            " INNER JOIN turno_unidad_reaccion_ubicacion " +
+                     " ON turno_unidad_reaccion_ubicacion.id_unidad_reaccion = unidad_reaccion.id_unidad_reaccion" +
+            " INNER JOIN turno " +
+                    " ON turno.id_turno = turno_unidad_reaccion_ubicacion.id_turno";
 
     int offSet=30;
 
@@ -402,6 +425,19 @@ public class ProviderCotizacion extends ContentProvider {
                 builder.setTables(Tablas.TURNO);
                 c = builder.query(bd, proyTurno,
                         null, null, null, null,null);
+                break;
+            case TURNOS_ID_UNIDADES_REACCION_UBICACION:
+                // Consultando ubiccaciones de Unidades de Reaccion por turno
+                id = Turnos.obtenerIdTurno(uri);
+                builder.setTables(TURNO_UNIDAD_REACCION_UBICACION);
+                c = builder.query(bd, proyTurno_UnidadReaccionUbicacion,
+                        Tablas.TURNO + '.' + Turnos.ID_TURNO + "=" + "\'" + id + "\'"
+                                + (!TextUtils.isEmpty(selection) ?" AND (" + selection + ')' : ""),
+                        selectionArgs, null, null, null);
+
+                /*c = builder.query(bd, proyTurno_UnidadReaccionUbicacion,
+                        selection,
+                        selectionArgs, null, null, null);*/
                 break;
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);

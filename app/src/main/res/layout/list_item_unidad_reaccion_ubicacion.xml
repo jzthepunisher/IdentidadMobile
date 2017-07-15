@@ -12,7 +12,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin">
 
     <ImageView
-        android:id="@+id/imageViewTipoUnidadReaccion"
+        android:id="@+id/imageViewFotoTipoUnidadReaccion"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_centerVertical="true"
@@ -38,7 +38,7 @@
         android:layout_marginTop="@dimen/padding_top_item_small"
         android:layout_below="@+id/textViewDescripcionUnidadReaccion"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:text="XP-1986"
+        android:text="XP-1986KKKK"
         tools:text="XP-1986" />
 
     <TextView

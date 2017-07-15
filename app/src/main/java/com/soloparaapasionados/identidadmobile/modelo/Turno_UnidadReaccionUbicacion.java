@@ -78,7 +78,7 @@ public class Turno_UnidadReaccionUbicacion  {
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
 
-        values.put(Turnos_UnidadesReaccionUbicacion.ID_TURNO, idUnidadReaccion);
+        values.put(Turnos_UnidadesReaccionUbicacion.ID_TURNO, idTurno);
         values.put(Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION, idUnidadReaccion);
         values.put(Turnos_UnidadesReaccionUbicacion.LATITUD, latitud);
         values.put(Turnos_UnidadesReaccionUbicacion.LONGITUD, longitud);

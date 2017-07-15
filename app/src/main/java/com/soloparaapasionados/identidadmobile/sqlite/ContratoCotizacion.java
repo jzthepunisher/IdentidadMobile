@@ -45,8 +45,9 @@ public class ContratoCotizacion {
     }
 
     interface ColumnasTipoUnidadReaccion{
-        String ID_TIPO_UNIDAD_REACCION    = "id_tipo_unidad_reaccion";
+        String ID_TIPO_UNIDAD_REACCION = "id_tipo_unidad_reaccion";
         String DESCRIPCION = "descripcion";
+        String FOTO        = "foto";
     }
 
     interface ColumnasUnidadReaccion{

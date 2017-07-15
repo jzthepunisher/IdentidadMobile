@@ -13,15 +13,18 @@ public class TipoUnidadReaccion {
 
     private String idTipoUnidadReaccion;
     private String descripcion;
+    private String foto;
 
-    public TipoUnidadReaccion(String idTipoUnidadReaccion,String descripcion) {
+    public TipoUnidadReaccion(String idTipoUnidadReaccion,String descripcion,String foto) {
         this.idTipoUnidadReaccion = idTipoUnidadReaccion;
         this.descripcion = descripcion;
+        this.foto = foto;
     }
 
     public TipoUnidadReaccion(Cursor cursor) {
         idTipoUnidadReaccion = cursor.getString(cursor.getColumnIndex(TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION));
         descripcion = cursor.getString(cursor.getColumnIndex(TiposUnidadReaccion.DESCRIPCION));
+        foto = cursor.getString(cursor.getColumnIndex(TiposUnidadReaccion.FOTO));
     }
 
     public String getIdTipoUnidadReaccion() {
@@ -40,10 +43,19 @@ public class TipoUnidadReaccion {
         this.descripcion = descripcion;
     }
 
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
         values.put(TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION, idTipoUnidadReaccion);
         values.put(TiposUnidadReaccion.DESCRIPCION, descripcion);
+        values.put(TiposUnidadReaccion.FOTO, foto);
         return values;
     }
 
