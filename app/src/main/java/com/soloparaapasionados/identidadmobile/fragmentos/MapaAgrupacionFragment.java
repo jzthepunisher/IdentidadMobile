@@ -105,7 +105,7 @@ public class MapaAgrupacionFragment extends Fragment implements LoaderManager.Lo
 
 
     protected void startDemo() {
-        //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-12.074459,  -77.027633), 12));
 
         mClusterManager = new ClusterManager<MyItem>(getActivity(), googleMap);
         googleMap.setOnCameraIdleListener(mClusterManager);
@@ -116,13 +116,13 @@ public class MapaAgrupacionFragment extends Fragment implements LoaderManager.Lo
 
     private void readItems()  {
         // Iniciar loader
-        getActivity().getSupportLoaderManager().restartLoader(1, null,  this);
+        getActivity().getSupportLoaderManager().restartLoader(4, null,  this);
     }
 /////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id){
-            case 1:
+            case 4:
                 return new CursorLoader(getActivity(), Clientes.crearUriClienteListadoConFiltroMonitoreoActivo(true), null, null, null, null);
         }
         return null;
@@ -131,16 +131,12 @@ public class MapaAgrupacionFragment extends Fragment implements LoaderManager.Lo
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()){
-            case 1:
+            case 4:
                 if(data!=null)
                 {
                     if ( data.getCount()>0) {
-
-                        //data.moveToFirst();
-                        while(data.moveToNext()){
-                            List<MyItem> items = new MyItemReader().leeClientes(data);
-                            mClusterManager.addItems(items);
-                        }
+                        List<MyItem> items = new MyItemReader().leeClientes(data);
+                        mClusterManager.addItems(items);
                     }
                 }
                 break;

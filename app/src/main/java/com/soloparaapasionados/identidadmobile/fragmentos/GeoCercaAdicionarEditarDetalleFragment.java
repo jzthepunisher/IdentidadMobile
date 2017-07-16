@@ -33,7 +33,8 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class GeoCercaAdicionarEditarDetalleFragment extends Fragment implements GoogleMap.OnMapLongClickListener {
+public class GeoCercaAdicionarEditarDetalleFragment extends Fragment
+        implements GoogleMap.OnMapLongClickListener {
     private static final String ARGUMENTO_ID_GEOCERCA = "argumento_id_geocerca";
 
     private String mIdGeocerca;
@@ -229,5 +230,6 @@ public class GeoCercaAdicionarEditarDetalleFragment extends Fragment implements 
 
     private  void asignaListener(){
         googleMap.setOnMapLongClickListener(this);
+
     }
 }

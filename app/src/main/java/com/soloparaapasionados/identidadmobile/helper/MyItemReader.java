@@ -2,6 +2,7 @@ package com.soloparaapasionados.identidadmobile.helper;
 
 import android.database.Cursor;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.soloparaapasionados.identidadmobile.modelo.MyItem;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Clientes;
 
@@ -61,6 +62,19 @@ public class MyItemReader {
             items.add(new MyItem(lat, lng, title, snippet));
         }
 
+
+        return items;
+    }
+
+    public ArrayList<LatLng> leeClientesMapaTermico(Cursor cursorClientes)  {
+        ArrayList<LatLng> items = new ArrayList<LatLng>();
+
+        while(cursorClientes.moveToNext()){
+            double lat = Double.valueOf(cursorClientes.getString(cursorClientes.getColumnIndex(Clientes.LATITUD_CLIENTE)));
+            double lng = Double.valueOf(cursorClientes.getString(cursorClientes.getColumnIndex(Clientes.LONGITUD_CLIENTE)));
+
+            items.add(new LatLng(lat, lng));
+        }
 
         return items;
     }

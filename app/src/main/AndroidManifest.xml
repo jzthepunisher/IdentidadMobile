@@ -65,11 +65,15 @@
             android:launchMode="singleTop"
             android:parentActivityName=".actividades.DispostivoAdicionarEditarActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
+
 
             <!-- Receives the search request. -->
             <intent-filter>
@@ -108,8 +112,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+
+        <service
+            android:name=".ServicioRemoto.FetchAddressIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
