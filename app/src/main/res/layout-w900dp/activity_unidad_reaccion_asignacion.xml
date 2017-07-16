@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -35,7 +36,6 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/ancho_panel_lista"
         android:layout_toRightOf="@+id/unidad_reaccion_listado_por_turno_container"
-
         android:elevation="8dp" />
 
     <android.support.design.widget.FloatingActionButton

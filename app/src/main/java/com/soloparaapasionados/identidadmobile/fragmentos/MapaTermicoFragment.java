@@ -4,32 +4,54 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.soloparaapasionados.identidadmobile.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MapaTermicoFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MapaTermicoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MapaTermicoFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
 
-    private OnFragmentInteractionListener mListener;
 
+public class MapaTermicoFragment extends Fragment   {
+
+    private GoogleMap googleMap;
+    MapView mMapView;
+
+    private HashMap<String, DataSet> mLists = new HashMap<String, DataSet>();
+    private HeatmapTileProvider mProvider;
+    private TileOverlay mOverlay;
+
+    public static final CameraPosition ESTADIO_NACIONAL =
+            new CameraPosition.Builder().target(new LatLng(-12.066886, -77.033745))
+                    .zoom(17.5f)
+                    .bearing(300)
+                    .tilt(0)
+                    .build();
     public MapaTermicoFragment() {
         // Required empty public constructor
     }
@@ -45,10 +67,7 @@ public class MapaTermicoFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static MapaTermicoFragment newInstance(String param1, String param2) {
         MapaTermicoFragment fragment = new MapaTermicoFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -56,8 +75,7 @@ public class MapaTermicoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -65,45 +83,130 @@ public class MapaTermicoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_mapa_termico, container, false);
+        View view= inflater.inflate(R.layout.fragment_mapa_termico, container, false);
+
+        mMapView = (MapView) view.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
+
+        mMapView.onResume(); // needed to get the map to display immediately
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+                //asignaListener();
+
+                startDemo();
+                //mMap.addMarker(new MarkerOptions().position(new LatLng(-12.066886, -77.033745)).title("Marker"));
+
+               // changeCamera(CameraUpdateFactory.newCameraPosition(ESTADIO_NACIONAL));
+
+
+
+                // For showing a move to my location button
+                //googleMap.setMyLocationEnabled(true);
+
+                // For dropping a marker at a point on the Map
+                //LatLng sydney = new LatLng(-34, 151);
+                //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+
+                // For zooming automatically to the location of the marker
+                //CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+                //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+        });
+
+
+
+
+        return  view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+
+    private void changeCamera(CameraUpdate update) {
+        changeCamera(update, null);
+    }
+
+    private void changeCamera(CameraUpdate update, GoogleMap.CancelableCallback callback) {
+        //if (mAnimateToggle.isChecked()) {
+        //    if (mCustomDurationToggle.isChecked()) {
+        //        int duration = mCustomDurationBar.getProgress();
+        //        // The duration must be strictly positive so we make it at least 1.
+        //        mMap.animateCamera(update, Math.max(duration, 1), callback);
+        //    } else {
+        //        mMap.animateCamera(update, callback);
+        //    }
+        //} else {
+        googleMap.moveCamera(update);
+        //}
+    }
+
+    protected void startDemo() {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-25, 143), 4));
+
+
+        try {
+            mLists.put(getString(R.string.police_stations), new DataSet(readItems(R.raw.police),
+                    getString(R.string.police_stations_url)));
+            mLists.put(getString(R.string.medicare), new DataSet(readItems(R.raw.medicare),
+                    getString(R.string.medicare_url)));
+
+            llenaMapa();
+        } catch (JSONException e) {
+            Toast.makeText(getActivity(), "Problem reading list of markers.", Toast.LENGTH_LONG).show();
         }
+
+        // Make the handler deal with the map
+        // Input: list of WeightedLatLngs, minimum and maximum zoom levels to calculate custom
+        // intensity from, and the map to draw the heatmap on
+        // radius, gradient and opacity not specified, so default are used
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+    private void llenaMapa(){
+        // Check if need to instantiate (avoid setData etc twice)
+        if (mProvider == null) {
+            mProvider = new HeatmapTileProvider.Builder().data(
+                    mLists.get(getString(R.string.police_stations)).getData()).build();
+            mOverlay = googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+
+
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            mProvider.setData(mLists.get(R.string.police_stations).getData());
+            mOverlay.clearTileCache();
+        }
+
+    }
+
+    private class DataSet {
+        private ArrayList<LatLng> mDataset;
+        private String mUrl;
+
+        public DataSet(ArrayList<LatLng> dataSet, String url) {
+            this.mDataset = dataSet;
+            this.mUrl = url;
+        }
+
+        public ArrayList<LatLng> getData() {
+            return mDataset;
+        }
+
+        public String getUrl() {
+            return mUrl;
         }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    // Datasets from http://data.gov.au
+    private ArrayList<LatLng> readItems(int resource) throws JSONException {
+        ArrayList<LatLng> list = new ArrayList<LatLng>();
+        InputStream inputStream = getResources().openRawResource(resource);
+        String json = new Scanner(inputStream).useDelimiter("\\A").next();
+        JSONArray array = new JSONArray(json);
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject object = array.getJSONObject(i);
+            double lat = object.getDouble("lat");
+            double lng = object.getDouble("lng");
+            list.add(new LatLng(lat, lng));
+        }
+        return list;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

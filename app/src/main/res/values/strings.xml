@@ -164,4 +164,11 @@
     <string name="title_activity_unidad_reaccion_asignacion">Asignación de Unidad Reacción
     </string>
 
+    <string name="police_stations">Police Stations in Victoria</string>
+    <string name="police_stations_url">http://data.gov.au/dataset/police-station-locations/resource/76110b24-0f0a-4c29-9583-3f99eaba486c</string>
+    <string name="medicare">Medicare Offices</string>
+    <string name="medicare_url">http://data.gov.au/dataset/location-of-medicare-offices/resource/5d38e1be-4011-49c4-8b8b-75405eeb1088</string>
+
+    <string name="titulo_mapa_termico">Mapa Térmico</string>
+    <string name="titulo_mapa_agrupacion">Mapa Agrupación</string>
 </resources>

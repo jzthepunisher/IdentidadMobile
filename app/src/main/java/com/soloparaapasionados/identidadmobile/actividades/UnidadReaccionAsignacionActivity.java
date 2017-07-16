@@ -9,12 +9,13 @@ import android.view.View;
 
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.fragmentos.EmpleadoListadoFragment;
+import com.soloparaapasionados.identidadmobile.fragmentos.MapaTermicoAgrupacionFragment;
 import com.soloparaapasionados.identidadmobile.fragmentos.UnidadReaccionListaPorTurnoFragment;
 
 public class UnidadReaccionAsignacionActivity extends AppCompatActivity {
 
     UnidadReaccionListaPorTurnoFragment unidadReaccionListaPorTurnoFragment;
-
+    boolean patronMasterDetalle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +32,14 @@ public class UnidadReaccionAsignacionActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.unidad_reaccion_listado_por_turno_container, unidadReaccionListaPorTurnoFragment).commit();
         }
 
+        // Verificación: ¿Existe el detalle en el layout?
+        if (findViewById(R.id.mapa_termico_agrupacion_container) != null) {
+            // Si es asi, entonces confirmar modo Master-Detail
+            patronMasterDetalle = true;
+
+            cargarFragmentoDetalle("0101");
+        }
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,4 +50,15 @@ public class UnidadReaccionAsignacionActivity extends AppCompatActivity {
         });
     }
 
+    private void cargarFragmentoDetalle(String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString(MapaTermicoAgrupacionFragment.ARGUMENTO_ID_TURNO, id);
+
+        MapaTermicoAgrupacionFragment mapaTermicoAgrupacionFragment = new MapaTermicoAgrupacionFragment();
+        mapaTermicoAgrupacionFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mapa_termico_agrupacion_container, mapaTermicoAgrupacionFragment)
+                .commit();
+    }
 }
