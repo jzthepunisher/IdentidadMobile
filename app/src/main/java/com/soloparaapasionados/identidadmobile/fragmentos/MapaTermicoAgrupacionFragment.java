@@ -1,8 +1,10 @@
 package com.soloparaapasionados.identidadmobile.fragmentos;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -18,25 +20,32 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.ServicioLocal.TurnoServiceLocal;
 import com.soloparaapasionados.identidadmobile.adaptadores.SeccionesPagerAdaptador;
+import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicacion;
 
 public class MapaTermicoAgrupacionFragment extends Fragment  {
 
     TabLayout tabs;
     ViewPager mViewPager;
-    Toolbar toolbar;
+    public static Toolbar toolbar;
 
     public static final String ARGUMENTO_ID_TURNO="argumento_id_turno";
     public static final String ARGUMENTO_DESCRIPCION_TURNO="argumento_descripcion_turno";
     public static final String ARGUMENTO_HORARIO_TURNO="argumento_horario_turno";
 
-    String idTurno;
-    String descripcionTurno;
-    String rangoHorarioTurno;
+    public static String idTurno;
+    public static String descripcionTurno;
+    public static String rangoHorarioTurno;
 
-    String idUnidadReaccion;
-    String descripcionUnidadReaccion;
-    String direccionUbicacionUnidadReaccion;
+    public static String idUnidadReaccion;
+    public static String descripcionUnidadReaccion;
+    public static double latitudUbicacionUnidadReaccion;
+    public static double longitudUbicacionUnidadReaccion;
+    public static String direccionUbicacionUnidadReaccion;
+
+
+    SeccionesPagerAdaptador adapter;
 
     public MapaTermicoAgrupacionFragment() {
         // Required empty public constructor
@@ -97,18 +106,50 @@ public class MapaTermicoAgrupacionFragment extends Fragment  {
         Glide.with(this)
                 .load(itemDetallado.urlMiniatura)
                 .into((ImageView) v.findViewById(R.id.imagen));*/
+
+        FloatingActionButton floatingActionButtonSalvarUbicacionUnidadReaccion = (FloatingActionButton) v.findViewById(R.id.floatingActionButtonSalvarUbicacionUnidadReaccion);
+        floatingActionButtonSalvarUbicacionUnidadReaccion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actualizarUbicacionUnidadReaccionLocalmente( idTurno, idUnidadReaccion,
+                        latitudUbicacionUnidadReaccion,  longitudUbicacionUnidadReaccion,
+                        direccionUbicacionUnidadReaccion);
+            }
+        });
+
         return v;
     }
 
     private void configuraViewPager(ViewPager viewPager) {
-        SeccionesPagerAdaptador adapter = new SeccionesPagerAdaptador(getActivity().getSupportFragmentManager());
+        adapter = new SeccionesPagerAdaptador(getActivity().getSupportFragmentManager());
         adapter.addFragment(MapaTermicoFragment.newInstance("01","02"), getString(R.string.titulo_mapa_termico));
         adapter.addFragment(MapaAgrupacionFragment.newInstance("02","02"), getString(R.string.titulo_mapa_agrupacion));
         //adapter.addFragment(GridFragment.newInstance(3), getString(R.string.title_section3));
         viewPager.setAdapter(adapter);
     }
 
+    private void actualizarUbicacionUnidadReaccionLocalmente(String idTurno,String idUnidadReaccion,double latitud, double longitud,String message){
+        Intent intent = new Intent(getActivity(), TurnoServiceLocal.class);
+        intent.setAction(TurnoServiceLocal.ACCION_ACTUALIZAR_TURNO_UNIDAD_REACCION_UBICACION_ISERVICE);
+        Turno_UnidadReaccionUbicacion turno_unidadReaccionUbicacion=generarEntidadTurno_UnidadReaccionUbicacion(idTurno,idUnidadReaccion, latitud,  longitud, message);
+        intent.putExtra(TurnoServiceLocal.EXTRA_MI_TURNO_UNIDAD_REACCION_UBICACION, turno_unidadReaccionUbicacion);
+        getActivity().startService(intent);
+    }
 
+    private Turno_UnidadReaccionUbicacion generarEntidadTurno_UnidadReaccionUbicacion(
+            String idTurno,String idUnidadReaccion,
+            double latitud, double longitud,String direccion){
+
+        Turno_UnidadReaccionUbicacion turno_unidadReaccionUbicacion =new Turno_UnidadReaccionUbicacion();
+
+        turno_unidadReaccionUbicacion.setIdTurno(idTurno);
+        turno_unidadReaccionUbicacion.setIdUnidadReaccion(idUnidadReaccion);
+        turno_unidadReaccionUbicacion.setLatitud(latitud);
+        turno_unidadReaccionUbicacion.setLongitud(longitud);
+        turno_unidadReaccionUbicacion.setDireccion(direccion);
+
+        return turno_unidadReaccionUbicacion;
+    }
 
     public void setSubTituloTurno(String idTurno,String descripcionTurno, String rangoHorarioTurno, int position){
 
@@ -117,6 +158,8 @@ public class MapaTermicoAgrupacionFragment extends Fragment  {
         this.rangoHorarioTurno=rangoHorarioTurno==null?"":rangoHorarioTurno;
 
         setSubTitulo();
+
+        ((MapaTermicoFragment)adapter.getItem(0)).setIdTurno(this.idTurno);
     }
 
     public void setSubTituloUbicacionUnidadReaccion(String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion, int position){
@@ -125,11 +168,11 @@ public class MapaTermicoAgrupacionFragment extends Fragment  {
         this.direccionUbicacionUnidadReaccion=direccionUbicacionUnidadReaccion==null?"":direccionUbicacionUnidadReaccion;
 
         setSubTitulo();
+
+        ((MapaTermicoFragment)adapter.getItem(0)).setIdUnidadReaccion(this.idUnidadReaccion);
     }
 
-
-
-    public void setSubTitulo(){
+    public static void setSubTitulo(){
 
         /*String subtitulo=" Turno : " + descripcionTurno + " " + rangoHorarioTurno;
         subtitulo+="   " + " Unidad Reacción : " + descripcionUnidadReaccion + " " + direccionUbicacionUnidadReaccion;*/

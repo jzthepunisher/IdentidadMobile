@@ -116,6 +116,9 @@
 
         <service
             android:name=".ServicioRemoto.FetchAddressIntentService"
+            android:exported="false" />
+        <service
+            android:name=".ServicioLocal.TurnoServiceLocal"
             android:exported="false"></service>
     </application>
 

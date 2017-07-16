@@ -5,12 +5,14 @@ import android.database.Cursor;
 
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_UnidadesReaccionUbicacion;
 
+import java.io.Serializable;
+
 /**
  * Created by USUARIO on 15/07/2017.
  */
 
-public class Turno_UnidadReaccionUbicacion  {
-
+public class Turno_UnidadReaccionUbicacion implements Serializable {
+    private static final long serialVersionUID=1L;
     private String idTurno;
     private String idUnidadReaccion;
     private Double latitud;
@@ -55,6 +57,10 @@ public class Turno_UnidadReaccionUbicacion  {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public Turno_UnidadReaccionUbicacion(){
+
     }
 
     public Turno_UnidadReaccionUbicacion(String idTurno,String idUnidadReaccion,Double latitud,Double longitud

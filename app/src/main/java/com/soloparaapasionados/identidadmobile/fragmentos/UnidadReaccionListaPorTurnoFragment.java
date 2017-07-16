@@ -25,7 +25,7 @@ import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicac
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_UnidadesReaccionUbicacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos;
-
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.UnidadesReaccion;
 
 
 public class UnidadReaccionListaPorTurnoFragment extends Fragment
@@ -177,8 +177,8 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
 
                         data.moveToFirst();
 
-                        idUnidadReaccion=data.getString(data.getColumnIndex(ContratoCotizacion.UnidadesReaccion.DESCRIPCION));
-                        descripcionUnidadReaccion=data.getString(data.getColumnIndex(ContratoCotizacion.UnidadesReaccion.DESCRIPCION));
+                        idUnidadReaccion=data.getString(data.getColumnIndex(UnidadesReaccion.ID_UNIDAD_REACCION));
+                        descripcionUnidadReaccion=data.getString(data.getColumnIndex(UnidadesReaccion.DESCRIPCION));
                         String direccion=data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.DIRECCION));
                         direccionUbicacionUnidadReaccion=direccion.isEmpty()?"No existe ubicación asignada":direccion;
                         position=0 ;
@@ -221,12 +221,12 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
 
     public void cargarUbicacionUnidadReaccion(String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion, int position) {
         if (onTurnoItemClickFragmentoListener != null) {
-            onTurnoItemClickFragmentoListener.OnUbicacionUnidadReaccionItemFragmentoClick(idUnidadReaccion, descripcionUnidadReaccion,  direccionUbicacionUnidadReaccion, position);
+            onTurnoItemClickFragmentoListener.OnUbicacionUnidadReaccionItemFragmentoClick(idUnidadReaccion, descripcionUnidadReaccion, direccionUbicacionUnidadReaccion, position);
         }
     }
 
     public interface OnTurnoItemClickFragmentoListener {
         public void OnTurnoItemFragmentoClick( String idTurno,String descripcionTurno, String rangoHorarioTurno, int position);
-        public void OnUbicacionUnidadReaccionItemFragmentoClick( String idTurno,String descripcionTurno, String rangoHorarioTurno, int position);
+        public void OnUbicacionUnidadReaccionItemFragmentoClick( String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion, int position);
     }
 }

@@ -65,7 +65,8 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
 
     private ArrayList<Marker> listaMarkers = new ArrayList<Marker>();
 
-
+    String idTurno;
+    String idUnidadReaccion;
 
     /**
      * Tracks whether the user has requested an address. Becomes true when the user requests an
@@ -86,7 +87,6 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
     private String mAddressOutput;
 
 
-
     public static final CameraPosition ESTADIO_NACIONAL =
             new CameraPosition.Builder().target(new LatLng(-12.066886, -77.033745))
                     .zoom(17.5f)
@@ -97,15 +97,6 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MapaTermicoFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static MapaTermicoFragment newInstance(String param1, String param2) {
         MapaTermicoFragment fragment = new MapaTermicoFragment();
 
@@ -137,22 +128,6 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
                 asignaListener();
 
                 startDemo();
-                //mMap.addMarker(new MarkerOptions().position(new LatLng(-12.066886, -77.033745)).title("Marker"));
-
-               // changeCamera(CameraUpdateFactory.newCameraPosition(ESTADIO_NACIONAL));
-
-
-
-                // For showing a move to my location button
-                //googleMap.setMyLocationEnabled(true);
-
-                // For dropping a marker at a point on the Map
-                //LatLng sydney = new LatLng(-34, 151);
-                //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-
-                // For zooming automatically to the location of the marker
-                //CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
 
@@ -184,20 +159,7 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
 
     protected void startDemo() {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-25, 143), 4));
-
-
-
-            /*mLists.put(getString(R.string.police_stations), new DataSet(readItems(R.raw.police), getString(R.string.police_stations_url)));
-            mLists.put(getString(R.string.medicare), new DataSet(readItems(R.raw.medicare),
-                    getString(R.string.medicare_url)));*/
-
-            llenaMapa();
-
-
-        // Make the handler deal with the map
-        // Input: list of WeightedLatLngs, minimum and maximum zoom levels to calculate custom
-        // intensity from, and the map to draw the heatmap on
-        // radius, gradient and opacity not specified, so default are used
+        llenaMapa();
     }
 
     private void llenaMapa(){
@@ -206,18 +168,6 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
 
         // Iniciar loader
         getActivity().getSupportLoaderManager().restartLoader(3, null,  this);
-
-        // Check if need to instantiate (avoid setData etc twice)
-        /*if (mProvider == null) {
-            mProvider = new HeatmapTileProvider.Builder().data(
-                    mLists.get(getString(R.string.police_stations)).getData()).build();
-            mOverlay = googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
-
-
-        } else {
-            mProvider.setData(mLists.get(R.string.police_stations).getData());
-            mOverlay.clearTileCache();
-        }*/
 
     }
 ////////////////////////////////////////////////////////////////////////
@@ -380,7 +330,6 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
      */
     @SuppressWarnings("unused")
     public void fetchAddressButtonHandler() {
-
         for (Marker marcadorlista : listaMarkers) {
             if (marcadorlista.getPosition() != null) {
                 mLastLocation=new Location("");
@@ -390,7 +339,6 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
                 return;
             }
         }
-
         // If we have not yet retrieved the user location, we process the user's request by setting
         // mAddressRequested to true. As far as the user is concerned, pressing the Fetch Address button
         // immediately kicks off the process of getting the address.
@@ -411,6 +359,8 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
 
         // Pass the location data as an extra to the service.
         intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
+        intent.putExtra(FetchAddressIntentService.EXTRA_ID_TURNO,"");
+        intent.putExtra(FetchAddressIntentService.EXTRA_ID_UNIDAD_REACCION,"");
 
         // Start the service. If the service isn't already running, it is instantiated and started
         // (creating a process for it if needed); if it is running then it remains running. The
@@ -438,7 +388,11 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
 
             // Show a toast message if an address was found.
             if (resultCode == Constants.SUCCESS_RESULT) {
-                showToast(getString(R.string.address_found));
+                //showToast(getString(R.string.address_found));
+                MapaTermicoAgrupacionFragment.direccionUbicacionUnidadReaccion=mAddressOutput;
+                MapaTermicoAgrupacionFragment.latitudUbicacionUnidadReaccion=mLastLocation.getLatitude();
+                MapaTermicoAgrupacionFragment.longitudUbicacionUnidadReaccion=mLastLocation.getLongitude();
+                MapaTermicoAgrupacionFragment.setSubTitulo();
             }
 
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
@@ -460,6 +414,37 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
      */
     private void showToast(String text) {
         Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+    }
+
+   /*  @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnUbicacionUnidadReaccionChangeFragmentoListener) {
+            onUbicacionUnidadReaccionChangeFragmentoListener = (OnUbicacionUnidadReaccionChangeFragmentoListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " debes implementar EscuchaFragmento");
+        }
+    }
+
+   @Override
+    public void onDetach() {
+        super.onDetach();
+        onUbicacionUnidadReaccionChangeFragmentoListener = null;
+    }
+
+    private OnUbicacionUnidadReaccionChangeFragmentoListener onUbicacionUnidadReaccionChangeFragmentoListener;
+
+    public interface OnUbicacionUnidadReaccionChangeFragmentoListener {
+        public void OnUbicacionUnidadReaccionChange( String direccionUbicacion,Double latitudUnidadReaccion, Double longitudUnidadReaccion);
+    }*/
+
+    public void setIdTurno(String idTurno){
+        this.idTurno =idTurno==null?"":idTurno;
+    }
+
+    public void setIdUnidadReaccion(String idUnidadReaccion){
+        this.idUnidadReaccion=idUnidadReaccion==null?"":idUnidadReaccion;
     }
 
 }

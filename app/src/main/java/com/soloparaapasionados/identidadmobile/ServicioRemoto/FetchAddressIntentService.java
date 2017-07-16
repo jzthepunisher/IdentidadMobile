@@ -12,6 +12,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.ServicioLocal.TurnoServiceLocal;
+import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicacion;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +29,8 @@ import java.util.Locale;
  */
 public class FetchAddressIntentService extends IntentService {
     private static final String TAG = "FetchAddressIS";
-
+    public static final String EXTRA_ID_TURNO = "extra_id_turno";
+    public static final String EXTRA_ID_UNIDAD_REACCION="extra_id_unidad_reaccion";
     /**
      * The receiver where results are forwarded from this service.
      */
@@ -71,7 +74,7 @@ public class FetchAddressIntentService extends IntentService {
         if (location == null) {
             errorMessage = getString(R.string.no_location_data_provided);
             Log.wtf(TAG, errorMessage);
-            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
+            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage,0.0,0.0);
             return;
         }
 
@@ -112,13 +115,17 @@ public class FetchAddressIntentService extends IntentService {
         }
 
         // Handle case where no address was found.
-        if (addresses == null || addresses.size()  == 0) {
-            if (errorMessage.isEmpty()) {
+        if (addresses == null || addresses.size()  == 0)
+        {
+            if (errorMessage.isEmpty())
+            {
                 errorMessage = getString(R.string.no_address_found);
                 Log.e(TAG, errorMessage);
             }
-            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
-        } else {
+            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage,0.0,0.0);
+        }
+        else
+        {
             Address address = addresses.get(0);
             ArrayList<String> addressFragments = new ArrayList<>();
 
@@ -131,21 +138,51 @@ public class FetchAddressIntentService extends IntentService {
             // getPostalCode() ("94043", for example)
             // getCountryCode() ("US", for example)
             // getCountryName() ("United States", for example)
-            for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+            for(int i = 0; i < address.getMaxAddressLineIndex(); i++)
+            {
                 addressFragments.add(address.getAddressLine(i));
             }
+
             Log.i(TAG, getString(R.string.address_found));
             deliverResultToReceiver(Constants.SUCCESS_RESULT,
-                    TextUtils.join(System.getProperty("line.separator"), addressFragments));
+                    TextUtils.join(System.getProperty("line.separator"), addressFragments), location.getLatitude() ,location.getLongitude());
         }
     }
 
     /**
      * Sends a resultCode and message to the receiver.
      */
-    private void deliverResultToReceiver(int resultCode, String message) {
+    private void deliverResultToReceiver(int resultCode, String message,Double latitud,Double longitud) {
+
+        /*actualizarUbicacionUnidadReaccionLocalmente(idTurno,idUnidadReaccion,latitud, longitud,message);*/
+
         Bundle bundle = new Bundle();
         bundle.putString(Constants.RESULT_DATA_KEY, message);
         mReceiver.send(resultCode, bundle);
     }
+
+    /*private void actualizarUbicacionUnidadReaccionLocalmente(String idTurno,String idUnidadReaccion,double latitud, double longitud,String message){
+        Intent intent = new Intent(this, TurnoServiceLocal.class);
+        intent.setAction(TurnoServiceLocal.ACCION_ACTUALIZAR_TURNO_UNIDAD_REACCION_UBICACION_ISERVICE);
+        Turno_UnidadReaccionUbicacion turno_unidadReaccionUbicacion=generarEntidadTurno_UnidadReaccionUbicacion(idTurno,idUnidadReaccion, latitud,  longitud, message);
+        intent.putExtra(TurnoServiceLocal.EXTRA_MI_TURNO_UNIDAD_REACCION_UBICACION, turno_unidadReaccionUbicacion);
+        startService(intent);
+    }*/
+
+    //Generar entidad empleado
+    /*private Turno_UnidadReaccionUbicacion generarEntidadTurno_UnidadReaccionUbicacion(
+            String idTurno,String idUnidadReaccion,
+            double latitud, double longitud,String direccion){
+
+        Turno_UnidadReaccionUbicacion turno_unidadReaccionUbicacion =new Turno_UnidadReaccionUbicacion();
+
+        turno_unidadReaccionUbicacion.setIdTurno(idTurno);
+        turno_unidadReaccionUbicacion.setIdUnidadReaccion(idUnidadReaccion);
+        turno_unidadReaccionUbicacion.setLatitud(latitud);
+        turno_unidadReaccionUbicacion.setLongitud(longitud);
+        turno_unidadReaccionUbicacion.setDireccion(direccion);
+
+        return turno_unidadReaccionUbicacion;
+    }*/
+
 }

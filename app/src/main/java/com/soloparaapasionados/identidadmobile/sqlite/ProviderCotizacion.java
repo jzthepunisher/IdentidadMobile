@@ -64,6 +64,7 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int TURNOS = 600;
     public static final int TURNOS_ID = 601;
     public static final int TURNOS_ID_UNIDADES_REACCION_UBICACION = 602;
+    public static final int TURNOS_ID_UNIDADES_REACCION_ID_UBICACION = 603;
     public static final int CLIENTES = 700;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
@@ -83,6 +84,7 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "turnos"                     , TURNOS);
         uriMatcher.addURI(AUTORIDAD, "turnos/*"                   , TURNOS_ID);
         uriMatcher.addURI(AUTORIDAD, "turnos/*/unidades_reaccion" , TURNOS_ID_UNIDADES_REACCION_UBICACION);
+        uriMatcher.addURI(AUTORIDAD, "turnos/*/unidades_reaccion/*/ubicaciones" , TURNOS_ID_UNIDADES_REACCION_ID_UBICACION);
         uriMatcher.addURI(AUTORIDAD, "clientes"                   , CLIENTES);
     }
     // [/URI_MATCHER]
@@ -300,6 +302,9 @@ public class ProviderCotizacion extends ContentProvider {
                 bd.insertOrThrow(Tablas.DISPOSITIVO_EMPLEADO, null,valuesDos);
                 notificarCambio(uri);
                 return DispositivosEmpleados.crearUriDispositivoEmpleado(id,idEmpleado);
+
+
+
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }
@@ -518,6 +523,30 @@ public class ProviderCotizacion extends ContentProvider {
 
 
                 break;
+            case TURNOS_ID_UNIDADES_REACCION_ID_UBICACION:
+                String idTurno = Turnos.obtenerIdTurno(uri);
+                String idUnidadReaccion = Turnos.obtenerIdUnidadReaccion(uri);
+
+                String[] argumentos3={idTurno,idUnidadReaccion};
+
+                seleccion = String.format("%s=? ", Turnos_UnidadesReaccionUbicacion.ID_TURNO) + " AND " + String.format("%s=? ", Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION);
+
+                //seleccion +=  seleccion + " AND " + String.format("%s=? ", Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION);
+                //values=new ContentValues();
+                //values.put(Turnos_UnidadesReaccionUbicacion.DIRECCION,estado);
+
+                afectados = bd.update(Tablas.TURNO_UNIDAD_REACCION_UBICACION, values, seleccion, argumentos3);
+                break;
+                /*String seleccion = String.format("%s=? AND %s=?",
+                        DispositivosEmpleados.IMEI, DispositivosEmpleados.ID_EMPLEADO);*/
+
+                /*ContentValues valuesDos = new ContentValues();
+                valuesDos.put(DispositivosEmpleados.IMEI,imei);
+                valuesDos.put(DispositivosEmpleados.ID_EMPLEADO,idEmpleado);
+
+                bd.insertOrThrow(Tablas.DISPOSITIVO_EMPLEADO, null,valuesDos);
+                notificarCambio(uri);
+                return DispositivosEmpleados.crearUriDispositivoEmpleado(id,idEmpleado);*/
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }

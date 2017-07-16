@@ -34,8 +34,6 @@ public class DispositivoServicioLocal extends IntentService {
     public static final String EXTRA_MI_DISPOSITIVO_EMPLEADO = "extra_mi_dispositivo_empleado";
     public static final String EXTRA_ID_DISPOSITIVO = "extra_id_dispositivo";
 
-
-
     public DispositivoServicioLocal() {
         super("DispositivoServicioLocal");
     }

@@ -111,6 +111,7 @@ public class ContratoCotizacion {
     private static final String RUTA_TIPOS_UNIDAD_REACCION="tipos_unidad_reaccion";
     private static final String RUTA_UNIDADES_REACCION="unidades_reaccion";
     private static final String RUTA_CLIENTES="clientes";
+    private static final String RUTA_UBICACIONES="ubicaciones";
     // [/URIS]
 
     // [TIPOS_MIME]
@@ -258,12 +259,20 @@ public class ContratoCotizacion {
             return uri.getPathSegments().get(1);
         }
 
+        public static String obtenerIdUnidadReaccion(Uri uri) {
+            return uri.getPathSegments().get(3);
+        }
+
         public static Uri crearUriTurno(String id) {
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
 
-        public static Uri crearUriTurno_UnidadesReaccionUbicacion(String id) {
-            return URI_CONTENIDO.buildUpon().appendPath(id).appendPath(RUTA_UNIDADES_REACCION).build();
+        public static Uri crearUriTurno_UnidadesReaccionUbicacion(String idTurno) {
+            return URI_CONTENIDO.buildUpon().appendPath(idTurno).appendPath(RUTA_UNIDADES_REACCION).build();
+        }
+
+        public static Uri crearUriTurno_UnidadesReaccionUbicacion_Ubicacion(String idTurno,String idUnidadReaccion) {
+            return URI_CONTENIDO.buildUpon().appendPath(idTurno).appendPath(RUTA_UNIDADES_REACCION).appendPath(idUnidadReaccion).appendPath(RUTA_UBICACIONES).build();
         }
 
         public static Uri crearUriTurnoLista() {
