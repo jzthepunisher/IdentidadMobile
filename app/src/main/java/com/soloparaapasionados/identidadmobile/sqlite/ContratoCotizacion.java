@@ -69,6 +69,20 @@ public class ContratoCotizacion {
         String DIRECCION          = "direccion";
     }
 
+    interface ColumnasCliente
+    {
+        String ID_CLIENTE           = "id_cliente";
+        String NOMBRES_CLIENTE      = "nombres_cliente";
+        String APELLIDO_PATERNO     = "apellido_paterno";
+        String APELLIDO_MATERNO     = "apellido_materno";
+        String RAZON_SOCIAL_CLIENTE = "razon_social_cliente";
+        String RUC_CLIENTE          = "ruc_cliente";
+        String DIRECCION_CLIENTE    = "direccion_cliente";
+        String LATITUD_CLIENTE      = "latitud_cliente";
+        String LONGITUD_CLIENTE     = "longitud_cliente";
+        String MONITOREO_ACTIVO     = "monitoreo_activo";
+    }
+
     public interface EstadoRegistro{
         String REGISTRADO_LOCALMENTE= "registrado.localmente";
         String REGISTRANDO_REMOTAMENTE= "registrando.remotamente";
@@ -96,6 +110,7 @@ public class ContratoCotizacion {
     private static final String RUTA_TURNOS="turnos";
     private static final String RUTA_TIPOS_UNIDAD_REACCION="tipos_unidad_reaccion";
     private static final String RUTA_UNIDADES_REACCION="unidades_reaccion";
+    private static final String RUTA_CLIENTES="clientes";
     // [/URIS]
 
     // [TIPOS_MIME]
@@ -284,4 +299,30 @@ public class ContratoCotizacion {
 
     }
 
+    //Clase contrato de Turno
+    public static class Clientes implements ColumnasCliente {
+
+        public static final String PARAMETRO_FILTRO_MONITOREO_ACTIVO = "filtro_monitoreo_activo";
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_CLIENTES).build();
+
+        public static String obtenerIdTipoUnidadReaccion(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri crearUriTipoUnidadReaccion(String id) {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+
+        public static Uri crearUriClienteListadoConFiltroMonitoreoActivo(Boolean filtroActivo) {
+            return URI_CONTENIDO.buildUpon().appendQueryParameter(PARAMETRO_FILTRO_MONITOREO_ACTIVO,String.valueOf(filtroActivo)).build();
+        }
+
+        public static boolean tieneFiltroMonitoreoActivo(Uri uri) {
+            return uri != null && uri.getQueryParameter(PARAMETRO_FILTRO_MONITOREO_ACTIVO) != null;
+        }
+
+        public static Uri crearUriClienteListado() {
+            return URI_CONTENIDO;
+        }
+    }
 }

@@ -1,6 +1,9 @@
 package com.soloparaapasionados.identidadmobile.helper;
 
+import android.database.Cursor;
+
 import com.soloparaapasionados.identidadmobile.modelo.MyItem;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Clientes;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +45,23 @@ public class MyItemReader {
             }
             items.add(new MyItem(lat, lng, title, snippet));
         }
+        return items;
+    }
+
+    public List<MyItem> leeClientes(Cursor cursorClientes)  {
+        List<MyItem> items = new ArrayList<MyItem>();
+
+        //data.moveToFirst();
+        while(cursorClientes.moveToNext()){
+            double lat = Double.valueOf(cursorClientes.getString(cursorClientes.getColumnIndex(Clientes.LATITUD_CLIENTE)));
+            double lng = Double.valueOf(cursorClientes.getString(cursorClientes.getColumnIndex(Clientes.LONGITUD_CLIENTE)));
+            String title = cursorClientes.getString(cursorClientes.getColumnIndex(Clientes.ID_CLIENTE));
+            String snippet = cursorClientes.getString(cursorClientes.getColumnIndex(Clientes.NOMBRES_CLIENTE));
+
+            items.add(new MyItem(lat, lng, title, snippet));
+        }
+
+
         return items;
     }
 

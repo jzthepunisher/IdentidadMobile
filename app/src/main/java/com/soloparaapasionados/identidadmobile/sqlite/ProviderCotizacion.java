@@ -2,6 +2,7 @@ package com.soloparaapasionados.identidadmobile.sqlite;
 
 import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.EmpleadoServicioRemoto;
+import com.soloparaapasionados.identidadmobile.modelo.Cliente;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones.Tablas;
@@ -15,7 +16,7 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposUnidadReaccion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.UnidadesReaccion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_UnidadesReaccionUbicacion;
-
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Clientes;
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -63,6 +64,7 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int TURNOS = 600;
     public static final int TURNOS_ID = 601;
     public static final int TURNOS_ID_UNIDADES_REACCION_UBICACION = 602;
+    public static final int CLIENTES = 700;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
@@ -81,6 +83,7 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "turnos"                     , TURNOS);
         uriMatcher.addURI(AUTORIDAD, "turnos/*"                   , TURNOS_ID);
         uriMatcher.addURI(AUTORIDAD, "turnos/*/unidades_reaccion" , TURNOS_ID_UNIDADES_REACCION_UBICACION);
+        uriMatcher.addURI(AUTORIDAD, "clientes"                   , CLIENTES);
     }
     // [/URI_MATCHER]
 
@@ -143,6 +146,13 @@ public class ProviderCotizacion extends ContentProvider {
             Tablas.TURNO_UNIDAD_REACCION_UBICACION + "." + Turnos_UnidadesReaccionUbicacion.DIRECCION,
             Tablas.TURNO_UNIDAD_REACCION_UBICACION + "." + Turnos_UnidadesReaccionUbicacion.LATITUD,
             Tablas.TURNO_UNIDAD_REACCION_UBICACION + "." + Turnos_UnidadesReaccionUbicacion.LONGITUD};
+
+    private final String[] proyCliente = new String[]{
+            BaseColumns._ID,
+            Tablas.CLIENTE + "." + Clientes.ID_CLIENTE,
+            Tablas.CLIENTE + "." + Clientes.NOMBRES_CLIENTE,
+            Tablas.CLIENTE + "." + Clientes.LATITUD_CLIENTE,
+            Tablas.CLIENTE + "." + Clientes.LONGITUD_CLIENTE};
 
     // [/CAMPOS_AUXILIARES]
 
@@ -438,6 +448,30 @@ public class ProviderCotizacion extends ContentProvider {
                 /*c = builder.query(bd, proyTurno_UnidadReaccionUbicacion,
                         selection,
                         selectionArgs, null, null, null);*/
+                break;
+            case CLIENTES:
+                if (Clientes.tieneFiltroMonitoreoActivo(uri))
+                {
+                    String parametroMonitoreoActivo="";
+                    parametroMonitoreoActivo=String.valueOf( uri.getQueryParameter(Clientes.PARAMETRO_FILTRO_MONITOREO_ACTIVO)) ;
+
+                    parametroMonitoreoActivo=parametroMonitoreoActivo.equals("true")?"1":"0";
+
+                    builder.setTables(Tablas.CLIENTE);
+                    c = builder.query(bd, proyCliente,
+                            Tablas.CLIENTE + '.' + Clientes.MONITOREO_ACTIVO + "=" + "" + parametroMonitoreoActivo + ""
+                            + (!TextUtils.isEmpty(selection) ?" AND (" + selection + ')' : ""), selectionArgs, null, null, null);
+
+                }
+                else
+                {
+                    // Consultando ubiccaciones de Unidades de Reaccion por turno
+                    builder.setTables(Tablas.CLIENTE);
+                    c = builder.query(bd, proyCliente,
+                            null,
+                            null, null, null, null);
+                }
+
                 break;
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);

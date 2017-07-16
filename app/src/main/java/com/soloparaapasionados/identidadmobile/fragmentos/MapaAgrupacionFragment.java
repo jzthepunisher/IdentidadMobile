@@ -1,7 +1,11 @@
 package com.soloparaapasionados.identidadmobile.fragmentos;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +20,8 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.helper.MyItemReader;
 import com.soloparaapasionados.identidadmobile.modelo.MyItem;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Clientes;
 
 import org.json.JSONException;
 
@@ -23,7 +29,7 @@ import java.io.InputStream;
 import java.util.List;
 
 
-public class MapaAgrupacionFragment extends Fragment {
+public class MapaAgrupacionFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private GoogleMap googleMap;
     MapView mMapView;
@@ -99,21 +105,51 @@ public class MapaAgrupacionFragment extends Fragment {
 
 
     protected void startDemo() {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
+        //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
 
         mClusterManager = new ClusterManager<MyItem>(getActivity(), googleMap);
         googleMap.setOnCameraIdleListener(mClusterManager);
 
-        try {
-            readItems();
-        } catch (JSONException e) {
-            Toast.makeText(getActivity(), "Problem reading list of markers.", Toast.LENGTH_LONG).show();
+        readItems();
+
+    }
+
+    private void readItems()  {
+        // Iniciar loader
+        getActivity().getSupportLoaderManager().restartLoader(1, null,  this);
+    }
+/////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        switch (id){
+            case 1:
+                return new CursorLoader(getActivity(), Clientes.crearUriClienteListadoConFiltroMonitoreoActivo(true), null, null, null, null);
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        switch (loader.getId()){
+            case 1:
+                if(data!=null)
+                {
+                    if ( data.getCount()>0) {
+
+                        //data.moveToFirst();
+                        while(data.moveToNext()){
+                            List<MyItem> items = new MyItemReader().leeClientes(data);
+                            mClusterManager.addItems(items);
+                        }
+                    }
+                }
+                break;
         }
     }
 
-    private void readItems() throws JSONException {
-        InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
-        List<MyItem> items = new MyItemReader().read(inputStream);
-        mClusterManager.addItems(items);
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
+/////////////////////////////////////////////////////////////////////////////////////////
 }

@@ -1,6 +1,7 @@
 package com.soloparaapasionados.identidadmobile.sqlite;
 
 import com.soloparaapasionados.identidadmobile.modelo.Cargo;
+import com.soloparaapasionados.identidadmobile.modelo.Cliente;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 
@@ -16,6 +17,7 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposUnidadReaccion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.UnidadesReaccion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_UnidadesReaccionUbicacion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Clientes;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,7 +33,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 36;
+    private static final int VERSION_ACTUAL = 40;
 
     private final Context contexto;
 
@@ -45,6 +47,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         String TIPO_UNIDAD_REACCION            = "tipo_unidad_reaccion";
         String UNIDAD_REACCION                 = "unidad_reaccion";
         String TURNO_UNIDAD_REACCION_UBICACION = "turno_unidad_reaccion_ubicacion";
+        String CLIENTE                         = "cliente";
     }
 
     interface Referencias {
@@ -127,7 +130,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "%s TEXT NOT NULL %s,%s TEXT NOT NULL %s,"+
-                        "%s REAL NULL,%s REAL NULL," +
+                        "%s TEXT NULL,%s TEXT NULL," +
                         "%s TEXT NULL," +
                         " UNIQUE (%s, %s) ON CONFLICT REPLACE)",
                 Tablas.TURNO_UNIDAD_REACCION_UBICACION, BaseColumns._ID,
@@ -136,11 +139,21 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 Turnos_UnidadesReaccionUbicacion.DIRECCION,
                 Turnos_UnidadesReaccionUbicacion.ID_TURNO,Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION));
 
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT UNIQUE NOT NULL,%s TEXT NULL,%s TEXT NULL,%s TEXT NULL," +
+                        "%s TEXT NULL ,%s TEXT NULL,%s TEXT NULL,%s TEXT NULL,"+
+                        "%s TEXT NULL ,%s BOOLEAN DEFAULT 0)",
+                Tablas.CLIENTE, BaseColumns._ID,
+                Clientes.ID_CLIENTE,Clientes.NOMBRES_CLIENTE, Clientes.APELLIDO_PATERNO,Clientes.APELLIDO_MATERNO,
+                Clientes.RAZON_SOCIAL_CLIENTE, Clientes.RUC_CLIENTE, Clientes.DIRECCION_CLIENTE, Clientes.LATITUD_CLIENTE,
+                Clientes.LONGITUD_CLIENTE, Clientes.MONITOREO_ACTIVO));
+
         mockData(db);
         mockDataTurnos(db);
         mockDataTiposUnidadReaccion(db);
         mockDataUnidadesReaccion(db);
         mockDataTurno_UnidadesReaccionUbicacion(db);
+        mockDataClientes(db);
         //mockDataEmpleados(db);
         //mockDataDispositivosEmpleados(db);
     }
@@ -168,6 +181,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.TIPO_UNIDAD_REACCION);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.UNIDAD_REACCION);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.TURNO_UNIDAD_REACCION_UBICACION);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.CLIENTE);
 
         onCreate(db);
     }
@@ -423,6 +437,69 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("03","19",Double.valueOf(0),Double.valueOf(0),""));
         mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("03","20",Double.valueOf(0),Double.valueOf(0),""));
     }
+
+    private void mockDataClientes(SQLiteDatabase sqLiteDatabase)
+    {
+        mockCliente(sqLiteDatabase, new Cliente("11111111111","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.063355","-77.028431",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111112","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.063746","-77.028479",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111113","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.065328","-77.034696",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111114","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.075864","-77.034296",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111115","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.069483","-77.037914",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111116","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074459","-77.027633",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111117","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.079473","-77.033952",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111118","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.080648","-77.033180",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111119","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.081446","-77.033781",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111110","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.080774","-77.030347",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111211","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.082411","-77.030567",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111212","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.079012","-77.028717",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111213","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.079515","-77.026785",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111214","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.078876","-77.026689",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111215","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.079421","-77.026796",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111216","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.077931","-77.024071",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111217","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.076410","-77.022880",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111218","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.082243","-77.022150",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111219","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.075319","-77.021807",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111220","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.076913","-77.020906",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111221","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.084887","-77.021550",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111222","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.078928","-77.020262",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111223","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.081487","-77.019833",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111224","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.080858","-77.016786",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111225","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.073682","-77.015499",true));
+
+        mockCliente(sqLiteDatabase, new Cliente("11111111226","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.103791","-76.962974",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111227","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.100913","-76.964946",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111228","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.104533","-76.964946",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111229","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.105720","-76.966099",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111230","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.106758","-76.967950",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111231","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.100272","-76.969772",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111232","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.100797","-76.971725",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111233","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.101090","-76.971317",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111234","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.101657","-76.971682",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111235","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.103293","-76.971918",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111236","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.102244","-76.972304",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111237","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.101846","-76.971382",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111238","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.103398","-76.972948",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111239","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.104972","-76.972991",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111240","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.105790","-76.973420",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111241","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.107490","-76.971639",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111242","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.106545","-76.973828",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111243","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.107490","-76.968506",true));
+
+        mockCliente(sqLiteDatabase, new Cliente("11111111244","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.076528","-77.093597",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111245","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.077535","-77.093844",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111246","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.078039","-77.092031",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111247","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.075112","-77.092471",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111248","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074073","-77.092578",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111249","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074010","-77.092267",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111250","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074125","-77.091956",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111251","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074524","-77.090357",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111252","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074167","-77.090143",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111253","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074566","-77.089542",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111254","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.077462","-77.089735",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111255","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.077546","-77.085991",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111256","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074846","-77.083170",true));
+
+    }
 /////////////////////////////////////////////////////////////////////////////////////////////
     public long mockLawyer(SQLiteDatabase db, Cargo cargo) {
         return db.insert(
@@ -490,5 +567,12 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 Tablas.TURNO_UNIDAD_REACCION_UBICACION,
                 null,
                 turno_unidadReaccionUbicacion.toContentValues());
+    }
+
+    public long mockCliente(SQLiteDatabase db, Cliente cliente) {
+        return db.insert(
+                Tablas.CLIENTE,
+                null,
+                cliente.toContentValues());
     }
 }
