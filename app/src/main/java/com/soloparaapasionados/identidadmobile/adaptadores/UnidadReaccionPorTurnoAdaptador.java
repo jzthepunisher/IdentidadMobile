@@ -34,19 +34,28 @@ public class UnidadReaccionPorTurnoAdaptador extends RecyclerView.Adapter<Unidad
     private SparseBooleanArray elementosSeleccionados;
     private static int indiceSeleccionadoActual = -1;
 
+    String idUnidadReaccion;
+    String descripcionUnidadReaccion;
+    String direccionUbicacionUnidadReaccion;
+    int position;
+
     private UnidadReaccionPorTurnoAdaptador.OnItemClickListener escucha;
 
     public interface OnItemClickListener {
-        public void onClick(UnidadReaccionPorTurnoAdaptador.ViewHolder holder, String idUnidadReaccion, int position);
+        //public void onClick(UnidadReaccionPorTurnoAdaptador.ViewHolder holder, String idTurno,String descripcionTurno,String rangoHorarioTurno, int position);
+        public void onClick(UnidadReaccionPorTurnoAdaptador.ViewHolder holder, String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion,int position);
     }
 
-    private String obtenerIdUnidadReaccion(int posicion) {
+    private void obtenerUbicacionUnidadReaccion(int posicion) {
         if (items != null) {
             if (items.moveToPosition(posicion)) {
-                return items.getString(items.getColumnIndex(UnidadesReaccion.ID_UNIDAD_REACCION));
+                this.idUnidadReaccion= items.getString(items.getColumnIndex(UnidadesReaccion.ID_UNIDAD_REACCION));
+                this.descripcionUnidadReaccion=items.getString(items.getColumnIndex(UnidadesReaccion.DESCRIPCION));
+                String direccion=items.getString(items.getColumnIndex(Turnos_UnidadesReaccionUbicacion.DIRECCION));
+                this.direccionUbicacionUnidadReaccion=direccion.isEmpty()?"No existe ubicación asignada":direccion;
+                position=posicion;
             }
         }
-        return null;
     }
 
     public Empleado obtenerEmpleado(int posicion) {
@@ -91,8 +100,9 @@ public class UnidadReaccionPorTurnoAdaptador extends RecyclerView.Adapter<Unidad
 
         @Override
         public void onClick(View view) {
-            escucha.onClick(this, obtenerIdUnidadReaccion(getAdapterPosition()),getAdapterPosition());
+            obtenerUbicacionUnidadReaccion(getAdapterPosition());
 
+            escucha.onClick(this, idUnidadReaccion, descripcionUnidadReaccion, direccionUbicacionUnidadReaccion,getAdapterPosition());
         }
     }
 
@@ -143,6 +153,4 @@ public class UnidadReaccionPorTurnoAdaptador extends RecyclerView.Adapter<Unidad
     public Cursor getCursor() {
         return items;
     }
-
-
 }

@@ -13,20 +13,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.actividades.UnidadReaccionAsignacionActivity;
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosListaAdaptador;
 import com.soloparaapasionados.identidadmobile.adaptadores.TurnoListaAdaptador;
 import com.soloparaapasionados.identidadmobile.adaptadores.UnidadReaccionPorTurnoAdaptador;
+import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_UnidadesReaccionUbicacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos;
 
 
 
 public class UnidadReaccionListaPorTurnoFragment extends Fragment
-        implements TurnoListaAdaptador.OnItemClickListener, UnidadReaccionPorTurnoAdaptador.OnItemClickListener,
-         LoaderManager.LoaderCallbacks<Cursor>{
+        implements TurnoListaAdaptador.OnItemClickListener,
+                    UnidadReaccionPorTurnoAdaptador.OnItemClickListener,
+                    LoaderManager.LoaderCallbacks<Cursor>{
 
     private RecyclerView recyclerViewTurnos;
     private LinearLayoutManager linearLayoutManager;
@@ -35,9 +40,20 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     private RecyclerView recyclerViewUbicacionUnidadReaccionPorTurno;
     //private LinearLayoutManager linearLayoutManager;
     private UnidadReaccionPorTurnoAdaptador unidadReaccionPorTurnoAdaptador;
+    private TextView textViewCantidadTurnosDisponibles;
 
     private String ARGUMENTO_ID_TURNO="argumento_id_turno";
+
     String idTurno;
+    String descripcionTurno;
+    String rangoHorarioTurno;
+    int position;
+
+    String idUnidadReaccion;
+    String descripcionUnidadReaccion;
+    String direccionUbicacionUnidadReaccion;
+
+    private OnTurnoItemClickFragmentoListener onTurnoItemClickFragmentoListener;
     public UnidadReaccionListaPorTurnoFragment() {
         // Required empty public constructor
     }
@@ -45,7 +61,6 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     public static UnidadReaccionListaPorTurnoFragment newInstance() {
         return new UnidadReaccionListaPorTurnoFragment();
     }
-
 
 
     @Override
@@ -59,6 +74,7 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root =  inflater.inflate(R.layout.fragment_unidad_reaccion_lista_por_turno, container, false);
+
 
         // Preparar lista de Turnos
         recyclerViewTurnos = (RecyclerView) root.findViewById(R.id.recyclerViewTurnos);
@@ -79,7 +95,8 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
 
         unidadReaccionPorTurnoAdaptador = new UnidadReaccionPorTurnoAdaptador(getActivity(), this);
         recyclerViewUbicacionUnidadReaccionPorTurno.setAdapter(unidadReaccionPorTurnoAdaptador);
-
+        //
+        textViewCantidadTurnosDisponibles=(TextView)root.findViewById(R.id.textViewCantidadTurnosDisponibles);
         // Iniciar loader
         getActivity().getSupportLoaderManager().restartLoader(1, null,  this);
 
@@ -87,8 +104,12 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     }
 
     @Override
-    public void onClick(TurnoListaAdaptador.ViewHolder holder, String idTurno, int position) {
-        Toast.makeText(getActivity()," Hola " + idTurno + "position : " + position,Toast.LENGTH_SHORT).show();
+    public void onClick(TurnoListaAdaptador.ViewHolder holder, String idTurno,String descripcionTurno,String rangoHorarioTurno, int position) {
+        //Toast.makeText(getActivity()," Hola " + idTurno + "position : " + position,Toast.LENGTH_SHORT).show();
+
+        if (UnidadReaccionAsignacionActivity.patronMasterDetalle==true){
+            cargarTurno(idTurno, descripcionTurno, rangoHorarioTurno, position);
+        }
 
         Bundle bundle= new Bundle();
         bundle.putString(ARGUMENTO_ID_TURNO,idTurno);
@@ -97,9 +118,13 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     }
 
     @Override
-    public void onClick(UnidadReaccionPorTurnoAdaptador.ViewHolder holder, String idUnidadReaccion, int position) {
+    public void onClick(UnidadReaccionPorTurnoAdaptador.ViewHolder holder, String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion, int position) {
 
-        Toast.makeText(getActivity()," Hola 2 " + idTurno + " Unidad Reaccion :" + idUnidadReaccion +  "position : " + position,Toast.LENGTH_SHORT).show();
+        if (UnidadReaccionAsignacionActivity.patronMasterDetalle==true){
+            cargarUbicacionUnidadReaccion(idUnidadReaccion, descripcionUnidadReaccion, direccionUbicacionUnidadReaccion, position);
+        }
+
+        //Toast.makeText(getActivity()," Hola 2 " + idTurno + " Unidad Reaccion :" + idUnidadReaccion +  "position : " + position,Toast.LENGTH_SHORT).show();
     }
     //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>
     @Override
@@ -124,9 +149,18 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
                     if (turnoListaAdaptador != null && data.getCount()>0) {
                         turnoListaAdaptador.swapCursor(data);
 
+                        textViewCantidadTurnosDisponibles.setText(String.valueOf(turnoListaAdaptador.getItemCount()));
+
                         data.moveToFirst();
 
                         idTurno = data.getString(data.getColumnIndex(Turnos.ID_TURNO));
+                        descripcionTurno = data.getString(data.getColumnIndex(Turnos.DESCRIPCION));
+                        rangoHorarioTurno=" Inicio :";
+                        rangoHorarioTurno += " " + data.getString(data.getColumnIndex(Turnos.HORA_INICIO));
+                        rangoHorarioTurno += " | Fin :";
+                        rangoHorarioTurno += " " + data.getString(data.getColumnIndex(Turnos.HORA_FIN));
+                        position=0 ;
+                        cargarTurno(idTurno, descripcionTurno, rangoHorarioTurno, position);
 
                         Bundle bundle= new Bundle();
                         bundle.putString(ARGUMENTO_ID_TURNO,idTurno);
@@ -140,6 +174,16 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
                 {
                     if (unidadReaccionPorTurnoAdaptador != null && data.getCount()>0) {
                         unidadReaccionPorTurnoAdaptador.swapCursor(data);
+
+                        data.moveToFirst();
+
+                        idUnidadReaccion=data.getString(data.getColumnIndex(ContratoCotizacion.UnidadesReaccion.DESCRIPCION));
+                        descripcionUnidadReaccion=data.getString(data.getColumnIndex(ContratoCotizacion.UnidadesReaccion.DESCRIPCION));
+                        String direccion=data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.DIRECCION));
+                        direccionUbicacionUnidadReaccion=direccion.isEmpty()?"No existe ubicación asignada":direccion;
+                        position=0 ;
+
+                        cargarUbicacionUnidadReaccion(idUnidadReaccion, descripcionUnidadReaccion,  direccionUbicacionUnidadReaccion, position);
                     }
                 }
                 break;
@@ -152,8 +196,37 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnTurnoItemClickFragmentoListener) {
+            onTurnoItemClickFragmentoListener = (OnTurnoItemClickFragmentoListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " debes implementar EscuchaFragmento");
+        }
+    }
 
-    public interface OnTurnoItemClickListener {
-        public void onClick( String idTurno, int position);
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        onTurnoItemClickFragmentoListener = null;
+    }
+
+    public void cargarTurno(String idTurno,String descripcionTurno, String rangoHorarioTurno, int position) {
+        if (onTurnoItemClickFragmentoListener != null) {
+            onTurnoItemClickFragmentoListener.OnTurnoItemFragmentoClick(idTurno,descripcionTurno, rangoHorarioTurno, position);
+        }
+    }
+
+    public void cargarUbicacionUnidadReaccion(String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion, int position) {
+        if (onTurnoItemClickFragmentoListener != null) {
+            onTurnoItemClickFragmentoListener.OnUbicacionUnidadReaccionItemFragmentoClick(idUnidadReaccion, descripcionUnidadReaccion,  direccionUbicacionUnidadReaccion, position);
+        }
+    }
+
+    public interface OnTurnoItemClickFragmentoListener {
+        public void OnTurnoItemFragmentoClick( String idTurno,String descripcionTurno, String rangoHorarioTurno, int position);
+        public void OnUbicacionUnidadReaccionItemFragmentoClick( String idTurno,String descripcionTurno, String rangoHorarioTurno, int position);
     }
 }

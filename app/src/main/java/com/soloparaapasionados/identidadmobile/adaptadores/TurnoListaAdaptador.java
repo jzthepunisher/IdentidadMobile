@@ -28,22 +28,34 @@ public class TurnoListaAdaptador extends RecyclerView.Adapter<TurnoListaAdaptado
     private final Context contexto;
     private Cursor items;
 
+    private String idTurno;
+    private String descripcionTurno ;
+    private String rangoHorarioTurno;
+    private int position ;
+
     private SparseBooleanArray elementosSeleccionados;
     private static int indiceSeleccionadoActual = -1;
 
     private TurnoListaAdaptador.OnItemClickListener escucha;
 
     public interface OnItemClickListener {
-        public void onClick(TurnoListaAdaptador.ViewHolder holder, String idTurno, int position);
+        public void onClick(TurnoListaAdaptador.ViewHolder holder, String idTurno,String descripcionTurno,String rangoHorarioTurno, int position);
     }
 
-    private String obtenerIdTurno(int posicion) {
+    private void obtenerTurno(int posicion) {
         if (items != null) {
             if (items.moveToPosition(posicion)) {
-                return items.getString(items.getColumnIndex(Turnos.ID_TURNO));
+                this.idTurno= items.getString(items.getColumnIndex(Turnos.ID_TURNO));
+
+                this.descripcionTurno= items.getString(items.getColumnIndex(Turnos.DESCRIPCION));
+                this.rangoHorarioTurno=" Inicio :";
+                this.rangoHorarioTurno += " " + items.getString(items.getColumnIndex(Turnos.HORA_INICIO));
+                this.rangoHorarioTurno += " | Fin :";
+                this.rangoHorarioTurno += " " + items.getString(items.getColumnIndex(Turnos.HORA_FIN));
+
+                this.position=posicion ;
             }
         }
-        return null;
     }
 
     public Empleado obtenerEmpleado(int posicion) {
@@ -84,8 +96,9 @@ public class TurnoListaAdaptador extends RecyclerView.Adapter<TurnoListaAdaptado
 
         @Override
         public void onClick(View view) {
-            escucha.onClick(this, obtenerIdTurno(getAdapterPosition()),getAdapterPosition());
+            obtenerTurno(getAdapterPosition());
 
+            escucha.onClick(this, idTurno, descripcionTurno,rangoHorarioTurno,position);
         }
     }
 

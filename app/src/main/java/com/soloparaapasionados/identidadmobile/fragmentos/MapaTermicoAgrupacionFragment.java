@@ -24,10 +24,19 @@ public class MapaTermicoAgrupacionFragment extends Fragment  {
 
     TabLayout tabs;
     ViewPager mViewPager;
+    Toolbar toolbar;
 
     public static final String ARGUMENTO_ID_TURNO="argumento_id_turno";
-    private String idTurno;
+    public static final String ARGUMENTO_DESCRIPCION_TURNO="argumento_descripcion_turno";
+    public static final String ARGUMENTO_HORARIO_TURNO="argumento_horario_turno";
 
+    String idTurno;
+    String descripcionTurno;
+    String rangoHorarioTurno;
+
+    String idUnidadReaccion;
+    String descripcionUnidadReaccion;
+    String direccionUbicacionUnidadReaccion;
 
     public MapaTermicoAgrupacionFragment() {
         // Required empty public constructor
@@ -56,12 +65,18 @@ public class MapaTermicoAgrupacionFragment extends Fragment  {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_mapa_termico_agrupacion, container, false);
 
+        idTurno =getArguments().getString(MapaTermicoAgrupacionFragment.ARGUMENTO_ID_TURNO);
+        descripcionTurno=getArguments().getString(MapaTermicoAgrupacionFragment.ARGUMENTO_DESCRIPCION_TURNO);
+        rangoHorarioTurno=getArguments().getString(MapaTermicoAgrupacionFragment.ARGUMENTO_HORARIO_TURNO);
+
+        String subtitulo=" Turno : " + descripcionTurno + " " + rangoHorarioTurno;
         // Toolbar en master-detail
-        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+        toolbar = (Toolbar) v.findViewById(R.id.toolbar);
         if (toolbar != null){
             toolbar.inflateMenu(R.menu.menu_detalle_articulo);
             toolbar.setTitle("Clientes Monitoreados Activos");
-            toolbar.setSubtitle("Unidad Reacción: H51 | Turno : Turno Noche ");
+            //toolbar.setSubtitle("Unidad Reacción: H51 | Turno : Turno Noche ");
+            toolbar.setSubtitle(subtitulo);
         }
 
         // Setear adaptador al viewpager.
@@ -94,4 +109,37 @@ public class MapaTermicoAgrupacionFragment extends Fragment  {
     }
 
 
+
+    public void setSubTituloTurno(String idTurno,String descripcionTurno, String rangoHorarioTurno, int position){
+
+        this.idTurno =idTurno==null?"":idTurno;
+        this.descripcionTurno=descripcionTurno==null?"":descripcionTurno;
+        this.rangoHorarioTurno=rangoHorarioTurno==null?"":rangoHorarioTurno;
+
+        setSubTitulo();
+    }
+
+    public void setSubTituloUbicacionUnidadReaccion(String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion, int position){
+        this.idUnidadReaccion=idUnidadReaccion==null?"":idUnidadReaccion;
+        this.descripcionUnidadReaccion=descripcionUnidadReaccion==null?"":descripcionUnidadReaccion;
+        this.direccionUbicacionUnidadReaccion=direccionUbicacionUnidadReaccion==null?"":direccionUbicacionUnidadReaccion;
+
+        setSubTitulo();
+    }
+
+
+
+    public void setSubTitulo(){
+
+        /*String subtitulo=" Turno : " + descripcionTurno + " " + rangoHorarioTurno;
+        subtitulo+="   " + " Unidad Reacción : " + descripcionUnidadReaccion + " " + direccionUbicacionUnidadReaccion;*/
+
+        String subtitulo= descripcionTurno + " " + rangoHorarioTurno;
+        subtitulo+="   " + descripcionUnidadReaccion + " " + direccionUbicacionUnidadReaccion;
+        // Toolbar en master-detail
+        if (toolbar != null){
+            toolbar.inflateMenu(R.menu.menu_detalle_articulo);
+            toolbar.setSubtitle(subtitulo);
+        }
+    }
 }

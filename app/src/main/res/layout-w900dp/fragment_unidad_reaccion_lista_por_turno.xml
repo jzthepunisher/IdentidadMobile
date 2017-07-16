@@ -30,7 +30,21 @@
                 android:paddingTop="@dimen/activity_horizontal_margin_dos"
                 android:paddingBottom="@dimen/activity_horizontal_margin_dos"
                 android:textColor="@color/colorAccent"
-                android:text="Turnos Disponibles                    3"/>
+                android:text="Turnos Disponibles"/>
+
+            <TextView
+                android:id="@+id/textViewCantidadTurnosDisponibles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/textViewEtiquetaTurnosDisponibles"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_horizontal_margin_dos"
+                android:paddingBottom="@dimen/activity_horizontal_margin_dos"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:textColor="@color/colorAccent"
+                android:text="3"/>
 
             <android.support.v7.widget.RecyclerView
                 xmlns:android="http://schemas.android.com/apk/res/android"

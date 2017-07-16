@@ -285,7 +285,10 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
                 //marcadorlista.setVisible(false);
                 //marker.remove(); <-- works too!
                 marcadorlista.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                fetchAddressButtonHandler();
             }
+
+
         }
 
     }
@@ -322,7 +325,7 @@ public class MapaTermicoFragment extends Fragment implements LoaderManager.Loade
                     String hola="ddddd";
                     hola+=hola +"ddaa";
                     marcadorlista=marker;
-                    Toast.makeText(getActivity(),"Latitud : " + String.valueOf(marker.getPosition().latitude) + " Longitud : " + String.valueOf(marker.getPosition().longitude),Toast.LENGTH_LONG ).show();
+                    //Toast.makeText(getActivity(),"Latitud : " + String.valueOf(marker.getPosition().latitude) + " Longitud : " + String.valueOf(marker.getPosition().longitude),Toast.LENGTH_LONG ).show();
                 }
                 //return true;
             }
