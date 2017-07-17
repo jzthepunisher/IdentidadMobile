@@ -58,6 +58,10 @@
         <service
             android:name=".ServicioRemoto.EmpleadoServicioRemoto"
             android:exported="false" />
+        <service
+            android:name=".ServicioRemoto.TurnoServicioRemoto"
+            android:exported="false" />
+
 
         <activity
             android:name=".actividades.EmpleadoListadoActivity"
@@ -106,7 +110,8 @@
         <activity
             android:name=".actividades.UnidadReaccionAsignacionActivity"
             android:label="@string/title_activity_unidad_reaccion_asignacion"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

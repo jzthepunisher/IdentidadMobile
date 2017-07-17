@@ -54,8 +54,10 @@ import java.util.List;
 import java.util.Scanner;
 
 
-public class MapaTermicoFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-    GoogleMap.OnMapLongClickListener,GoogleMap.OnMarkerDragListener {
+public class MapaTermicoFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+                GoogleMap.OnMapLongClickListener,GoogleMap.OnMarkerDragListener {
+
     private GoogleMap googleMap;
     MapView mMapView;
 

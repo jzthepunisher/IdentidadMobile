@@ -2,6 +2,7 @@ package com.soloparaapasionados.identidadmobile.sqlite;
 
 import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.EmpleadoServicioRemoto;
+import com.soloparaapasionados.identidadmobile.ServicioRemoto.TurnoServicioRemoto;
 import com.soloparaapasionados.identidadmobile.modelo.Cliente;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
@@ -440,6 +441,9 @@ public class ProviderCotizacion extends ContentProvider {
                 builder.setTables(Tablas.TURNO);
                 c = builder.query(bd, proyTurno,
                         null, null, null, null,null);
+
+                leerTurnosRemotamente();
+
                 break;
             case TURNOS_ID_UNIDADES_REACCION_UBICACION:
                 // Consultando ubiccaciones de Unidades de Reaccion por turno
@@ -605,4 +609,10 @@ public class ProviderCotizacion extends ContentProvider {
         afectados = bd.update(Tablas.EMPLEADO, values, seleccion, argumentos);
     }
 
+    private void leerTurnosRemotamente(){
+        Intent intent = new Intent(getContext(), TurnoServicioRemoto.class);
+        intent.setAction(TurnoServicioRemoto.ACCION_LEER_TURNO_ISERVICE);
+        //intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
+        getContext().startService(intent);
+    }
 }
