@@ -33,11 +33,11 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 40;
+    private static final int VERSION_ACTUAL = 42;
 
     private final Context contexto;
 
-    interface Tablas {
+    public static interface Tablas {
         String DISPOSITIVO                     = "dispositivo";
         String EMPLEADO                        = "empleado";
         String CARGO                           = "cargo";
@@ -149,11 +149,11 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 Clientes.LONGITUD_CLIENTE, Clientes.MONITOREO_ACTIVO));
 
         mockData(db);
-        mockDataTurnos(db);
-        mockDataTiposUnidadReaccion(db);
-        mockDataUnidadesReaccion(db);
-        mockDataTurno_UnidadesReaccionUbicacion(db);
-        mockDataClientes(db);
+        //mockDataTurnos(db);
+        //mockDataTiposUnidadReaccion(db);
+        //mockDataUnidadesReaccion(db);
+        //mockDataTurno_UnidadesReaccionUbicacion(db);
+        //mockDataClientes(db);
         //mockDataEmpleados(db);
         //mockDataDispositivosEmpleados(db);
     }

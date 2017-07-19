@@ -66,6 +66,7 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int TURNOS_ID = 601;
     public static final int TURNOS_ID_UNIDADES_REACCION_UBICACION = 602;
     public static final int TURNOS_ID_UNIDADES_REACCION_ID_UBICACION = 603;
+    public static final int TURNOS_SINCRONIZACION = 604;
     public static final int CLIENTES = 700;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
@@ -86,6 +87,8 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "turnos/*"                   , TURNOS_ID);
         uriMatcher.addURI(AUTORIDAD, "turnos/*/unidades_reaccion" , TURNOS_ID_UNIDADES_REACCION_UBICACION);
         uriMatcher.addURI(AUTORIDAD, "turnos/*/unidades_reaccion/*/ubicaciones" , TURNOS_ID_UNIDADES_REACCION_ID_UBICACION);
+        uriMatcher.addURI(AUTORIDAD, "turnossincronizacion"      , TURNOS_SINCRONIZACION);
+
         uriMatcher.addURI(AUTORIDAD, "clientes"                   , CLIENTES);
     }
     // [/URI_MATCHER]
@@ -273,7 +276,10 @@ public class ProviderCotizacion extends ContentProvider {
         SQLiteDatabase bd = helper.getWritableDatabase();
         String id = null;
 
-        switch (uriMatcher.match(uri)) {
+        // Comparar Uri
+        int match = uriMatcher.match(uri);
+
+        switch (match) {
             case DISPOSITIVOS:
                 id = values.getAsString(Dispositivos.IMEI);
                 bd.insertOrThrow(Tablas.DISPOSITIVO, null, values);
@@ -303,8 +309,12 @@ public class ProviderCotizacion extends ContentProvider {
                 bd.insertOrThrow(Tablas.DISPOSITIVO_EMPLEADO, null,valuesDos);
                 notificarCambio(uri);
                 return DispositivosEmpleados.crearUriDispositivoEmpleado(id,idEmpleado);
+            case TURNOS_ID:
+                id = values.getAsString(Turnos.ID_TURNO);
+                bd.insertOrThrow(Tablas.TURNO,null,values);
+                notificarCambio(uri);
 
-
+                return Turnos.crearUriTurno(id);
 
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
@@ -444,6 +454,12 @@ public class ProviderCotizacion extends ContentProvider {
 
                 leerTurnosRemotamente();
 
+                break;
+            case TURNOS_SINCRONIZACION:
+                // Consultando todos los cargos
+                builder.setTables(Tablas.TURNO);
+                c = builder.query(bd, proyTurno,
+                        null, null, null, null,null);
                 break;
             case TURNOS_ID_UNIDADES_REACCION_UBICACION:
                 // Consultando ubiccaciones de Unidades de Reaccion por turno

@@ -15,7 +15,6 @@ public class ListaTurnos {
     private String idTurno;
     private List<Turno> Items;
 
-
     public ListaTurnos(List<Turno> Items) {
         this.Items = Items;
     }
@@ -32,7 +31,7 @@ public class ListaTurnos {
         return idTurno;
     }
 
-    public void setIdTurno(String idEmpleado) {
+    public void setIdTurno(String idTurno) {
         this.idTurno = idTurno;
     }
 

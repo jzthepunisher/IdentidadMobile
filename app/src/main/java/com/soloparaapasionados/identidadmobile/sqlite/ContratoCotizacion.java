@@ -278,6 +278,10 @@ public class ContratoCotizacion {
         public static Uri crearUriTurnoLista() {
             return URI_CONTENIDO;
         }
+
+        public static Uri crearUriTurnoListaSincronizacion() {
+            return URI_BASE.buildUpon().appendPath("turnossincronizacion").build();
+        }
     }
 
     //Clase contrato de Turno

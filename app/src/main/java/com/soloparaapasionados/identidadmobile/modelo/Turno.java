@@ -11,63 +11,66 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos;
 
 public class Turno {
 
-    private String idTurno;
-    private String descripcion;
-    private String horaInicio;
-    private String horaFin;
+
+
+    private String IdTurno;
+    private String Descripcion;
+    private String HoraInicio;
+    private String HoraFin;
 
     public String getIdTurno() {
-        return idTurno;
+        return IdTurno;
     }
 
     public void setIdTurno(String idTurno) {
-        this.idTurno = idTurno;
+        IdTurno = idTurno;
     }
 
     public String getDescripcion() {
-        return descripcion;
+        return Descripcion;
     }
 
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        Descripcion = descripcion;
     }
 
     public String getHoraInicio() {
-        return horaInicio;
+        return HoraInicio;
     }
 
     public void setHoraInicio(String horaInicio) {
-        this.horaInicio = horaInicio;
+        HoraInicio = horaInicio;
     }
 
     public String getHoraFin() {
-        return horaFin;
+        return HoraFin;
     }
 
     public void setHoraFin(String horaFin) {
-        this.horaFin = horaFin;
+        HoraFin = horaFin;
     }
 
+
     public Turno(String idTurno,String descripcion,String horaInicio,String horaFin) {
-        this.idTurno = idTurno;
-        this.descripcion = descripcion;
-        this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
+        this.IdTurno = idTurno;
+        this.Descripcion = descripcion;
+        this.HoraInicio = horaInicio;
+        this.HoraFin = horaFin;
     }
 
     public Turno(Cursor cursor) {
-        idTurno = cursor.getString(cursor.getColumnIndex(Turnos.ID_TURNO));
-        descripcion = cursor.getString(cursor.getColumnIndex(Turnos.DESCRIPCION));
-        horaInicio = cursor.getString(cursor.getColumnIndex(Turnos.HORA_INICIO));
-        horaFin = cursor.getString(cursor.getColumnIndex(Turnos.HORA_FIN));
+        IdTurno = cursor.getString(cursor.getColumnIndex(Turnos.ID_TURNO));
+        Descripcion = cursor.getString(cursor.getColumnIndex(Turnos.DESCRIPCION));
+        HoraInicio = cursor.getString(cursor.getColumnIndex(Turnos.HORA_INICIO));
+        HoraFin = cursor.getString(cursor.getColumnIndex(Turnos.HORA_FIN));
     }
 
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
-        values.put(Turnos.ID_TURNO, idTurno);
-        values.put(Turnos.DESCRIPCION, descripcion);
-        values.put(Turnos.HORA_INICIO, horaInicio);
-        values.put(Turnos.HORA_FIN, horaFin);
+        values.put(Turnos.ID_TURNO, IdTurno);
+        values.put(Turnos.DESCRIPCION, Descripcion);
+        values.put(Turnos.HORA_INICIO, HoraInicio);
+        values.put(Turnos.HORA_FIN, HoraFin);
         return values;
     }
 
