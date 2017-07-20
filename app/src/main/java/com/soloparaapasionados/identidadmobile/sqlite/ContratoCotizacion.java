@@ -311,6 +311,20 @@ public class ContratoCotizacion {
     //Clase contrato de Turno
     public static class UnidadesReaccion implements ColumnasUnidadReaccion {
 
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_UNIDADES_REACCION).build();
+        public static final String PARAMETRO_SINCRONIZACION = "sincronizacion";
+
+        public static Uri crearUriUnidadReaccionLista(String estadoSincronizacion) {
+            return URI_CONTENIDO.buildUpon().appendQueryParameter(PARAMETRO_SINCRONIZACION,estadoSincronizacion).build();
+        }
+
+        public static boolean tieneEstadoSincronizaion(Uri uri) {
+            return uri != null && uri.getQueryParameter(PARAMETRO_SINCRONIZACION) != null;
+        }
+
+        public static Uri crearUriUnidadReaccion(String id) {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
     }
 
     //Clase contrato de TurnoUnidadReaccionUbicacion

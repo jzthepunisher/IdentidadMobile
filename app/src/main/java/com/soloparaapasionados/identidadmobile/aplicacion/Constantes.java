@@ -44,6 +44,7 @@ public class Constantes {
 
     public static final String GET_TURNOS = "http://" + IP + PUERTO_HOST + "/api/turnos";
     public static final String GET_TIPOS_UNIDAD_REACCION = "http://" + IP + PUERTO_HOST + "/api/tiposunidadreaccion";
+    public static final String GET_UNIDADES_REACCION = "http://" + IP + PUERTO_HOST + "/api/unidadesreaccion";
 
 
 }

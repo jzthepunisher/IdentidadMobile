@@ -112,8 +112,8 @@
         <activity
             android:name=".actividades.UnidadReaccionAsignacionActivity"
             android:label="@string/title_activity_unidad_reaccion_asignacion"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -126,6 +126,9 @@
             android:exported="false" />
         <service
             android:name=".ServicioLocal.TurnoServiceLocal"
+            android:exported="false" />
+        <service
+            android:name=".ServicioRemoto.UnidadReaccionServicioRemoto"
             android:exported="false"></service>
     </application>
 
