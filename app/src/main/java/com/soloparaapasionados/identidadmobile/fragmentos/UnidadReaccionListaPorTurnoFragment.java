@@ -131,11 +131,11 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id){
             case 1:
-                return new CursorLoader(getActivity(), Turnos.crearUriTurnoLista(), null, null, null, null);
+                return new CursorLoader(getActivity(), Turnos.crearUriTurnoLista("activado"), null, null, null, null);
             case 2:
                 idTurno = args.getString(ARGUMENTO_ID_TURNO);
 
-                return new CursorLoader(getActivity(), Turnos.crearUriTurno_UnidadesReaccionUbicacion(idTurno), null, null, null, null);
+                return new CursorLoader(getActivity(), Turnos.crearUriTurno_UnidadesReaccionUbicacion(idTurno,"activado"), null, null, null, null);
         }
         return null;
     }

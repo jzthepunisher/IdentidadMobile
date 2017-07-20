@@ -11,52 +11,55 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposUn
 
 public class TipoUnidadReaccion {
 
-    private String idTipoUnidadReaccion;
-    private String descripcion;
-    private String foto;
+
+    private String IdTipoUnidadReaccion;
+    private String Descripcion;
+    private String Foto;
 
     public TipoUnidadReaccion(String idTipoUnidadReaccion,String descripcion,String foto) {
-        this.idTipoUnidadReaccion = idTipoUnidadReaccion;
-        this.descripcion = descripcion;
-        this.foto = foto;
+        this.IdTipoUnidadReaccion = idTipoUnidadReaccion;
+        this.Descripcion = descripcion;
+        this.Foto = foto;
     }
 
     public TipoUnidadReaccion(Cursor cursor) {
-        idTipoUnidadReaccion = cursor.getString(cursor.getColumnIndex(TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION));
-        descripcion = cursor.getString(cursor.getColumnIndex(TiposUnidadReaccion.DESCRIPCION));
-        foto = cursor.getString(cursor.getColumnIndex(TiposUnidadReaccion.FOTO));
+        IdTipoUnidadReaccion = cursor.getString(cursor.getColumnIndex(TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION));
+        Descripcion = cursor.getString(cursor.getColumnIndex(TiposUnidadReaccion.DESCRIPCION));
+        Foto = cursor.getString(cursor.getColumnIndex(TiposUnidadReaccion.FOTO));
     }
 
-    public String getIdTipoUnidadReaccion() {
-        return idTipoUnidadReaccion;
-    }
-
-    public void setIdTipoUnidadReaccion(String idTipoUnidadReaccion) {
-        this.idTipoUnidadReaccion = idTipoUnidadReaccion;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getFoto() {
-        return foto;
-    }
-
-    public void setFoto(String foto) {
-        this.foto = foto;
-    }
 
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
-        values.put(TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION, idTipoUnidadReaccion);
-        values.put(TiposUnidadReaccion.DESCRIPCION, descripcion);
-        values.put(TiposUnidadReaccion.FOTO, foto);
+        values.put(TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION, IdTipoUnidadReaccion);
+        values.put(TiposUnidadReaccion.DESCRIPCION, Descripcion);
+        values.put(TiposUnidadReaccion.FOTO, Foto);
         return values;
     }
+
+    public String getIdTipoUnidadReaccion() {
+        return IdTipoUnidadReaccion;
+    }
+
+    public void setIdTipoUnidadReaccion(String idTipoUnidadReaccion) {
+        IdTipoUnidadReaccion = idTipoUnidadReaccion;
+    }
+
+    public String getDescripcion() {
+        return Descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        Descripcion = descripcion;
+    }
+
+    public String getFoto() {
+        return Foto;
+    }
+
+    public void setFoto(String foto) {
+        Foto = foto;
+    }
+
 
 }

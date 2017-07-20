@@ -43,7 +43,7 @@ public class Constantes {
     public static final String DELETE = "http://" + IP + PUERTO_HOST + "/I%20Wish/borrar_meta.php";
 
     public static final String GET_TURNOS = "http://" + IP + PUERTO_HOST + "/api/turnos";
-
+    public static final String GET_TIPOS_UNIDAD_REACCION = "http://" + IP + PUERTO_HOST + "/api/tiposunidadreaccion";
 
 
 }

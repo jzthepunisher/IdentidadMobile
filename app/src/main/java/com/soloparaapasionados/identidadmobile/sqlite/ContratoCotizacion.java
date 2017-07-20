@@ -254,6 +254,7 @@ public class ContratoCotizacion {
     public static class Turnos implements ColumnasTurno {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_TURNOS).build();
+        public static final String PARAMETRO_SINCRONIZACION = "sincronizacion";
 
         public static String obtenerIdTurno(Uri uri) {
             return uri.getPathSegments().get(1);
@@ -267,20 +268,20 @@ public class ContratoCotizacion {
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
 
-        public static Uri crearUriTurno_UnidadesReaccionUbicacion(String idTurno) {
-            return URI_CONTENIDO.buildUpon().appendPath(idTurno).appendPath(RUTA_UNIDADES_REACCION).build();
+        public static Uri crearUriTurno_UnidadesReaccionUbicacion(String idTurno,String estadoSincronizacion) {
+            return URI_CONTENIDO.buildUpon().appendPath(idTurno).appendPath(RUTA_UNIDADES_REACCION).appendQueryParameter(PARAMETRO_SINCRONIZACION,estadoSincronizacion).build();
         }
 
         public static Uri crearUriTurno_UnidadesReaccionUbicacion_Ubicacion(String idTurno,String idUnidadReaccion) {
             return URI_CONTENIDO.buildUpon().appendPath(idTurno).appendPath(RUTA_UNIDADES_REACCION).appendPath(idUnidadReaccion).appendPath(RUTA_UBICACIONES).build();
         }
 
-        public static Uri crearUriTurnoLista() {
-            return URI_CONTENIDO;
+        public static Uri crearUriTurnoLista(String estadoSincronizacion) {
+            return URI_CONTENIDO.buildUpon().appendQueryParameter(PARAMETRO_SINCRONIZACION,estadoSincronizacion).build();
         }
 
-        public static Uri crearUriTurnoListaSincronizacion() {
-            return URI_BASE.buildUpon().appendPath("turnossincronizacion").build();
+        public static boolean tieneEstadoSincronizaion(Uri uri) {
+            return uri != null && uri.getQueryParameter(PARAMETRO_SINCRONIZACION) != null;
         }
     }
 
@@ -288,6 +289,7 @@ public class ContratoCotizacion {
     public static class TiposUnidadReaccion implements ColumnasTipoUnidadReaccion {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_TIPOS_UNIDAD_REACCION).build();
+        public static final String PARAMETRO_SINCRONIZACION = "sincronizacion";
 
         public static String obtenerIdTipoUnidadReaccion(Uri uri) {
             return uri.getPathSegments().get(1);
@@ -297,8 +299,12 @@ public class ContratoCotizacion {
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
 
-        public static Uri crearUriTipoUnidadReaccionLista() {
-            return URI_CONTENIDO;
+        public static Uri crearUriTipoUnidadReaccionLista(String estadoSincronizacion) {
+            return URI_CONTENIDO.buildUpon().appendQueryParameter(PARAMETRO_SINCRONIZACION,estadoSincronizacion).build();
+        }
+
+        public static boolean tieneEstadoSincronizaion(Uri uri) {
+            return uri != null && uri.getQueryParameter(PARAMETRO_SINCRONIZACION) != null;
         }
     }
 

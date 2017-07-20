@@ -2,6 +2,7 @@ package com.soloparaapasionados.identidadmobile.sqlite;
 
 import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.EmpleadoServicioRemoto;
+import com.soloparaapasionados.identidadmobile.ServicioRemoto.TipoUnidadReaccionServicioRemoto;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.TurnoServicioRemoto;
 import com.soloparaapasionados.identidadmobile.modelo.Cliente;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
@@ -68,6 +69,8 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int TURNOS_ID_UNIDADES_REACCION_ID_UBICACION = 603;
     public static final int TURNOS_SINCRONIZACION = 604;
     public static final int CLIENTES = 700;
+    public static final int TIPOS_UNIDAD_REACCION = 800;
+    public static final int TIPOS_UNIDAD_REACCION_ID  = 801;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
@@ -88,8 +91,9 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "turnos/*/unidades_reaccion" , TURNOS_ID_UNIDADES_REACCION_UBICACION);
         uriMatcher.addURI(AUTORIDAD, "turnos/*/unidades_reaccion/*/ubicaciones" , TURNOS_ID_UNIDADES_REACCION_ID_UBICACION);
         uriMatcher.addURI(AUTORIDAD, "turnossincronizacion"      , TURNOS_SINCRONIZACION);
-
         uriMatcher.addURI(AUTORIDAD, "clientes"                   , CLIENTES);
+        uriMatcher.addURI(AUTORIDAD, "tipos_unidad_reaccion"        , TIPOS_UNIDAD_REACCION);
+        uriMatcher.addURI(AUTORIDAD, "tipos_unidad_reaccion/*"      , TIPOS_UNIDAD_REACCION_ID);
     }
     // [/URI_MATCHER]
 
@@ -160,6 +164,11 @@ public class ProviderCotizacion extends ContentProvider {
             Tablas.CLIENTE + "." + Clientes.LATITUD_CLIENTE,
             Tablas.CLIENTE + "." + Clientes.LONGITUD_CLIENTE};
 
+    private final String[] proyTipoUnidadReaccion = new String[]{
+            BaseColumns._ID,
+            Tablas.TIPO_UNIDAD_REACCION + "." + TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION,
+            Tablas.TIPO_UNIDAD_REACCION + "." + TiposUnidadReaccion.DESCRIPCION,
+            Tablas.TIPO_UNIDAD_REACCION + "." + TiposUnidadReaccion.FOTO};
     // [/CAMPOS_AUXILIARES]
 
 
@@ -316,6 +325,13 @@ public class ProviderCotizacion extends ContentProvider {
 
                 return Turnos.crearUriTurno(id);
 
+            case TIPOS_UNIDAD_REACCION_ID:
+                id = values.getAsString(TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION);
+                bd.insertOrThrow(Tablas.TIPO_UNIDAD_REACCION,null,values);
+                notificarCambio(uri);
+
+                return TiposUnidadReaccion.crearUriTipoUnidadReaccion(id);
+
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }
@@ -450,9 +466,17 @@ public class ProviderCotizacion extends ContentProvider {
                 // Consultando todos los cargos
                 builder.setTables(Tablas.TURNO);
                 c = builder.query(bd, proyTurno,
-                        null, null, null, null,null);
+                        null, null, null, null,Turnos.ID_TURNO);
 
-                leerTurnosRemotamente();
+
+                String estadoSincronizacion="desactivado";
+                if (Turnos.tieneEstadoSincronizaion(uri)){
+                    estadoSincronizacion=String.valueOf( uri.getQueryParameter(Turnos.PARAMETRO_SINCRONIZACION)) ;
+                }
+
+                if (estadoSincronizacion.equals("activado")){
+                    leerTurnosRemotamente();
+                }
 
                 break;
             case TURNOS_SINCRONIZACION:
@@ -470,9 +494,14 @@ public class ProviderCotizacion extends ContentProvider {
                                 + (!TextUtils.isEmpty(selection) ?" AND (" + selection + ')' : ""),
                         selectionArgs, null, null, null);
 
-                /*c = builder.query(bd, proyTurno_UnidadReaccionUbicacion,
-                        selection,
-                        selectionArgs, null, null, null);*/
+                estadoSincronizacion="desactivado";
+                if (Turnos.tieneEstadoSincronizaion(uri)){
+                    estadoSincronizacion=String.valueOf( uri.getQueryParameter(TiposUnidadReaccion.PARAMETRO_SINCRONIZACION)) ;
+                }
+
+                if (estadoSincronizacion.equals("activado")){
+                    leerTiposUnidadReaccionRemotamente();
+                }
                 break;
             case CLIENTES:
                 if (Clientes.tieneFiltroMonitoreoActivo(uri))
@@ -495,6 +524,24 @@ public class ProviderCotizacion extends ContentProvider {
                     c = builder.query(bd, proyCliente,
                             null,
                             null, null, null, null);
+                }
+
+                break;
+
+            case TIPOS_UNIDAD_REACCION:
+                // Consultando todos los cargos
+                builder.setTables(Tablas.TIPO_UNIDAD_REACCION);
+                c = builder.query(bd, proyTipoUnidadReaccion,
+                        null, null, null, null,TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION);
+
+
+                estadoSincronizacion="desactivado";
+                if (TiposUnidadReaccion.tieneEstadoSincronizaion(uri)){
+                    estadoSincronizacion=String.valueOf(uri.getQueryParameter(TiposUnidadReaccion.PARAMETRO_SINCRONIZACION)) ;
+                }
+
+                if (estadoSincronizacion.equals("activado")){
+                    leerTurnosRemotamente();
                 }
 
                 break;
@@ -628,6 +675,13 @@ public class ProviderCotizacion extends ContentProvider {
     private void leerTurnosRemotamente(){
         Intent intent = new Intent(getContext(), TurnoServicioRemoto.class);
         intent.setAction(TurnoServicioRemoto.ACCION_LEER_TURNO_ISERVICE);
+        //intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
+        getContext().startService(intent);
+    }
+
+    private void leerTiposUnidadReaccionRemotamente(){
+        Intent intent = new Intent(getContext(), TipoUnidadReaccionServicioRemoto.class);
+        intent.setAction(TipoUnidadReaccionServicioRemoto.ACCION_LEER_TIPO_UNIDAD_REACCION_TURNO_ISERVICE);
         //intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
         getContext().startService(intent);
     }

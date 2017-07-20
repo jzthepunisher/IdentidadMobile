@@ -234,7 +234,7 @@ public class TurnoServicioRemoto extends IntentService {
         }
 
         // Consultar registros remotos actuales
-        Uri uri =  Turnos.crearUriTurnoListaSincronizacion() ;
+        Uri uri =  Turnos.crearUriTurnoLista("desactivado") ;
         /******String select = ContractParaGastos.Columnas.ID_REMOTA + " IS NOT NULL";*/
 
         ContentResolver resolver = getContentResolver();
@@ -318,7 +318,7 @@ public class TurnoServicioRemoto extends IntentService {
                 e.printStackTrace();
             }
 
-            resolver.notifyChange(Turnos.crearUriTurnoListaSincronizacion(), null, false);
+            resolver.notifyChange(Turnos.crearUriTurnoLista("desactivado"), null, false);
 
             Log.i(TAG, "Sincronización finalizada.");
         }
