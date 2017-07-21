@@ -277,11 +277,13 @@ public class ContratoCotizacion {
             return URI_CONTENIDO.buildUpon().appendPath(idTurno).appendPath(RUTA_UNIDADES_REACCION).appendPath(idUnidadReaccion).appendPath(RUTA_UBICACIONES).build();
         }
 
-        public static Uri crearUriTurnoLista(String estadoSincronizacion) {
+        public static Uri crearUriTurnoLista(String estadoSincronizacion)
+        {
             return URI_CONTENIDO.buildUpon().appendQueryParameter(PARAMETRO_SINCRONIZACION,estadoSincronizacion).build();
         }
 
-        public static boolean tieneEstadoSincronizaion(Uri uri) {
+        public static boolean tieneEstadoSincronizaion(Uri uri)
+        {
             return uri != null && uri.getQueryParameter(PARAMETRO_SINCRONIZACION) != null;
         }
     }
@@ -353,14 +355,16 @@ public class ContratoCotizacion {
     //Clase contrato de Turno
     public static class Clientes implements ColumnasCliente {
 
-        public static final String PARAMETRO_FILTRO_MONITOREO_ACTIVO = "filtro_monitoreo_activo";
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_CLIENTES).build();
+        public static final String PARAMETRO_FILTRO_MONITOREO_ACTIVO = "filtro_monitoreo_activo";
+        public static final String PARAMETRO_SINCRONIZACION = "sincronizacion";
 
         public static String obtenerIdTipoUnidadReaccion(Uri uri) {
             return uri.getPathSegments().get(1);
         }
 
-        public static Uri crearUriTipoUnidadReaccion(String id) {
+        public static Uri crearUriCliente(String id)
+        {
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
 
@@ -372,8 +376,14 @@ public class ContratoCotizacion {
             return uri != null && uri.getQueryParameter(PARAMETRO_FILTRO_MONITOREO_ACTIVO) != null;
         }
 
-        public static Uri crearUriClienteListado() {
-            return URI_CONTENIDO;
+        public static Uri crearUriClienteListado(String estadoSincronizacion)
+        {
+            return URI_CONTENIDO.buildUpon().appendQueryParameter(PARAMETRO_SINCRONIZACION,estadoSincronizacion).build();
+        }
+
+        public static boolean tieneEstadoSincronizaion(Uri uri)
+        {
+            return uri != null && uri.getQueryParameter(PARAMETRO_SINCRONIZACION) != null;
         }
     }
 }

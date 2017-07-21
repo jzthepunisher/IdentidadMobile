@@ -69,6 +69,9 @@ public class MapaTermicoFragment extends Fragment
 
     String idTurno;
     String idUnidadReaccion;
+    Double latitudUnidadReaccion;
+    Double longitudUnidadReaccion;
+    String direccionUnidadReaccionUbicacion;
 
     /**
      * Tracks whether the user has requested an address. Becomes true when the user requests an
@@ -239,8 +242,6 @@ public class MapaTermicoFragment extends Fragment
                 marcadorlista.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                 fetchAddressButtonHandler();
             }
-
-
         }
 
     }
@@ -445,8 +446,34 @@ public class MapaTermicoFragment extends Fragment
         this.idTurno =idTurno==null?"":idTurno;
     }
 
-    public void setIdUnidadReaccion(String idUnidadReaccion){
+    public void setIdUnidadReaccion(String idUnidadReaccion,Double latitudUnidadReaccion,Double longitudUnidadReaccion,String direccionUnidadReaccionUbicacion){
         this.idUnidadReaccion=idUnidadReaccion==null?"":idUnidadReaccion;
+        this.latitudUnidadReaccion=latitudUnidadReaccion;
+        this.longitudUnidadReaccion=longitudUnidadReaccion;
+        this.direccionUnidadReaccionUbicacion=direccionUnidadReaccionUbicacion;
+
+        listaMarkers.clear();
+        googleMap.clear();
+        LatLng latLng= new LatLng( this.latitudUnidadReaccion,this.longitudUnidadReaccion);
+        AsignarUbicacionUnidadReaccion(latLng);
+    }
+
+    private void AsignarUbicacionUnidadReaccion(LatLng latLng){
+        if (listaMarkers.size()<=0){
+            Marker marcador =googleMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title("Hito X")
+                    .draggable(true));
+
+            listaMarkers.add(marcador);
+
+            for (Marker marcadorlista : listaMarkers) {
+                //marcadorlista.setVisible(false);
+                //marker.remove(); <-- works too!
+                marcadorlista.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                //fetchAddressButtonHandler();
+            }
+        }
     }
 
 }

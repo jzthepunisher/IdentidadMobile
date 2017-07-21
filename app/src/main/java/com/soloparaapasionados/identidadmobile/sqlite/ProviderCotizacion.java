@@ -1,6 +1,7 @@
 package com.soloparaapasionados.identidadmobile.sqlite;
 
 import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
+import com.soloparaapasionados.identidadmobile.ServicioRemoto.ClienteServicioRemoto;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.EmpleadoServicioRemoto;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.TipoUnidadReaccionServicioRemoto;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.TurnoServicioRemoto;
@@ -72,6 +73,7 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int TURNOS_ID_UNIDADES_REACCION_ID_UBICACION = 603;
     public static final int TURNOS_SINCRONIZACION = 604;
     public static final int CLIENTES = 700;
+    public static final int CLIENTES_ID = 701;
     public static final int TIPOS_UNIDAD_REACCION = 800;
     public static final int TIPOS_UNIDAD_REACCION_ID  = 801;
     public static final int UNIDADES_REACCION = 900;
@@ -99,6 +101,7 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "turnos/*/unidades_reaccion/*/ubicaciones" , TURNOS_ID_UNIDADES_REACCION_ID_UBICACION);
         uriMatcher.addURI(AUTORIDAD, "turnossincronizacion"         , TURNOS_SINCRONIZACION);
         uriMatcher.addURI(AUTORIDAD, "clientes"                     , CLIENTES);
+        uriMatcher.addURI(AUTORIDAD, "clientes/*"                   , CLIENTES_ID);
         uriMatcher.addURI(AUTORIDAD, "tipos_unidad_reaccion"        , TIPOS_UNIDAD_REACCION);
         uriMatcher.addURI(AUTORIDAD, "tipos_unidad_reaccion/*"      , TIPOS_UNIDAD_REACCION_ID);
         uriMatcher.addURI(AUTORIDAD, "unidades_reaccion"            , UNIDADES_REACCION);
@@ -307,7 +310,8 @@ public class ProviderCotizacion extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(Uri uri, ContentValues values)
+    {
 
         Log.d(TAG, "Inserción en " + uri + "( " + values.toString() + " )\n");
 
@@ -374,6 +378,12 @@ public class ProviderCotizacion extends ContentProvider {
                 notificarCambio(uri);
 
                 return Turnos_UnidadesReaccionUbicacion.crearUriTurnoUnidadReaccionUbicacion(id);
+            case CLIENTES_ID:
+                id = values.getAsString(Clientes.ID_CLIENTE);
+                bd.insertOrThrow(Tablas.CLIENTE,null,values);
+                notificarCambio(uri);
+
+                return Clientes.crearUriCliente(id);
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }
@@ -388,7 +398,8 @@ public class ProviderCotizacion extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
+    {
         // Obtener base de datos
         SQLiteDatabase bd = helper.getReadableDatabase();
 
@@ -545,6 +556,7 @@ public class ProviderCotizacion extends ContentProvider {
                     leerTiposUnidadReaccionRemotamente();
                     //leerUnidadesReaccionRemotamente();
                     //leerTurnosUnidadesReaccionUbicacionRemotamente();
+                    leerClientesRemotamente();
                 }
                 break;
             case CLIENTES:
@@ -783,6 +795,14 @@ public class ProviderCotizacion extends ContentProvider {
     {
         Intent intent = new Intent(getContext(), TurnoUnidadReaccionUbicacionServicioRemoto.class);
         intent.setAction(TurnoUnidadReaccionUbicacionServicioRemoto.ACCION_LEER_TURNO_UNIDAD_REACCION_UBICACION_ISERVICE);
+        //intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
+        getContext().startService(intent);
+    }
+
+    private void leerClientesRemotamente()
+    {
+        Intent intent = new Intent(getContext(), ClienteServicioRemoto.class);
+        intent.setAction(ClienteServicioRemoto.ACCION_LEER_CLIENTE_ISERVICE);
         //intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
         getContext().startService(intent);
     }

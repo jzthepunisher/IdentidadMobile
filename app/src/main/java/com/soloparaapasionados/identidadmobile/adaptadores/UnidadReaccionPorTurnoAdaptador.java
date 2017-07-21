@@ -36,6 +36,8 @@ public class UnidadReaccionPorTurnoAdaptador extends RecyclerView.Adapter<Unidad
 
     String idUnidadReaccion;
     String descripcionUnidadReaccion;
+    Double latitudUnidadReaccion;
+    Double longitudUnidadReaccion;
     String direccionUbicacionUnidadReaccion;
     int position;
 
@@ -43,7 +45,7 @@ public class UnidadReaccionPorTurnoAdaptador extends RecyclerView.Adapter<Unidad
 
     public interface OnItemClickListener {
         //public void onClick(UnidadReaccionPorTurnoAdaptador.ViewHolder holder, String idTurno,String descripcionTurno,String rangoHorarioTurno, int position);
-        public void onClick(UnidadReaccionPorTurnoAdaptador.ViewHolder holder, String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion,int position);
+        public void onClick(UnidadReaccionPorTurnoAdaptador.ViewHolder holder, String idUnidadReaccion,String descripcionUnidadReaccion,Double latitudUnidadReaccion,Double longitudUnidadReaccion, String direccionUbicacionUnidadReaccion,int position);
     }
 
     private void obtenerUbicacionUnidadReaccion(int posicion) {
@@ -51,9 +53,28 @@ public class UnidadReaccionPorTurnoAdaptador extends RecyclerView.Adapter<Unidad
             if (items.moveToPosition(posicion)) {
                 this.idUnidadReaccion= items.getString(items.getColumnIndex(UnidadesReaccion.ID_UNIDAD_REACCION));
                 this.descripcionUnidadReaccion=items.getString(items.getColumnIndex(UnidadesReaccion.DESCRIPCION));
+
+                if(items.getString(items.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LATITUD))!=null)
+                {
+                    this.latitudUnidadReaccion=Double.valueOf(items.getString(items.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LATITUD)));
+                }
+                else
+                {
+                    this.latitudUnidadReaccion=0.0;
+                }
+
+                if(items.getString(items.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD))!=null){
+                    this.longitudUnidadReaccion=Double.valueOf(items.getString(items.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD)));
+                }
+                else
+                {
+                    this.longitudUnidadReaccion=0.0;
+                }
+
+
                 String direccion=items.getString(items.getColumnIndex(Turnos_UnidadesReaccionUbicacion.DIRECCION));
-                direccion+=direccion==null?"":direccion;
-                this.direccionUbicacionUnidadReaccion=direccion.isEmpty()?"No existe ubicación asignada":direccion;
+                //direccion+=direccion==null?"":direccion;
+                this.direccionUbicacionUnidadReaccion=direccion==null|| direccion.isEmpty()?"No existe ubicación asignada":direccion;
 
                 position=posicion;
             }
@@ -104,7 +125,7 @@ public class UnidadReaccionPorTurnoAdaptador extends RecyclerView.Adapter<Unidad
         public void onClick(View view) {
             obtenerUbicacionUnidadReaccion(getAdapterPosition());
 
-            escucha.onClick(this, idUnidadReaccion, descripcionUnidadReaccion, direccionUbicacionUnidadReaccion,getAdapterPosition());
+            escucha.onClick(this, idUnidadReaccion, descripcionUnidadReaccion,latitudUnidadReaccion,longitudUnidadReaccion, direccionUbicacionUnidadReaccion,getAdapterPosition());
         }
     }
 
@@ -131,8 +152,6 @@ public class UnidadReaccionPorTurnoAdaptador extends RecyclerView.Adapter<Unidad
         {
             holder.textViewDireccionUbicacion.setText("No existe ubicación asignada");
         }
-
-
 
 
         String fotoTipoUnidadReaccion = items.getString(items.getColumnIndex(TiposUnidadReaccion.FOTO));

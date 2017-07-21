@@ -46,5 +46,5 @@ public class Constantes {
     public static final String GET_TIPOS_UNIDAD_REACCION = "http://" + IP + PUERTO_HOST + "/api/tiposunidadreaccion";
     public static final String GET_UNIDADES_REACCION = "http://" + IP + PUERTO_HOST + "/api/unidadesreaccion";
     public static final String GET_TURNOS_UNIDADES_REACCION_UBICACION = "http://" + IP + PUERTO_HOST + "/api/turnosunidadesreaccionubicacion";
-
+    public static final String GET_CLIENTES = "http://" + IP + PUERTO_HOST + "/api/clientes";
 }

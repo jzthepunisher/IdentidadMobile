@@ -11,143 +11,143 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Cliente
 
 public class Cliente
 {
-    private String idCliente;
-    private String nombresCliente;
-    private String apellidoPaterno;
-    private String apellidoMaterno;
-    private String razonSocialCliente;
-    private String rucCliente;
-    private String direccionCliente;
-    private String latitudCliente;
-    private String longitudCliente;
-    private Boolean monitoreoActivo;
+    private String IdCliente;
+    private String NombresCliente;
+    private String ApellidoPaterno;
+    private String ApellidoMaterno;
+    private String RazonSocialCliente;
+    private String RucCliente;
+    private String DireccionCliente;
+    private Double LatitudCliente;
+    private Double LongitudCliente;
+    private Boolean MonitoreoActivo;
 
     public Cliente(String idCliente,String nombresCliente,String apellidoPaterno,String apellidoMaterno,
-                   String razonSocialCliente,String rucCliente,String direccionCliente,String latitudCliente,
-                    String longitudCliente,Boolean monitoreoActivo)
+                   String razonSocialCliente,String rucCliente,String direccionCliente,Double latitudCliente,
+                   Double longitudCliente,Boolean monitoreoActivo)
     {
-        this.idCliente=idCliente;
-        this.nombresCliente=nombresCliente;
-        this.apellidoPaterno=apellidoPaterno;
-        this.apellidoMaterno=apellidoMaterno;
-        this.razonSocialCliente=razonSocialCliente;
-        this.rucCliente=rucCliente;
-        this.direccionCliente=direccionCliente;
-        this.latitudCliente=latitudCliente;
-        this.longitudCliente=longitudCliente;
-        this.monitoreoActivo=monitoreoActivo;
+        this.IdCliente=idCliente;
+        this.NombresCliente=nombresCliente;
+        this.ApellidoPaterno=apellidoPaterno;
+        this.ApellidoMaterno=apellidoMaterno;
+        this.RazonSocialCliente=razonSocialCliente;
+        this.RucCliente=rucCliente;
+        this.DireccionCliente=direccionCliente;
+        this.LatitudCliente=latitudCliente;
+        this.LongitudCliente=longitudCliente;
+        this.MonitoreoActivo=monitoreoActivo;
     }
 
     public Cliente(Cursor cursor)
     {
-        this.idCliente=cursor.getString(cursor.getColumnIndex(Clientes.ID_CLIENTE));
-        this.nombresCliente=cursor.getString(cursor.getColumnIndex(Clientes.NOMBRES_CLIENTE));
-        this.apellidoPaterno=cursor.getString(cursor.getColumnIndex(Clientes.APELLIDO_PATERNO));
-        this.apellidoMaterno=cursor.getString(cursor.getColumnIndex(Clientes.APELLIDO_MATERNO));
-        this.razonSocialCliente=cursor.getString(cursor.getColumnIndex(Clientes.RAZON_SOCIAL_CLIENTE));
-        this.rucCliente=cursor.getString(cursor.getColumnIndex(Clientes.RUC_CLIENTE));
-        this.direccionCliente=cursor.getString(cursor.getColumnIndex(Clientes.DIRECCION_CLIENTE));
-        this.latitudCliente=cursor.getString(cursor.getColumnIndex(Clientes.LATITUD_CLIENTE));
-        this.longitudCliente=cursor.getString(cursor.getColumnIndex(Clientes.LONGITUD_CLIENTE));
-        this.monitoreoActivo=Boolean.valueOf( cursor.getString(cursor.getColumnIndex(Clientes.MONITOREO_ACTIVO)));
+        this.IdCliente=cursor.getString(cursor.getColumnIndex(Clientes.ID_CLIENTE));
+        this.NombresCliente=cursor.getString(cursor.getColumnIndex(Clientes.NOMBRES_CLIENTE));
+        this.ApellidoPaterno=cursor.getString(cursor.getColumnIndex(Clientes.APELLIDO_PATERNO));
+        this.ApellidoMaterno=cursor.getString(cursor.getColumnIndex(Clientes.APELLIDO_MATERNO));
+        this.RazonSocialCliente=cursor.getString(cursor.getColumnIndex(Clientes.RAZON_SOCIAL_CLIENTE));
+        this.RucCliente=cursor.getString(cursor.getColumnIndex(Clientes.RUC_CLIENTE));
+        this.DireccionCliente=cursor.getString(cursor.getColumnIndex(Clientes.DIRECCION_CLIENTE));
+        this.LatitudCliente=Double.valueOf(cursor.getString(cursor.getColumnIndex(Clientes.LATITUD_CLIENTE)));
+        this.LongitudCliente=Double.valueOf(cursor.getString(cursor.getColumnIndex(Clientes.LONGITUD_CLIENTE)));
+        this.MonitoreoActivo=Boolean.valueOf( cursor.getString(cursor.getColumnIndex(Clientes.MONITOREO_ACTIVO)));
     }
-
 
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
-        values.put(Clientes.ID_CLIENTE, idCliente);
-        values.put(Clientes.NOMBRES_CLIENTE, nombresCliente);
-        values.put(Clientes.APELLIDO_PATERNO, apellidoPaterno);
-        values.put(Clientes.APELLIDO_MATERNO, apellidoMaterno);
-        values.put(Clientes.RAZON_SOCIAL_CLIENTE, razonSocialCliente);
-        values.put(Clientes.RUC_CLIENTE, rucCliente);
-        values.put(Clientes.DIRECCION_CLIENTE, direccionCliente);
-        values.put(Clientes.LATITUD_CLIENTE, latitudCliente);
-        values.put(Clientes.LONGITUD_CLIENTE, longitudCliente);
-        values.put(Clientes.MONITOREO_ACTIVO, monitoreoActivo);
+        values.put(Clientes.ID_CLIENTE, IdCliente);
+        values.put(Clientes.NOMBRES_CLIENTE, NombresCliente);
+        values.put(Clientes.APELLIDO_PATERNO, ApellidoPaterno);
+        values.put(Clientes.APELLIDO_MATERNO, ApellidoMaterno);
+        values.put(Clientes.RAZON_SOCIAL_CLIENTE, RazonSocialCliente);
+        values.put(Clientes.RUC_CLIENTE, RucCliente);
+        values.put(Clientes.DIRECCION_CLIENTE, DireccionCliente);
+        values.put(Clientes.LATITUD_CLIENTE, LatitudCliente);
+        values.put(Clientes.LONGITUD_CLIENTE, LongitudCliente);
+        values.put(Clientes.MONITOREO_ACTIVO, MonitoreoActivo);
 
         return values;
     }
 
     public String getIdCliente() {
-        return idCliente;
+        return IdCliente;
     }
 
     public void setIdCliente(String idCliente) {
-        this.idCliente = idCliente;
+        IdCliente = idCliente;
     }
 
     public String getNombresCliente() {
-        return nombresCliente;
+        return NombresCliente;
     }
 
     public void setNombresCliente(String nombresCliente) {
-        this.nombresCliente = nombresCliente;
+        NombresCliente = nombresCliente;
     }
 
     public String getApellidoPaterno() {
-        return apellidoPaterno;
+        return ApellidoPaterno;
     }
 
     public void setApellidoPaterno(String apellidoPaterno) {
-        this.apellidoPaterno = apellidoPaterno;
+        ApellidoPaterno = apellidoPaterno;
     }
 
     public String getApellidoMaterno() {
-        return apellidoMaterno;
+        return ApellidoMaterno;
     }
 
     public void setApellidoMaterno(String apellidoMaterno) {
-        this.apellidoMaterno = apellidoMaterno;
+        ApellidoMaterno = apellidoMaterno;
     }
 
     public String getRazonSocialCliente() {
-        return razonSocialCliente;
+        return RazonSocialCliente;
     }
 
     public void setRazonSocialCliente(String razonSocialCliente) {
-        this.razonSocialCliente = razonSocialCliente;
+        RazonSocialCliente = razonSocialCliente;
     }
 
     public String getRucCliente() {
-        return rucCliente;
+        return RucCliente;
     }
 
     public void setRucCliente(String rucCliente) {
-        this.rucCliente = rucCliente;
+        RucCliente = rucCliente;
     }
 
     public String getDireccionCliente() {
-        return direccionCliente;
+        return DireccionCliente;
     }
 
     public void setDireccionCliente(String direccionCliente) {
-        this.direccionCliente = direccionCliente;
+        DireccionCliente = direccionCliente;
     }
 
-    public String getLatitudCliente() {
-        return latitudCliente;
+    public Double getLatitudCliente() {
+        return LatitudCliente;
     }
 
-    public void setLatitudCliente(String latitudCliente) {
-        this.latitudCliente = latitudCliente;
+    public void setLatitudCliente(Double latitudCliente) {
+        LatitudCliente = latitudCliente;
     }
 
-    public String getLongitudCliente() {
-        return longitudCliente;
+    public Double getLongitudCliente() {
+        return LongitudCliente;
     }
 
-    public void setLongitudCliente(String longitudCliente) {
-        this.longitudCliente = longitudCliente;
+    public void setLongitudCliente(Double longitudCliente) {
+        LongitudCliente = longitudCliente;
     }
 
     public Boolean getMonitoreoActivo() {
-        return monitoreoActivo;
+        return MonitoreoActivo;
     }
 
     public void setMonitoreoActivo(Boolean monitoreoActivo) {
-        this.monitoreoActivo = monitoreoActivo;
+        MonitoreoActivo = monitoreoActivo;
     }
+
 
 
 }

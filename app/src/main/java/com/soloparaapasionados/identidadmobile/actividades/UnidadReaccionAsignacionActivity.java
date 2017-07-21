@@ -27,7 +27,8 @@ public class UnidadReaccionAsignacionActivity extends AppCompatActivity
     public static boolean patronMasterDetalle;
     DrawerLayout navigationDrawerLayout;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unidad_reaccion_asignacion);
 
@@ -100,7 +101,8 @@ public class UnidadReaccionAsignacionActivity extends AppCompatActivity
         toolbar.setSubtitle(tituloActividad);
     }
 
-    private void setupNavigationDrawerContent(NavigationView navigationView) {
+    private void setupNavigationDrawerContent(NavigationView navigationView)
+    {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -164,7 +166,8 @@ public class UnidadReaccionAsignacionActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         switch (item.getItemId()) {
             case android.R.id.home:
                 navigationDrawerLayout.openDrawer(GravityCompat.START);
@@ -189,7 +192,7 @@ public class UnidadReaccionAsignacionActivity extends AppCompatActivity
     }
 
     @Override
-    public void OnUbicacionUnidadReaccionItemFragmentoClick(String idTurno, String descripcionTurno, String rangoHorarioTurno, int position) {
+    public void OnUbicacionUnidadReaccionItemFragmentoClick(String idUnidadReaccion, String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion, double latiudUnidadReaccion, double longitudUnidadReaccion, int position) {
         // Verificación: ¿Existe el detalle en el layout?
         if (patronMasterDetalle== true) {
 
@@ -197,9 +200,10 @@ public class UnidadReaccionAsignacionActivity extends AppCompatActivity
                     getSupportFragmentManager().findFragmentById(R.id.mapa_termico_agrupacion_container);
 
             if(mapaTermicoAgrupacionFragment!=null){
-                mapaTermicoAgrupacionFragment.setSubTituloUbicacionUnidadReaccion(idTurno,  descripcionTurno,  rangoHorarioTurno,  position);
+                mapaTermicoAgrupacionFragment.setSubTituloUbicacionUnidadReaccion(idUnidadReaccion,  descripcionUnidadReaccion,  direccionUbicacionUnidadReaccion,latiudUnidadReaccion, longitudUnidadReaccion, position);
             }
 
         }
     }
+
 }

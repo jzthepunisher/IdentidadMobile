@@ -132,6 +132,9 @@
             android:exported="false" />
         <service
             android:name=".ServicioRemoto.TurnoUnidadReaccionUbicacionServicioRemoto"
+            android:exported="false" />
+        <service
+            android:name=".ServicioRemoto.ClienteServicioRemoto"
             android:exported="false"></service>
     </application>
 

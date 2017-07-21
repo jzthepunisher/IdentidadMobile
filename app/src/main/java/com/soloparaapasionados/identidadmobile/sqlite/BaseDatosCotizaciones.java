@@ -444,7 +444,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private void mockDataClientes(SQLiteDatabase sqLiteDatabase)
     {
-        mockCliente(sqLiteDatabase, new Cliente("11111111111","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.063355","-77.028431",true));
+       /* mockCliente(sqLiteDatabase, new Cliente("11111111111","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","",-12.063355,-77.028431,true));
         mockCliente(sqLiteDatabase, new Cliente("11111111112","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.063746","-77.028479",true));
         mockCliente(sqLiteDatabase, new Cliente("11111111113","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.065328","-77.034696",true));
         mockCliente(sqLiteDatabase, new Cliente("11111111114","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.075864","-77.034296",true));
@@ -502,7 +502,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         mockCliente(sqLiteDatabase, new Cliente("11111111254","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.077462","-77.089735",true));
         mockCliente(sqLiteDatabase, new Cliente("11111111255","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.077546","-77.085991",true));
         mockCliente(sqLiteDatabase, new Cliente("11111111256","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074846","-77.083170",true));
-
+*/
     }
 /////////////////////////////////////////////////////////////////////////////////////////////
     public long mockLawyer(SQLiteDatabase db, Cargo cargo) {

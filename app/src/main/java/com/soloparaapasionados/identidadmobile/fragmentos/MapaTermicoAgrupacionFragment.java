@@ -156,20 +156,21 @@ public class MapaTermicoAgrupacionFragment extends Fragment  {
         this.idTurno =idTurno==null?"":idTurno;
         this.descripcionTurno=descripcionTurno==null?"":descripcionTurno;
         this.rangoHorarioTurno=rangoHorarioTurno==null?"":rangoHorarioTurno;
-
         setSubTitulo();
 
         ((MapaTermicoFragment)adapter.getItem(0)).setIdTurno(this.idTurno);
     }
 
-    public void setSubTituloUbicacionUnidadReaccion(String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion, int position){
+    public void setSubTituloUbicacionUnidadReaccion(String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion,double latiudUnidadReaccion, double longitudUnidadReaccion, int position){
         this.idUnidadReaccion=idUnidadReaccion==null?"":idUnidadReaccion;
         this.descripcionUnidadReaccion=descripcionUnidadReaccion==null?"":descripcionUnidadReaccion;
         this.direccionUbicacionUnidadReaccion=direccionUbicacionUnidadReaccion==null?"":direccionUbicacionUnidadReaccion;
+        this.latitudUbicacionUnidadReaccion=latiudUnidadReaccion;
+        this.longitudUbicacionUnidadReaccion=longitudUnidadReaccion;
 
         setSubTitulo();
 
-        ((MapaTermicoFragment)adapter.getItem(0)).setIdUnidadReaccion(this.idUnidadReaccion);
+        ((MapaTermicoFragment)adapter.getItem(0)).setIdUnidadReaccion(this.idUnidadReaccion,this.latitudUbicacionUnidadReaccion,this.longitudUbicacionUnidadReaccion, this.direccionUbicacionUnidadReaccion);
     }
 
     public static void setSubTitulo(){

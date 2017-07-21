@@ -51,6 +51,8 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
 
     String idUnidadReaccion;
     String descripcionUnidadReaccion;
+    Double latitudUnidadReaccion;
+    Double longitudUnidadReaccion;
     String direccionUbicacionUnidadReaccion;
 
     String estadoSincronizacion="activado";
@@ -120,10 +122,10 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     }
 
     @Override
-    public void onClick(UnidadReaccionPorTurnoAdaptador.ViewHolder holder, String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion, int position) {
+    public void onClick(UnidadReaccionPorTurnoAdaptador.ViewHolder holder, String idUnidadReaccion,String descripcionUnidadReaccion,Double latitudUnidadReaccion, Double longitudUnidadReaccion, String direccionUbicacionUnidadReaccion, int position) {
 
         if (UnidadReaccionAsignacionActivity.patronMasterDetalle==true){
-            cargarUbicacionUnidadReaccion(idUnidadReaccion, descripcionUnidadReaccion, direccionUbicacionUnidadReaccion, position);
+            cargarUbicacionUnidadReaccion(idUnidadReaccion, descripcionUnidadReaccion, direccionUbicacionUnidadReaccion,latitudUnidadReaccion,longitudUnidadReaccion, position);
         }
 
         //Toast.makeText(getActivity()," Hola 2 " + idTurno + " Unidad Reaccion :" + idUnidadReaccion +  "position : " + position,Toast.LENGTH_SHORT).show();
@@ -181,21 +183,37 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
 
                         idUnidadReaccion=data.getString(data.getColumnIndex(UnidadesReaccion.ID_UNIDAD_REACCION));
                         descripcionUnidadReaccion=data.getString(data.getColumnIndex(UnidadesReaccion.DESCRIPCION));
-                        String direccion=data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.DIRECCION));
 
-                        if (direccion!=null)
-                        {
-                            direccionUbicacionUnidadReaccion=direccion.isEmpty()?"No existe ubicación asignada":direccion;
+                        if(data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LATITUD))!=null){
+                            latitudUnidadReaccion=Double.valueOf(data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LATITUD)));
                         }
                         else
                         {
-                            direccionUbicacionUnidadReaccion="No existe ubicación asignada";
+                            latitudUnidadReaccion=0.0;
                         }
+
+                        if(data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD))!=null)
+                        {
+                            longitudUnidadReaccion=Double.valueOf(data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD)));
+                        }else{
+                            longitudUnidadReaccion=0.0;
+                        }
+
+                        String direccion=data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.DIRECCION));
+
+                        /*if (direccion!=null)
+                        {*/
+                            direccionUbicacionUnidadReaccion=direccion==null||direccion.isEmpty() ?"No existe ubicación asignada":direccion;
+                       /* }
+                        else
+                        {
+                            direccionUbicacionUnidadReaccion="No existe ubicación asignada";
+                        }*/
 
 
                         position=0 ;
 
-                        cargarUbicacionUnidadReaccion(idUnidadReaccion, descripcionUnidadReaccion,  direccionUbicacionUnidadReaccion, position);
+                        cargarUbicacionUnidadReaccion(idUnidadReaccion, descripcionUnidadReaccion,  direccionUbicacionUnidadReaccion,latitudUnidadReaccion, longitudUnidadReaccion,position);
                     }
                 }
                 estadoSincronizacion="desactivado";
@@ -232,14 +250,14 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
         }
     }
 
-    public void cargarUbicacionUnidadReaccion(String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion, int position) {
+    public void cargarUbicacionUnidadReaccion(String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion,double latiudUnidadReaccion,double longitudUnidadReaccion, int position) {
         if (onTurnoItemClickFragmentoListener != null) {
-            onTurnoItemClickFragmentoListener.OnUbicacionUnidadReaccionItemFragmentoClick(idUnidadReaccion, descripcionUnidadReaccion, direccionUbicacionUnidadReaccion, position);
+            onTurnoItemClickFragmentoListener.OnUbicacionUnidadReaccionItemFragmentoClick(idUnidadReaccion, descripcionUnidadReaccion, direccionUbicacionUnidadReaccion, latiudUnidadReaccion, longitudUnidadReaccion, position);
         }
     }
 
     public interface OnTurnoItemClickFragmentoListener {
         public void OnTurnoItemFragmentoClick( String idTurno,String descripcionTurno, String rangoHorarioTurno, int position);
-        public void OnUbicacionUnidadReaccionItemFragmentoClick( String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion, int position);
+        public void OnUbicacionUnidadReaccionItemFragmentoClick( String idUnidadReaccion,String descripcionUnidadReaccion, String direccionUbicacionUnidadReaccion,double latiudUnidadReaccion,double longitudUnidadReaccion, int position);
     }
 }
