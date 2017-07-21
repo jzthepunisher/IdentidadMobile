@@ -33,7 +33,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 47;
+    private static final int VERSION_ACTUAL = 49;
 
     private final Context contexto;
 

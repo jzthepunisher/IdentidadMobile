@@ -543,8 +543,8 @@ public class ProviderCotizacion extends ContentProvider {
 
                 if (estadoSincronizacion.equals("activado")){
                     leerTiposUnidadReaccionRemotamente();
-                    leerUnidadesReaccionRemotamente();
-                    leerTurnosUnidadesReaccionUbicacionRemotamente();
+                    //leerUnidadesReaccionRemotamente();
+                    //leerTurnosUnidadesReaccionUbicacionRemotamente();
                 }
                 break;
             case CLIENTES:

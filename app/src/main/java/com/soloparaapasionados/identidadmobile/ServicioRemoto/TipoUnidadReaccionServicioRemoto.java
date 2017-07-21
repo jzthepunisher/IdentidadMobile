@@ -313,5 +313,24 @@ public class TipoUnidadReaccionServicioRemoto extends IntentService {
             Log.i(TAG, "No se requiere sincronización");
         }
 
+        leerUnidadesReaccionRemotamente();
+        //leerTurnosUnidadesReaccionUbicacionRemotamente();
+
+    }
+
+    private void leerUnidadesReaccionRemotamente()
+    {
+        Intent intent = new Intent(this, UnidadReaccionServicioRemoto.class);
+        intent.setAction(UnidadReaccionServicioRemoto.ACCION_LEER_UNIDAD_REACCION_ISERVICE);
+        //intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
+        this.startService(intent);
+    }
+
+    private void leerTurnosUnidadesReaccionUbicacionRemotamente()
+    {
+        Intent intent = new Intent(this, TurnoUnidadReaccionUbicacionServicioRemoto.class);
+        intent.setAction(TurnoUnidadReaccionUbicacionServicioRemoto.ACCION_LEER_TURNO_UNIDAD_REACCION_UBICACION_ISERVICE);
+        //intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
+        this.startService(intent);
     }
 }
