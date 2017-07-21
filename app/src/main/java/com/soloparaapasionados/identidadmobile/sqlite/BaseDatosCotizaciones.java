@@ -33,7 +33,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 43;
+    private static final int VERSION_ACTUAL = 47;
 
     private final Context contexto;
 
@@ -369,18 +369,21 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
     }
 
     // Insertar datos ficticios para prueba inicial
-    private void mockDataTurnos(SQLiteDatabase sqLiteDatabase) {
+    private void mockDataTurnos(SQLiteDatabase sqLiteDatabase)
+    {
         mockTurno(sqLiteDatabase, new Turno("01", "Turno Mañana","08:00:00","16:00:00"));
         mockTurno(sqLiteDatabase, new Turno("02", "Turno Tarde","16:00:00","00:00:00"));
         mockTurno(sqLiteDatabase, new Turno("03", "Turno Noche","00:00:00","08:00:00"));
     }
 
-    private void mockDataTiposUnidadReaccion(SQLiteDatabase sqLiteDatabase) {
+    private void mockDataTiposUnidadReaccion(SQLiteDatabase sqLiteDatabase)
+    {
         mockTipoUnidadReaccion(sqLiteDatabase, new TipoUnidadReaccion("01", "Halcón","ic_motorcycle_black_24dp.png"));
         mockTipoUnidadReaccion(sqLiteDatabase, new TipoUnidadReaccion("02", "Cóndor","ic_directions_car_black_24dp.png"));
     }
 
-    private void mockDataUnidadesReaccion(SQLiteDatabase sqLiteDatabase) {
+    private void mockDataUnidadesReaccion(SQLiteDatabase sqLiteDatabase)
+    {
         mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("01", "01","Halcón 1","XP-8709","Honda","Terreno","Azul"));
         mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("02", "01","Halcón 2","ER-3122","Honda","Terreno","Azul"));
         mockUnidadReaccion(sqLiteDatabase, new UnidadReaccion("03", "01","Halcón 3","YU-4444","Honda","Terreno","Azul"));
@@ -409,7 +412,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     }
 
-    private void mockDataTurno_UnidadesReaccionUbicacion(SQLiteDatabase sqLiteDatabase) {
+    private void mockDataTurno_UnidadesReaccionUbicacion(SQLiteDatabase sqLiteDatabase)
+    {
         mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("01","01",Double.valueOf(0),Double.valueOf(0),""));
         mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("01","02",Double.valueOf(0),Double.valueOf(0),""));
         mockTurno_UnidadesReaccionUbicacion(sqLiteDatabase, new Turno_UnidadReaccionUbicacion("01","03",Double.valueOf(0),Double.valueOf(0),""));

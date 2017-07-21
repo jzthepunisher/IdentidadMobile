@@ -52,7 +52,9 @@ public class UnidadReaccionPorTurnoAdaptador extends RecyclerView.Adapter<Unidad
                 this.idUnidadReaccion= items.getString(items.getColumnIndex(UnidadesReaccion.ID_UNIDAD_REACCION));
                 this.descripcionUnidadReaccion=items.getString(items.getColumnIndex(UnidadesReaccion.DESCRIPCION));
                 String direccion=items.getString(items.getColumnIndex(Turnos_UnidadesReaccionUbicacion.DIRECCION));
+                direccion+=direccion==null?"":direccion;
                 this.direccionUbicacionUnidadReaccion=direccion.isEmpty()?"No existe ubicación asignada":direccion;
+
                 position=posicion;
             }
         }
@@ -115,7 +117,23 @@ public class UnidadReaccionPorTurnoAdaptador extends RecyclerView.Adapter<Unidad
         holder.textViewPlaca.setText(placa);
         String direccion=items.getString(items.getColumnIndex(Turnos_UnidadesReaccionUbicacion.DIRECCION));
 
-        holder.textViewDireccionUbicacion.setText(direccion.isEmpty()?"No existe ubicación asignada":direccion);
+        if (direccion!=null)
+        {
+            if (direccion.isEmpty()){
+                holder.textViewDireccionUbicacion.setText("No existe ubicación asignada");
+            }
+            else
+            {
+                holder.textViewDireccionUbicacion.setText(direccion);
+            }
+        }
+        else
+        {
+            holder.textViewDireccionUbicacion.setText("No existe ubicación asignada");
+        }
+
+
+
 
         String fotoTipoUnidadReaccion = items.getString(items.getColumnIndex(TiposUnidadReaccion.FOTO));
         final ImageView imageViewFotoTipoUnidadReaccion = holder.imageViewFotoTipoUnidadReaccion;

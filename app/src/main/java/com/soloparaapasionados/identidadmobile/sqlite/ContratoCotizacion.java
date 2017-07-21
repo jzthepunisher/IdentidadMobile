@@ -112,6 +112,7 @@ public class ContratoCotizacion {
     private static final String RUTA_UNIDADES_REACCION="unidades_reaccion";
     private static final String RUTA_CLIENTES="clientes";
     private static final String RUTA_UBICACIONES="ubicaciones";
+    private static final String RUTA_TURNOS_UNIDADES_REACCION_UBICACION="turnos_unidades_reaccion_ubicacion";
     // [/URIS]
 
     // [TIPOS_MIME]
@@ -328,8 +329,25 @@ public class ContratoCotizacion {
     }
 
     //Clase contrato de TurnoUnidadReaccionUbicacion
-    public static class Turnos_UnidadesReaccionUbicacion implements ColumnasTurno_UnidadReaccionUbicacion {
+    public static class Turnos_UnidadesReaccionUbicacion implements ColumnasTurno_UnidadReaccionUbicacion
+    {
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_TURNOS_UNIDADES_REACCION_UBICACION).build();
+        public static final String PARAMETRO_SINCRONIZACION = "sincronizacion";
 
+        public static Uri crearUriTurnoUnidadReaccionUbicacionLista(String estadoSincronizacion)
+        {
+            return URI_CONTENIDO.buildUpon().appendQueryParameter(PARAMETRO_SINCRONIZACION,estadoSincronizacion).build();
+        }
+
+        public static boolean tieneEstadoSincronizaion(Uri uri)
+        {
+            return uri != null && uri.getQueryParameter(PARAMETRO_SINCRONIZACION) != null;
+        }
+
+        public static Uri crearUriTurnoUnidadReaccionUbicacion(String id)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
     }
 
     //Clase contrato de Turno

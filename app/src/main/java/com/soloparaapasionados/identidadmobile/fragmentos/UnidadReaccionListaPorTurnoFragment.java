@@ -53,6 +53,8 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     String descripcionUnidadReaccion;
     String direccionUbicacionUnidadReaccion;
 
+    String estadoSincronizacion="activado";
+
     private OnTurnoItemClickFragmentoListener onTurnoItemClickFragmentoListener;
     public UnidadReaccionListaPorTurnoFragment() {
         // Required empty public constructor
@@ -131,11 +133,11 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id){
             case 1:
-                return new CursorLoader(getActivity(), Turnos.crearUriTurnoLista("activado"), null, null, null, null);
+                return new CursorLoader(getActivity(), Turnos.crearUriTurnoLista(estadoSincronizacion), null, null, null, null);
             case 2:
                 idTurno = args.getString(ARGUMENTO_ID_TURNO);
+                return new CursorLoader(getActivity(), Turnos.crearUriTurno_UnidadesReaccionUbicacion(idTurno,estadoSincronizacion), null, null, null, null);
 
-                return new CursorLoader(getActivity(), Turnos.crearUriTurno_UnidadesReaccionUbicacion(idTurno,"activado"), null, null, null, null);
         }
         return null;
     }
@@ -180,12 +182,23 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
                         idUnidadReaccion=data.getString(data.getColumnIndex(UnidadesReaccion.ID_UNIDAD_REACCION));
                         descripcionUnidadReaccion=data.getString(data.getColumnIndex(UnidadesReaccion.DESCRIPCION));
                         String direccion=data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.DIRECCION));
-                        direccionUbicacionUnidadReaccion=direccion.isEmpty()?"No existe ubicación asignada":direccion;
+
+                        if (direccion!=null)
+                        {
+                            direccionUbicacionUnidadReaccion=direccion.isEmpty()?"No existe ubicación asignada":direccion;
+                        }
+                        else
+                        {
+                            direccionUbicacionUnidadReaccion="No existe ubicación asignada";
+                        }
+
+
                         position=0 ;
 
                         cargarUbicacionUnidadReaccion(idUnidadReaccion, descripcionUnidadReaccion,  direccionUbicacionUnidadReaccion, position);
                     }
                 }
+                estadoSincronizacion="desactivado";
                 break;
         }
     }
