@@ -60,7 +60,7 @@ public class UnidadReaccionPorTurnoAdaptador extends RecyclerView.Adapter<Unidad
                 }
                 else
                 {
-                    this.latitudUnidadReaccion=0.0;
+                    this.latitudUnidadReaccion=null;
                 }
 
                 if(items.getString(items.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD))!=null){
@@ -68,7 +68,7 @@ public class UnidadReaccionPorTurnoAdaptador extends RecyclerView.Adapter<Unidad
                 }
                 else
                 {
-                    this.longitudUnidadReaccion=0.0;
+                    this.longitudUnidadReaccion=null;
                 }
 
 

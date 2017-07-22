@@ -52,6 +52,12 @@ public class MapaAgrupacionFragment extends Fragment
     private String mAddressOutput;
 
 
+    String idTurno;
+    String idUnidadReaccion;
+    Double latitudUnidadReaccion;
+    Double longitudUnidadReaccion;
+    String direccionUnidadReaccionUbicacion;
+
     private AddressResultReceiver mResultReceiver;
 
 
@@ -289,5 +295,46 @@ public class MapaAgrupacionFragment extends Fragment
 
     private void showToast(String text) {
         Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+    }
+
+    public void setIdUnidadReaccion(String idUnidadReaccion,Double latitudUnidadReaccion,Double longitudUnidadReaccion,String direccionUnidadReaccionUbicacion){
+        this.idUnidadReaccion=idUnidadReaccion==null?"":idUnidadReaccion;
+        this.latitudUnidadReaccion=latitudUnidadReaccion;
+        this.longitudUnidadReaccion=longitudUnidadReaccion;
+        this.direccionUnidadReaccionUbicacion=direccionUnidadReaccionUbicacion;
+
+        if (this.latitudUnidadReaccion!=0.0 && longitudUnidadReaccion !=0.0 ){
+            LatLng latLng= new LatLng( this.latitudUnidadReaccion,this.longitudUnidadReaccion);
+            AsignarUbicacionUnidadReaccion(latLng);
+        }else{
+            for (Marker marcadorlista : listaMarkers) {
+                marcadorlista.remove();
+            }
+            listaMarkers.clear();
+        }
+    }
+
+    private void AsignarUbicacionUnidadReaccion(LatLng latLng){
+
+        for (Marker marcadorlista : listaMarkers) {
+            marcadorlista.remove();
+        }
+        listaMarkers.clear();
+
+        if (listaMarkers.size()<=0){
+            Marker marcador =googleMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title("Hito X")
+                    .draggable(true));
+
+            listaMarkers.add(marcador);
+
+            for (Marker marcadorlista : listaMarkers) {
+                //marcadorlista.setVisible(false);
+                //marker.remove(); <-- works too!
+                marcadorlista.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                //fetchAddressButtonHandler();
+            }
+        }
     }
 }

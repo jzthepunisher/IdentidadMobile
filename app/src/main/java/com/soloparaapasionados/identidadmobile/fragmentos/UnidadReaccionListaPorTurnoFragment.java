@@ -125,7 +125,7 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     public void onClick(UnidadReaccionPorTurnoAdaptador.ViewHolder holder, String idUnidadReaccion,String descripcionUnidadReaccion,Double latitudUnidadReaccion, Double longitudUnidadReaccion, String direccionUbicacionUnidadReaccion, int position) {
 
         if (UnidadReaccionAsignacionActivity.patronMasterDetalle==true){
-            cargarUbicacionUnidadReaccion(idUnidadReaccion, descripcionUnidadReaccion, direccionUbicacionUnidadReaccion,latitudUnidadReaccion,longitudUnidadReaccion, position);
+            cargarUbicacionUnidadReaccion(idUnidadReaccion, descripcionUnidadReaccion, direccionUbicacionUnidadReaccion,latitudUnidadReaccion==null?0.0:latitudUnidadReaccion,longitudUnidadReaccion==null?0.0:longitudUnidadReaccion, position);
         }
 
         //Toast.makeText(getActivity()," Hola 2 " + idTurno + " Unidad Reaccion :" + idUnidadReaccion +  "position : " + position,Toast.LENGTH_SHORT).show();
@@ -189,14 +189,14 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
                         }
                         else
                         {
-                            latitudUnidadReaccion=0.0;
+                            latitudUnidadReaccion=null;
                         }
 
                         if(data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD))!=null)
                         {
                             longitudUnidadReaccion=Double.valueOf(data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD)));
                         }else{
-                            longitudUnidadReaccion=0.0;
+                            longitudUnidadReaccion=null;
                         }
 
                         String direccion=data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.DIRECCION));

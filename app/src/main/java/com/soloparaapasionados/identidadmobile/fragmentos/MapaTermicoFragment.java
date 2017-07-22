@@ -452,13 +452,24 @@ public class MapaTermicoFragment extends Fragment
         this.longitudUnidadReaccion=longitudUnidadReaccion;
         this.direccionUnidadReaccionUbicacion=direccionUnidadReaccionUbicacion;
 
-        listaMarkers.clear();
-        googleMap.clear();
-        LatLng latLng= new LatLng( this.latitudUnidadReaccion,this.longitudUnidadReaccion);
-        AsignarUbicacionUnidadReaccion(latLng);
+       if (this.latitudUnidadReaccion!=0.0 && longitudUnidadReaccion !=0.0 ){
+           LatLng latLng= new LatLng( this.latitudUnidadReaccion,this.longitudUnidadReaccion);
+           AsignarUbicacionUnidadReaccion(latLng);
+       }else{
+           for (Marker marcadorlista : listaMarkers) {
+               marcadorlista.remove();
+           }
+           listaMarkers.clear();
+       }
     }
 
     private void AsignarUbicacionUnidadReaccion(LatLng latLng){
+
+            for (Marker marcadorlista : listaMarkers) {
+                marcadorlista.remove();
+            }
+            listaMarkers.clear();
+
         if (listaMarkers.size()<=0){
             Marker marcador =googleMap.addMarker(new MarkerOptions()
                     .position(latLng)

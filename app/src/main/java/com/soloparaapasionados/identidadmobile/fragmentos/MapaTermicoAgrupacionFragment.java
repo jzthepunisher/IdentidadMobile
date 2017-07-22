@@ -171,6 +171,7 @@ public class MapaTermicoAgrupacionFragment extends Fragment  {
         setSubTitulo();
 
         ((MapaTermicoFragment)adapter.getItem(0)).setIdUnidadReaccion(this.idUnidadReaccion,this.latitudUbicacionUnidadReaccion,this.longitudUbicacionUnidadReaccion, this.direccionUbicacionUnidadReaccion);
+        ((MapaAgrupacionFragment)adapter.getItem(1)).setIdUnidadReaccion(this.idUnidadReaccion,this.latitudUbicacionUnidadReaccion,this.longitudUbicacionUnidadReaccion, this.direccionUbicacionUnidadReaccion);
     }
 
     public static void setSubTitulo(){

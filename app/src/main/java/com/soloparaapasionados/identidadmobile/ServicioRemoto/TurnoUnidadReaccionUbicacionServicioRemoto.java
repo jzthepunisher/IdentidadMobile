@@ -42,6 +42,8 @@ public class TurnoUnidadReaccionUbicacionServicioRemoto extends IntentService {
     private static final String TAG = TurnoUnidadReaccionUbicacionServicioRemoto.class.getSimpleName();
 
     public static final String ACCION_LEER_TURNO_UNIDAD_REACCION_UBICACION_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_LEER_TURNO_UNIDAD_REACCION_UBICACION_ISERVICE";
+    public static final String ACCION_ACTUALIZAR_TURNO_UNIDAD_REACCION_UBICACION_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ACTUALIZAR_TURNO_UNIDAD_REACCION_UBICACION_ISERVICE";
+
     //public static final String ACCION_INSERTAR_EMPLEADO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_INSERTAR_EMPLEADO_ISERVICE";
     //public static final String ACCION_ELIMINAR_EMPLEADO_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ELIMINAR_EMPLEADO_ISERVICE";
     //public static final String EXTRA_MI_EMPLEADO = "extra_mi_empleado";
@@ -74,6 +76,13 @@ public class TurnoUnidadReaccionUbicacionServicioRemoto extends IntentService {
                 //Empleado empleado=(Empleado)intent.getSerializableExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO);
 
                 leerTurnoUnidadReaccionUbicacionServicioRemoto();
+            }
+
+            if (TurnoUnidadReaccionUbicacionServicioRemoto.ACCION_ACTUALIZAR_TURNO_UNIDAD_REACCION_UBICACION_ISERVICE.equals(action)) {
+
+                //Empleado empleado=(Empleado)intent.getSerializableExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO);
+
+                actualizarTurnoUnidadReaccionUbicacionServicioRemoto();
             }
 
             /*if (EmpleadoServicioRemoto.ACCION_INSERTAR_EMPLEADO_ISERVICE.equals(action)) {
@@ -128,7 +137,8 @@ public class TurnoUnidadReaccionUbicacionServicioRemoto extends IntentService {
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy()
+    {
         Toast.makeText(this, "Servicio Remoto destruido...", Toast.LENGTH_SHORT).show();
 
         // Emisión para avisar que se terminó el servicio
@@ -136,10 +146,6 @@ public class TurnoUnidadReaccionUbicacionServicioRemoto extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);*/
     }
 
-    /**
-     * Carga el adaptador con las metas obtenidas
-     * en la respuesta
-     */
     public void solicitudTurnosUnidadesReaccionUbicacionGet()
     {
 
@@ -215,7 +221,8 @@ public class TurnoUnidadReaccionUbicacionServicioRemoto extends IntentService {
     }
 
     //Procesador de nuevo registros para empleados
-    private void sincronizarTurnosUnidadesReaccionUbicacion(List<Turno_UnidadReaccionUbicacion> listaTurnosUnidadesReaccionUbicacion) {
+    private void sincronizarTurnosUnidadesReaccionUbicacion(List<Turno_UnidadReaccionUbicacion> listaTurnosUnidadesReaccionUbicacion)
+    {
         syncResult= new SyncResult();
         // Lista para recolección de operaciones pendientes
         ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
@@ -327,4 +334,66 @@ public class TurnoUnidadReaccionUbicacionServicioRemoto extends IntentService {
         }
 
     }
+
+    private void actualizarTurnoUnidadReaccionUbicacionServicioRemoto()
+    {
+        //try {
+        // Se construye la notificación
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setContentTitle("Servicio Remoto en segundo plano")
+                .setContentText("Procesando actualizaccion de registros de ubicación de unidades de reacción ...");
+
+        builder.setProgress( 2, 1, false);
+        startForeground( 1, builder.build());
+
+        solicitudTurnosUnidadesReaccionUbicacionPut();
+
+        // Quitar de primer plano
+        builder.setProgress( 2, 2, false);
+        stopForeground(true);
+    }
+
+    public void solicitudTurnosUnidadesReaccionUbicacionPut()
+    {
+
+        GsonRequest gsonRequest=new GsonRequest<ListaTurnosUnidadesReaccionUbicacion>(
+                Constantes.GET_TURNOS_UNIDADES_REACCION_UBICACION,
+                ListaTurnosUnidadesReaccionUbicacion.class,
+                null,
+                new Response.Listener<ListaTurnosUnidadesReaccionUbicacion>() {
+                    @Override
+                    public void onResponse(ListaTurnosUnidadesReaccionUbicacion response) {
+                        // Procesar la respuesta Json
+                        procesarRespuesta(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "Error Volley: " + error.toString());
+                        Toast.makeText(getBaseContext(),"Error Volley" + error.toString() ,Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        gsonRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+
+        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(gsonRequest);
+    }
+
 }
