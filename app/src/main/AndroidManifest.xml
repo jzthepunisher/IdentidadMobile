@@ -114,11 +114,7 @@
             android:label="@string/title_activity_unidad_reaccion_asignacion"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <service
@@ -135,7 +131,19 @@
             android:exported="false" />
         <service
             android:name=".ServicioRemoto.ClienteServicioRemoto"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity
+            android:name=".actividades.OrdenInstalacionListadoActivity"
+            android:label="@string/title_activity_orden_instalacion_listado"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

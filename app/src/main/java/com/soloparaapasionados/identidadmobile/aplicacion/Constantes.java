@@ -31,10 +31,10 @@ public class Constantes {
     //private static final String PUERTO_HOST = ":3000";
     //private static final String PUERTO_HOST = "";
 
-    private static final String IP = "192.168.1.33";
+    //private static final String IP = "192.168.1.33";
     //private static final String IP = "localhost";
     //private static final String IP = "10.0.2.2";
-    //private static final String IP = "yodeseoapirest.somee.com";
+    private static final String IP = "yodeseoapirest.somee.com";
 
     public static final String EMPLEADOS_GET = "http://" + IP + PUERTO_HOST + "/api/empleados";
     public static final String EMPLEADOS_POST = "http://" + IP + PUERTO_HOST + "/api/empleados";

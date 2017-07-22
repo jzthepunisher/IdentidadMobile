@@ -16,6 +16,12 @@
             android:id="@+id/item_navigation_drawer_asignacion_unidades_reaccion"
             android:icon="@drawable/ic_person_pin_circle_black_24dp"
             android:title="Asignacion unidades reacción" />
+
+        <item
+            android:id="@+id/item_navigation_orden_instalacion_actividades_crud"
+            android:icon="@drawable/ic_spellcheck_black_24dp"
+            android:title="Ejecución actividades Orden Instalación" />
+
         <item
             android:id="@+id/item_navigation_geocerca"
             android:icon="@drawable/ic_credit_card_black_24dp"
