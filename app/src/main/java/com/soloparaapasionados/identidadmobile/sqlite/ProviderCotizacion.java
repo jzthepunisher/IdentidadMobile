@@ -651,7 +651,10 @@ public class ProviderCotizacion extends ContentProvider {
         String id;
         int afectados;
 
-        switch (uriMatcher.match(uri)) {
+        // Comparar Uri
+        int match = uriMatcher.match(uri);
+
+        switch (match) {
 
             case DISPOSITIVOS_ID:
 
@@ -660,6 +663,7 @@ public class ProviderCotizacion extends ContentProvider {
                 String[] argumentos={id};
 
                 afectados = bd.update(Tablas.DISPOSITIVO, values, seleccion, argumentos);
+                notificarCambio(uri);
                 break;
             case EMPLEADOS_ID:
                 id = Empleados.obtenerIdEmpleado(uri);
@@ -678,7 +682,7 @@ public class ProviderCotizacion extends ContentProvider {
                 {
                     afectados = bd.update(Tablas.EMPLEADO, values, seleccion, argumentosDos);
                 }
-
+                notificarCambio(uri);
                 break;
             case TURNOS_ID_UNIDADES_REACCION_ID_UBICACION:
                 String idTurno = Turnos.obtenerIdTurno(uri);
@@ -688,27 +692,22 @@ public class ProviderCotizacion extends ContentProvider {
 
                 seleccion = String.format("%s=? ", Turnos_UnidadesReaccionUbicacion.ID_TURNO) + " AND " + String.format("%s=? ", Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION);
 
-                //seleccion +=  seleccion + " AND " + String.format("%s=? ", Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION);
-                //values=new ContentValues();
-                //values.put(Turnos_UnidadesReaccionUbicacion.DIRECCION,estado);
-
                 afectados = bd.update(Tablas.TURNO_UNIDAD_REACCION_UBICACION, values, seleccion, argumentos3);
+                notificarCambio(Turnos.crearUriTurno_UnidadesReaccionUbicacion(idTurno,"desactivado"));
                 break;
-                /*String seleccion = String.format("%s=? AND %s=?",
-                        DispositivosEmpleados.IMEI, DispositivosEmpleados.ID_EMPLEADO);*/
+            case  TURNOS_UNIDADES_REACCION_UBICACION:
 
-                /*ContentValues valuesDos = new ContentValues();
-                valuesDos.put(DispositivosEmpleados.IMEI,imei);
-                valuesDos.put(DispositivosEmpleados.ID_EMPLEADO,idEmpleado);
+                //seleccion = String.format("%s=? ", Turnos_UnidadesReaccionUbicacion.ID_TURNO) + " AND " + String.format("%s=? ", Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION);
 
-                bd.insertOrThrow(Tablas.DISPOSITIVO_EMPLEADO, null,valuesDos);
+                afectados = bd.update(Tablas.TURNO_UNIDAD_REACCION_UBICACION, values, selection, selectionArgs);
+
                 notificarCambio(uri);
-                return DispositivosEmpleados.crearUriDispositivoEmpleado(id,idEmpleado);*/
+                break;
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }
 
-        notificarCambio(uri);
+
 
         return afectados;
     }

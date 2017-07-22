@@ -33,7 +33,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 49;
+    private static final int VERSION_ACTUAL = 51;
 
     private final Context contexto;
 
@@ -132,11 +132,13 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                         "%s TEXT NOT NULL %s,%s TEXT NOT NULL %s,"+
                         "%s TEXT NULL,%s TEXT NULL," +
                         "%s TEXT NULL," +
+                        "%s TEXT NULL,%s TEXT NULL," +
                         " UNIQUE (%s, %s) ON CONFLICT REPLACE)",
                 Tablas.TURNO_UNIDAD_REACCION_UBICACION, BaseColumns._ID,
                 Turnos_UnidadesReaccionUbicacion.ID_TURNO,Referencias.ID_TURNO,Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION,Referencias.ID_UNIDAD_REACCION,
                 Turnos_UnidadesReaccionUbicacion.LATITUD,Turnos_UnidadesReaccionUbicacion.LONGITUD,
                 Turnos_UnidadesReaccionUbicacion.DIRECCION,
+                Turnos_UnidadesReaccionUbicacion.PENDIENTE_PETICION,Turnos_UnidadesReaccionUbicacion.ESTADO_SINCRONIZACION,
                 Turnos_UnidadesReaccionUbicacion.ID_TURNO,Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +

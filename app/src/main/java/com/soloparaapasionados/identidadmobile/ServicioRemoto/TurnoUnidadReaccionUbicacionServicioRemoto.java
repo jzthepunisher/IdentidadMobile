@@ -3,6 +3,7 @@ package com.soloparaapasionados.identidadmobile.ServicioRemoto;
 import android.app.IntentService;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.Context;
 import android.content.OperationApplicationException;
@@ -15,21 +16,30 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.Gson;
 import com.soloparaapasionados.identidadmobile.aplicacion.Constantes;
 import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicacion;
 import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones.Tablas;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.EstadoRegistro;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_UnidadesReaccionUbicacion;
 import com.soloparaapasionados.identidadmobile.web.VolleySingleton;
 import com.soloparaapasionados.identidadmobile.web.request.GsonRequest;
 import com.soloparaapasionados.identidadmobile.web.request.ListaTurnosUnidadesReaccionUbicacion;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -306,6 +316,8 @@ public class TurnoUnidadReaccionUbicacionServicioRemoto extends IntentService {
                     .withValue(Turnos_UnidadesReaccionUbicacion.LATITUD, turno_UnidadReaccionUbicacionRemoto.getLatitud())
                     .withValue(Turnos_UnidadesReaccionUbicacion.LONGITUD, turno_UnidadReaccionUbicacionRemoto.getLongitud())
                     .withValue(Turnos_UnidadesReaccionUbicacion.DIRECCION, turno_UnidadReaccionUbicacionRemoto.getDireccion())
+                    .withValue(Turnos_UnidadesReaccionUbicacion.PENDIENTE_PETICION, EstadoRegistro.INSERTADO_REMOTAMENTE)
+                    .withValue(Turnos_UnidadesReaccionUbicacion.ESTADO_SINCRONIZACION, EstadoRegistro.ESTADO_OK)
                     .build());
             syncResult.stats.numInserts++;
         }
@@ -334,7 +346,7 @@ public class TurnoUnidadReaccionUbicacionServicioRemoto extends IntentService {
         }
 
     }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void actualizarTurnoUnidadReaccionUbicacionServicioRemoto()
     {
         //try {
@@ -347,7 +359,9 @@ public class TurnoUnidadReaccionUbicacionServicioRemoto extends IntentService {
         builder.setProgress( 2, 1, false);
         startForeground( 1, builder.build());
 
-        solicitudTurnosUnidadesReaccionUbicacionPut();
+        realizarSincronizacionRemota();
+
+        //solicitudTurnosUnidadesReaccionUbicacionPut();
 
         // Quitar de primer plano
         builder.setProgress( 2, 2, false);
@@ -396,4 +410,189 @@ public class TurnoUnidadReaccionUbicacionServicioRemoto extends IntentService {
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(gsonRequest);
     }
 
+    private void realizarSincronizacionRemota() {
+        Log.i(TAG, "Actualizando el servidor...");
+
+        iniciarActualizacion();
+
+        Cursor c = obtenerRegistrosSucios();
+
+        Log.i(TAG, "Se encontraron " + c.getCount() + " registros sucios.");
+
+        if (c.getCount() > 0) {
+            while (c.moveToNext()) {
+                //final int idLocal = c.getInt(COLUMNA_ID);
+                solicitudTurnoUnidadReaccionUbicacionPut(new Turno_UnidadReaccionUbicacion(c));
+            }
+
+        } else {
+            Log.i(TAG, "No se requiere sincronización");
+        }
+        c.close();
+    }
+
+    public void solicitudTurnoUnidadReaccionUbicacionPut(
+            Turno_UnidadReaccionUbicacion turno_unidadReaccionUbicacion)
+    {
+
+        Gson gson = new Gson();
+        JSONObject jsonObject=null;
+
+        String jsonString=gson.toJson(turno_unidadReaccionUbicacion);
+
+        try {
+            // Crear nuevo objeto Json basado en la cadena
+            jsonObject = new JSONObject(jsonString);
+        }catch (JSONException e){
+            Log.d(TAG, e.getMessage());
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                Constantes.PUT_TURNOS_UNIDADES_REACCION_UBICACION,
+                jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Procesar la respuesta del servidor
+                        procesarRespuestaTurno_UnidadReaccionUbicacionPut(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "Error Volley: " + error.getMessage());
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Accept", "application/json");
+                return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8" ;
+            }
+        };
+
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+
+        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(jsonObjectRequest);
+    }
+
+    /**
+     * Interpreta los resultados de la respuesta y así
+     * realizar las operaciones correspondientes
+     *
+     * @param response Objeto Json con la respuesta
+     */
+    private void procesarRespuestaTurno_UnidadReaccionUbicacionPut(JSONObject response)
+    {
+        try {
+            // Obtener estado
+            String estado = response.getString("Estado");
+            // Obtener mensaje
+            String mensaje = response.getString("Mensaje");
+            // Obtener idEmpleado
+            String idTurno = response.getString("IdTurno");
+            String idUnidadReaccion = response.getString("IdUnidadReaccion");
+
+            switch (estado) {
+                case "1":
+                    // Mostrar mensaje
+                    Toast.makeText(getBaseContext(),mensaje,Toast.LENGTH_LONG).show();
+                    finalizarActualizacion(idTurno,idUnidadReaccion);
+                    // Enviar código de éxito
+                    //getActivity().setResult(Activity.RESULT_OK);
+                    // Terminar actividad
+                    //getActivity().finish();
+                    break;
+
+                case "2":
+                    // Mostrar mensaje
+                    Toast.makeText( getBaseContext(), mensaje, Toast.LENGTH_LONG).show();
+                    // Enviar código de falla
+                    //getActivity().setResult(Activity.RESULT_CANCELED);
+                    // Terminar actividad
+                    //getActivity().finish();
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Cambia a estado "de sincronización" el registro que se acaba de insertar localmente
+     */
+    private void iniciarActualizacion() {
+        Uri uri = Turnos_UnidadesReaccionUbicacion.crearUriTurnoUnidadReaccionUbicacionLista("desactivado");
+        String selection = Turnos_UnidadesReaccionUbicacion.PENDIENTE_PETICION + "=? AND "
+                + Turnos_UnidadesReaccionUbicacion.ESTADO_SINCRONIZACION + "=?";
+        String[] selectionArgs = new String[]{EstadoRegistro.ACTUALIZADO_LOCALMENTE + "", EstadoRegistro.ESTADO_OK + ""};
+
+        ContentValues v = new ContentValues();
+        v.put(Turnos_UnidadesReaccionUbicacion.ESTADO_SINCRONIZACION ,  EstadoRegistro.ESTADO_SINCRONIZANDO);
+
+        ContentResolver resolver = getContentResolver();
+        int results = resolver.update(uri, v, selection, selectionArgs);
+        Log.i(TAG, "Registros puestos en cola de inserción:" + results);
+    }
+
+    /**
+     * Obtiene el registro que se acaba de marcar como "pendiente por sincronizar" y
+     * con "estado de sincronización"
+     *
+     * @return Cursor con el registro.
+     */
+    private Cursor obtenerRegistrosSucios() {
+        Uri uri = Turnos_UnidadesReaccionUbicacion.crearUriTurnoUnidadReaccionUbicacionLista("desactivado");
+        String selection = Turnos_UnidadesReaccionUbicacion.PENDIENTE_PETICION + "=? AND "
+                + Turnos_UnidadesReaccionUbicacion.ESTADO_SINCRONIZACION + "=?";
+        String[] selectionArgs = new String[]{EstadoRegistro.ACTUALIZADO_LOCALMENTE+ "", EstadoRegistro.ESTADO_SINCRONIZANDO + ""};
+
+        ContentResolver resolver = getContentResolver();
+        return resolver.query(uri, proyTurnoUnidadReaccionUbicacion, selection, selectionArgs, null);
+    }
+
+    /**
+     * Limpia el registro que se sincronizó y le asigna la nueva id remota proveida
+     * por el servidor
+     *
+     * @param idTurno id remota
+     * @param idUnidadReaccion id remota
+     */
+    private void finalizarActualizacion(String idTurno, String idUnidadReaccion) {
+        Uri uri = Turnos.crearUriTurno_UnidadesReaccionUbicacion_Ubicacion(idTurno,idUnidadReaccion);
+        String selection = Turnos_UnidadesReaccionUbicacion.ID_TURNO + "=?" +
+                " AND " +  Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION + "=?";
+        String[] selectionArgs = new String[]{idTurno,idUnidadReaccion};
+
+        ContentValues v = new ContentValues();
+        v.put(Turnos_UnidadesReaccionUbicacion.PENDIENTE_PETICION,EstadoRegistro.ACTUALIZADO_REMOTAMENTE);
+        v.put(Turnos_UnidadesReaccionUbicacion.ESTADO_SINCRONIZACION, EstadoRegistro.ESTADO_OK);
+
+        ContentResolver resolver = getContentResolver();
+        resolver.update(uri, v, selection, selectionArgs);
+    }
 }

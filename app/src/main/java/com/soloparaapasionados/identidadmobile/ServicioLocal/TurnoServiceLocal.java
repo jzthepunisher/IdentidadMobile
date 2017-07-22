@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
+import com.soloparaapasionados.identidadmobile.ServicioRemoto.TurnoUnidadReaccionUbicacionServicioRemoto;
 import com.soloparaapasionados.identidadmobile.aplicacion.Constantes;
 import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_UnidadesReaccionUbicacion;
@@ -83,6 +84,8 @@ public class TurnoServiceLocal extends IntentService {
                     .withValue(Turnos_UnidadesReaccionUbicacion.LATITUD,turnoUnidadReaccionUbicacion.getLatitud())
                     .withValue(Turnos_UnidadesReaccionUbicacion.LONGITUD,turnoUnidadReaccionUbicacion.getLongitud())
                     .withValue(Turnos_UnidadesReaccionUbicacion.DIRECCION,turnoUnidadReaccionUbicacion.getDireccion())
+                    .withValue(Turnos_UnidadesReaccionUbicacion.PENDIENTE_PETICION, ContratoCotizacion.EstadoRegistro.ACTUALIZADO_LOCALMENTE)
+                    .withValue(Turnos_UnidadesReaccionUbicacion.ESTADO_SINCRONIZACION, ContratoCotizacion.EstadoRegistro.ESTADO_OK)
                     .build());
 
             r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
@@ -96,6 +99,8 @@ public class TurnoServiceLocal extends IntentService {
         } catch (OperationApplicationException e) {
             e.printStackTrace();
         }
+
+        actualizarTurnosUnidadesReaccionUbicacionRemotamente();
     }
 
     @Override
@@ -105,6 +110,14 @@ public class TurnoServiceLocal extends IntentService {
         // Emisión para avisar que se terminó el servicio
         Intent localIntent = new Intent(Constantes.ACTION_PROGRESS_EXIT);
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+    }
+
+    private void actualizarTurnosUnidadesReaccionUbicacionRemotamente()
+    {
+        Intent intent = new Intent(this, TurnoUnidadReaccionUbicacionServicioRemoto.class);
+        intent.setAction(TurnoUnidadReaccionUbicacionServicioRemoto.ACCION_ACTUALIZAR_TURNO_UNIDAD_REACCION_UBICACION_ISERVICE);
+        //intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
+        this.startService(intent);
     }
 
 }

@@ -490,7 +490,7 @@ public class EmpleadoServicioRemoto extends IntentService {
                 case "1":
                     // Mostrar mensaje
                     Toast.makeText(getBaseContext(),mensaje,Toast.LENGTH_LONG).show();
-                    actualizarEstadoEmpleado(idEmpleado,EstadoRegistro.REGISTRADO_REMOTALMENTE);
+                    actualizarEstadoEmpleado(idEmpleado,EstadoRegistro.REGISTRADO_REMOTAMENTE);
                     // Enviar código de éxito
                     //getActivity().setResult(Activity.RESULT_OK);
                     // Terminar actividad

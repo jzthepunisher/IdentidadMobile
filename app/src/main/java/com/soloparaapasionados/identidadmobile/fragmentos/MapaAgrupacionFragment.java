@@ -305,7 +305,9 @@ public class MapaAgrupacionFragment extends Fragment
 
         if (this.latitudUnidadReaccion!=0.0 && longitudUnidadReaccion !=0.0 ){
             LatLng latLng= new LatLng( this.latitudUnidadReaccion,this.longitudUnidadReaccion);
-            AsignarUbicacionUnidadReaccion(latLng);
+            if (googleMap!=null){
+                AsignarUbicacionUnidadReaccion(latLng);
+            }
         }else{
             for (Marker marcadorlista : listaMarkers) {
                 marcadorlista.remove();

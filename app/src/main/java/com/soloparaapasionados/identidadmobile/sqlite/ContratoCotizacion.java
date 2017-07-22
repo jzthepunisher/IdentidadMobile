@@ -67,6 +67,10 @@ public class ContratoCotizacion {
         String LATITUD            = "latitud";
         String LONGITUD           = "longitud";
         String DIRECCION          = "direccion";
+
+        String PENDIENTE_PETICION    = "pendiente_peticion";
+        String ESTADO_SINCRONIZACION = "estado_sincronizacion";
+
     }
 
     interface ColumnasCliente
@@ -86,7 +90,18 @@ public class ContratoCotizacion {
     public interface EstadoRegistro{
         String REGISTRADO_LOCALMENTE= "registrado.localmente";
         String REGISTRANDO_REMOTAMENTE= "registrando.remotamente";
-        String REGISTRADO_REMOTALMENTE= "registrado.remotamente";
+        String REGISTRADO_REMOTAMENTE= "registrado.remotamente";
+
+        String ACTUALIZADO_LOCALMENTE= "actualizado.localmente";
+        //String ACTUALIZANDO_REMOTAMENTE= "actualizando.remotamente";
+        String ACTUALIZADO_REMOTAMENTE= "actualizado.remotamente";
+
+        String INSERTADO_LOCALMENTE= "insertado.localmente";
+        String INSERTADO_REMOTAMENTE= "insertado.remotamente";
+
+        String ESTADO_OK= "estado.ok";
+        String ESTADO_SINCRONIZANDO= "estado.sincronizando";
+
     }
 
     interface ColumnasCargo{

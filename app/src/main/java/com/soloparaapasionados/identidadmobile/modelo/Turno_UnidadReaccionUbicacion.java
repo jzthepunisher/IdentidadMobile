@@ -37,8 +37,25 @@ public class Turno_UnidadReaccionUbicacion implements Serializable {
     public Turno_UnidadReaccionUbicacion(Cursor cursor) {
         IdTurno = cursor.getString(cursor.getColumnIndex(Turnos_UnidadesReaccionUbicacion.ID_TURNO));
         IdUnidadReaccion = cursor.getString(cursor.getColumnIndex(Turnos_UnidadesReaccionUbicacion.ID_UNIDAD_REACCION));
-        Latitud = Double.valueOf(cursor.getString(cursor.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LATITUD)));
-        Longitud = Double.valueOf(cursor.getString(cursor.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD)));
+
+        if(cursor.getString(cursor.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LATITUD))!=null)
+        {
+            Latitud=Double.valueOf(cursor.getString(cursor.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LATITUD)));
+        }
+        else
+        {
+            this.Latitud=null;
+        }
+
+        if(cursor.getString(cursor.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD))!=null){
+            this.Longitud=Double.valueOf(cursor.getString(cursor.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD)));
+        }
+        else
+        {
+            this.Longitud=null;
+        }
+        //Latitud = Double.valueOf(cursor.getString(cursor.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LATITUD)));
+        //Longitud = Double.valueOf(cursor.getString(cursor.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD)));
         Direccion = cursor.getString(cursor.getColumnIndex(Turnos_UnidadesReaccionUbicacion.DIRECCION));
     }
 

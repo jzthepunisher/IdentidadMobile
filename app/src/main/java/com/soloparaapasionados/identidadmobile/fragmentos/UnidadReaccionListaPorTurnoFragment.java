@@ -189,14 +189,14 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
                         }
                         else
                         {
-                            latitudUnidadReaccion=null;
+                            latitudUnidadReaccion=0.0;
                         }
 
                         if(data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD))!=null)
                         {
                             longitudUnidadReaccion=Double.valueOf(data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.LONGITUD)));
                         }else{
-                            longitudUnidadReaccion=null;
+                            longitudUnidadReaccion=0.0;
                         }
 
                         String direccion=data.getString(data.getColumnIndex(Turnos_UnidadesReaccionUbicacion.DIRECCION));
