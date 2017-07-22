@@ -36,7 +36,7 @@ public class EmpleadosListaAdaptador extends RecyclerView.Adapter<EmpleadosLista
     private OnItemClickListener escucha;
 
     public interface OnItemClickListener {
-        public void onClick(ViewHolder holder, String idEmpleado,int position);
+        public void onClick(ViewHolder holder, String idOrdenInstacion,int position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

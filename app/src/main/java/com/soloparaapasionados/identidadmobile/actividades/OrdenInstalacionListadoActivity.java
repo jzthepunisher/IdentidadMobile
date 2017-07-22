@@ -79,12 +79,14 @@ public class OrdenInstalacionListadoActivity extends AppCompatActivity {
         {
             tituloActividad= "Selecciona ordenes de instlacion";
             toolbar.setTitle(tituloActividad);
+            toolbar.setSubtitle("toca para info. de Orden Instalación");
             //toolbar.setSubtitle("hola");
         }
         else
         {
-            tituloActividad= "Listado de Ordenes de Instalación";
+            tituloActividad= "Ordenes de Instalación";
             toolbar.setTitle(tituloActividad);
+            toolbar.setSubtitle("toca para info. de Orden Instalación");
             //toolbar.setSubtitle("hola");
         }
     }

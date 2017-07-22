@@ -1,13 +1,43 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.soloparaapasionados.identidadmobile.fragmentos.OrdenInslacionListadoFragment">
-
-    <!-- TODO: Update blank fragment layout -->
+    android:orientation="vertical"
+    android:animateLayoutChanges="true"
+    android:padding="0dp">
+    <!-- En caso de lista vacía -->
     <TextView
+        android:id="@+id/textViewListadoOrdenesInstacionVacio"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:gravity="center_vertical|center_horizontal"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:text="@string/mensaje_listado_vacio" />
 
-</FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewOrdenesInstacionSeleccionados"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_below="@+id/recyclerViewListadoOrdenInstalacion" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewListadoOrdenInstalacion"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/app_bar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewListadoOrdenInstalacionSugerencia"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_below="@+id/recyclerViewListadoOrdenInstalacion" />
+</LinearLayout>
+

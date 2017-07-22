@@ -178,4 +178,7 @@
     <string name="invalid_lat_long_used">Invalid latitude or longitude used</string>
     <string name="address_found">Address found</string>
     <string name="title_activity_orden_instalacion_listado">OrdenInstalacionListadoActivity</string>
+    <string name="title_activity_orden_instalacion_ejecutar_actividad">
+        OrdenInstalacionEjecutarActividadActivity
+    </string>
 </resources>

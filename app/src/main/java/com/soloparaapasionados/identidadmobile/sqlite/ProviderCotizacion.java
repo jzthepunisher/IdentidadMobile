@@ -23,6 +23,9 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposUn
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.UnidadesReaccion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_UnidadesReaccionUbicacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Clientes;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposOrdenInstalacion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacion;
+
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -80,6 +83,10 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int UNIDADES_REACCION_ID  = 901;
     public static final int TURNOS_UNIDADES_REACCION_UBICACION=1000;
     public static final int TURNOS_UNIDADES_REACCION_UBICACION_ID=1001;
+    public static final int TIPOS_ORDEN_INSTALACION = 1100;
+    public static final int TIPOS_ORDEN_INSTALACION_ID = 1101;
+    public static final int ORDENES_INSTALACION = 1200;
+    public static final int ORDENES_INSTALACION_ID = 1201;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
@@ -108,6 +115,10 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "unidades_reaccion/*"          , UNIDADES_REACCION_ID);
         uriMatcher.addURI(AUTORIDAD, "turnos_unidades_reaccion_ubicacion"   , TURNOS_UNIDADES_REACCION_UBICACION);
         uriMatcher.addURI(AUTORIDAD, "turnos_unidades_reaccion_ubicacion/*" , TURNOS_UNIDADES_REACCION_UBICACION_ID);
+        uriMatcher.addURI(AUTORIDAD, "tipos_orden_instalacion"              , TIPOS_ORDEN_INSTALACION);
+        uriMatcher.addURI(AUTORIDAD, "tipos_orden_instalacion/*"            , TIPOS_ORDEN_INSTALACION_ID);
+        uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion"                  , ORDENES_INSTALACION);
+        uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion/*"                , ORDENES_INSTALACION_ID);
     }
     // [/URI_MATCHER]
 
@@ -201,6 +212,21 @@ public class ProviderCotizacion extends ContentProvider {
             Tablas.TURNO_UNIDAD_REACCION_UBICACION + "." + Turnos_UnidadesReaccionUbicacion.LATITUD,
             Tablas.TURNO_UNIDAD_REACCION_UBICACION + "." + Turnos_UnidadesReaccionUbicacion.LONGITUD,
             Tablas.TURNO_UNIDAD_REACCION_UBICACION + "." + Turnos_UnidadesReaccionUbicacion.DIRECCION};
+
+    private final String[] proyTipoOrdenInstalacion = new String[]{
+            BaseColumns._ID,
+            Tablas.TIPO_ORDEN_INSTALACION + "." + TiposOrdenInstalacion.ID_TIPO_ORDEN_INSTALACION,
+            Tablas.TIPO_ORDEN_INSTALACION + "." + TiposOrdenInstalacion.DESCRIPCION};
+
+    private final String[] proyTipoOrdenInstalacion_OrdenInstalacion_Cliente = new String[]{
+            Tablas.ORDEN_INSTALACION + "." + BaseColumns._ID,
+            Tablas.ORDEN_INSTALACION + "." + OrdenesInstalacion.ID_ORDEN_INSTALACION,
+            Tablas.ORDEN_INSTALACION + "." + OrdenesInstalacion.FECHA_EMISION,
+            Tablas.CLIENTE + "." + Clientes.NOMBRES_CLIENTE,
+            Tablas.CLIENTE + "." + Clientes.APELLIDO_PATERNO,
+            Tablas.CLIENTE + "." + Clientes.APELLIDO_MATERNO,
+            Tablas.TIPO_ORDEN_INSTALACION + "." + TiposOrdenInstalacion.DESCRIPCION};
+
     // [/CAMPOS_AUXILIARES]
 
 
@@ -232,6 +258,11 @@ public class ProviderCotizacion extends ContentProvider {
             " INNER JOIN turno " +
                     " ON turno.id_turno = turno_unidad_reaccion_ubicacion.id_turno";
 
+    private static final String TIPO_ORDEN_INSTALACION_ORDEN_INSTALACION_CLIENTE=
+            "tipo_orden_instalacion INNER JOIN orden_instalacion " +
+                    "ON tipo_orden_instalacion.id_tipo_orden_instalacion = orden_instalacion.id_tipo_orden_instalacion" +
+            " INNER JOIN cliente " +
+                      " ON cliente.id_cliente = orden_instalacion.id_cliente";
     int offSet=30;
 
     @Override
@@ -384,6 +415,7 @@ public class ProviderCotizacion extends ContentProvider {
                 notificarCambio(uri);
 
                 return Clientes.crearUriCliente(id);
+
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }
@@ -626,6 +658,25 @@ public class ProviderCotizacion extends ContentProvider {
                 if (Turnos_UnidadesReaccionUbicacion.tieneEstadoSincronizaion(uri))
                 {
                     estadoSincronizacion=String.valueOf(uri.getQueryParameter(Turnos_UnidadesReaccionUbicacion.PARAMETRO_SINCRONIZACION)) ;
+                }
+
+                if (estadoSincronizacion.equals("activado"))
+                {
+                    //leerTurnosUnidadesReaccionUbicacionRemotamente();
+                }
+
+                break;
+
+            case ORDENES_INSTALACION:
+                // Consultando todos los ordenes instalacion
+                builder.setTables(TIPO_ORDEN_INSTALACION_ORDEN_INSTALACION_CLIENTE);
+                c = builder.query(bd, proyTipoOrdenInstalacion_OrdenInstalacion_Cliente,
+                        null, null, null, null,OrdenesInstalacion.ID_ORDEN_INSTALACION);
+
+                estadoSincronizacion="desactivado";
+                if (OrdenesInstalacion.tieneEstadoSincronizaion(uri))
+                {
+                    estadoSincronizacion=String.valueOf(uri.getQueryParameter(OrdenesInstalacion.PARAMETRO_SINCRONIZACION)) ;
                 }
 
                 if (estadoSincronizacion.equals("activado"))

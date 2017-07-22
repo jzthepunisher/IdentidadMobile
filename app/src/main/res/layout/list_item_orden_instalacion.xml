@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?listPreferredItemHeight"
+    android:background="@drawable/bg_list_row"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingRight="@dimen/activity_horizontal_margin">
+
+    <ImageView
+        android:id="@+id/imageViewFotoEmpleado"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerVertical="true"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_work_black_24dp" />
+
+    <TextView
+        android:id="@+id/textViewNombresCliente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="72dp"
+        android:layout_marginTop="@dimen/padding_top"
+        android:text="New Text"
+        android:textAppearance="?android:attr/textAppearanceListItem"
+        android:textStyle="bold"
+        tools:text="Maria Angela Contreras Salaverry " />
+
+
+    <TextView
+        android:id="@+id/textViewDescripcionTipoOrdenInstalacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="72dp"
+        android:layout_marginTop="@dimen/padding_top_item_small"
+        android:layout_below="@+id/textViewNombresCliente"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:text="Residencial"
+        tools:text="Residencial" />
+
+    <TextView
+        android:id="@+id/textViewIdOrdenInstalacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="72dp"
+        android:layout_marginTop="@dimen/padding_top_item_small"
+        android:layout_below="@+id/textViewDescripcionTipoOrdenInstalacion"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Residencial"
+        tools:text="Nro. 100001" />
+
+    <TextView
+        android:id="@+id/textViewFechaEmision"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textViewIdOrdenInstalacion"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="false"
+        android:gravity="right"
+        android:layout_toRightOf="@+id/textViewIdOrdenInstalacion"
+        android:text="22/0/2017" />
+
+</RelativeLayout>

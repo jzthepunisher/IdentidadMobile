@@ -87,7 +87,36 @@ public class ContratoCotizacion {
         String MONITOREO_ACTIVO     = "monitoreo_activo";
     }
 
-    public interface EstadoRegistro{
+    interface ColumnasOrdenInstalacion
+    {
+        String ID_ORDEN_INSTALACION      = "id_empleado";
+        String FECHA_EMISION             = "fecha_emision";
+        String ID_CLIENTE                = "id_cliente";
+        String ID_TIPO_ORDEN_INSTALACION = "id_tipo_orden_instalacion";
+
+        String PENDIENTE_PETICION    = "pendiente_peticion";
+        String ESTADO_SINCRONIZACION = "estado_sincronizacion";
+    }
+
+    interface ColumnasTipoOrdenInstalacion
+    {
+        String ID_TIPO_ORDEN_INSTALACION   = "id_tipo_orden_instalacion";
+        String DESCRIPCION = "descripcion";
+    }
+
+    interface ColumnasCargo
+    {
+        String ID_CARGO    = "id_cargo";
+        String DESCRIPCION = "descripcion";
+    }
+
+    interface ColumnasDispositivoEmpleado{
+        String IMEI             = "imei";
+        String ID_EMPLEADO      = "id_empleado";
+    }
+
+    public interface EstadoRegistro
+    {
         String REGISTRADO_LOCALMENTE= "registrado.localmente";
         String REGISTRANDO_REMOTAMENTE= "registrando.remotamente";
         String REGISTRADO_REMOTAMENTE= "registrado.remotamente";
@@ -102,16 +131,6 @@ public class ContratoCotizacion {
         String ESTADO_OK= "estado.ok";
         String ESTADO_SINCRONIZANDO= "estado.sincronizando";
 
-    }
-
-    interface ColumnasCargo{
-        String ID_CARGO    = "id_cargo";
-        String DESCRIPCION = "descripcion";
-    }
-
-    interface ColumnasDispositivoEmpleado{
-        String IMEI             = "imei";
-        String ID_EMPLEADO      = "id_empleado";
     }
     // [URIS]
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
@@ -128,6 +147,7 @@ public class ContratoCotizacion {
     private static final String RUTA_CLIENTES="clientes";
     private static final String RUTA_UBICACIONES="ubicaciones";
     private static final String RUTA_TURNOS_UNIDADES_REACCION_UBICACION="turnos_unidades_reaccion_ubicacion";
+    private static final String RUTA_ORDENES_INSTALACION="ordenes_instalacion";
     // [/URIS]
 
     // [TIPOS_MIME]
@@ -158,7 +178,8 @@ public class ContratoCotizacion {
 
     public int OFF_SET=10;
     //Clase contrato de Dispositivo
-    public static class Dispositivos implements ColumnasDispositivo {
+    public static class Dispositivos implements ColumnasDispositivo
+    {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_DISPOSITIVOS).build();
 
@@ -172,7 +193,8 @@ public class ContratoCotizacion {
     }
 
     //Clase contrato de Empleado
-    public static class Empleados implements ColumnasEmpleado {
+    public static class Empleados implements ColumnasEmpleado
+    {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_EMPLEADOS).build();
 
@@ -215,7 +237,8 @@ public class ContratoCotizacion {
     }
 
     //Clase contrato de Cargo
-    public static class Cargos implements ColumnasCargo {
+    public static class Cargos implements ColumnasCargo
+    {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_CARGOS).build();
 
@@ -267,7 +290,8 @@ public class ContratoCotizacion {
     }
 
     //Clase contrato de Turno
-    public static class Turnos implements ColumnasTurno {
+    public static class Turnos implements ColumnasTurno
+    {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_TURNOS).build();
         public static final String PARAMETRO_SINCRONIZACION = "sincronizacion";
@@ -304,7 +328,8 @@ public class ContratoCotizacion {
     }
 
     //Clase contrato de Turno
-    public static class TiposUnidadReaccion implements ColumnasTipoUnidadReaccion {
+    public static class TiposUnidadReaccion implements ColumnasTipoUnidadReaccion
+    {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_TIPOS_UNIDAD_REACCION).build();
         public static final String PARAMETRO_SINCRONIZACION = "sincronizacion";
@@ -327,7 +352,8 @@ public class ContratoCotizacion {
     }
 
     //Clase contrato de Turno
-    public static class UnidadesReaccion implements ColumnasUnidadReaccion {
+    public static class UnidadesReaccion implements ColumnasUnidadReaccion
+    {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_UNIDADES_REACCION).build();
         public static final String PARAMETRO_SINCRONIZACION = "sincronizacion";
@@ -368,7 +394,8 @@ public class ContratoCotizacion {
     }
 
     //Clase contrato de Turno
-    public static class Clientes implements ColumnasCliente {
+    public static class Clientes implements ColumnasCliente
+    {
 
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_CLIENTES).build();
         public static final String PARAMETRO_FILTRO_MONITOREO_ACTIVO = "filtro_monitoreo_activo";
@@ -400,5 +427,48 @@ public class ContratoCotizacion {
         {
             return uri != null && uri.getQueryParameter(PARAMETRO_SINCRONIZACION) != null;
         }
+    }
+
+    //Clase contrato de Empleado
+    public static class OrdenesInstalacion implements ColumnasOrdenInstalacion
+    {
+
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_ORDENES_INSTALACION).build();
+
+        public static final String PARAMETRO_SINCRONIZACION = "sincronizacion";
+        public static final String PARAMETRO_FILTRO_BUSQUEDA = "filtro_busqueda";
+
+        public static String obtenerIdOrdenInstalacion(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri crearUriOrdenInstalacion(String id) {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+
+        public static Uri crearUriOrdenInstalacionListado(String estadoSincronizacion)
+        {
+            return URI_CONTENIDO.buildUpon().appendQueryParameter(PARAMETRO_SINCRONIZACION,estadoSincronizacion).build();
+        }
+
+        public static boolean tieneEstadoSincronizaion(Uri uri)
+        {
+            return uri != null && uri.getQueryParameter(PARAMETRO_SINCRONIZACION) != null;
+        }
+
+        public static Uri crearUriOrdenInstalacionConFiltroBusqueda(String filtro) {
+            return URI_CONTENIDO.buildUpon().appendQueryParameter(PARAMETRO_FILTRO_BUSQUEDA,filtro).build();
+        }
+
+        public static boolean tieneFiltroBusqueda(Uri uri) {
+            return uri != null && uri.getQueryParameter(PARAMETRO_FILTRO_BUSQUEDA) != null;
+        }
+
+    }
+
+    //Clase contrato de Turno
+    public static class TiposOrdenInstalacion implements ColumnasTipoOrdenInstalacion
+    {
+
     }
 }

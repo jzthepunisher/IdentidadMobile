@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    card_view:cardCornerRadius="@dimen/cardview_default_radius"
+    card_view:cardElevation="@dimen/cardview_default_elevation"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewFechaInicioTerminadoEjecucion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/padding_top_item_small"
+            android:paddingTop="@dimen/padding_top_item_small"
+            android:text="22/07/2017"
+            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@android:color/white" />
+
+
+        <TextView
+            android:id="@+id/textViewDescripcionActividad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textViewFechaInicioTerminadoEjecucion"
+            android:layout_marginTop="@dimen/padding_top"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:text="New Text"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:textStyle="bold"
+            tools:text="Inicio y Termino de Actividades del día" />
+
+        <TextView
+            android:id="@+id/textViewIniciado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewDescripcionActividad"
+            android:layout_marginTop="@dimen/padding_top_item"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:text="Iniciado"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            tools:text="Iniciado : " />
+
+        <TextView
+            android:id="@+id/textViewFechaHoraInicio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textViewDescripcionTipoOrdenInstalacion"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="false"
+            android:layout_below="@+id/textViewDescripcionActividad"
+            android:layout_marginTop="@dimen/padding_top_item"
+            android:layout_toRightOf="@+id/textViewIdOrdenInstalacion"
+            android:gravity="right"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:text="22/07/2017 05:56 p.m." />
+
+        <TextView
+            android:id="@+id/textViewTerminado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewIniciado"
+            android:layout_marginTop="@dimen/padding_top_item_small"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:text="Terminado"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            tools:text="Terminado : " />
+
+        <TextView
+            android:id="@+id/textViewFechaHoraTermino"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textViewTerminado"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="false"
+            android:layout_below="@+id/textViewFechaHoraInicio"
+            android:layout_marginTop="@dimen/padding_top_item_small"
+            android:layout_toRightOf="@+id/textViewIdOrdenInstalacion"
+            android:gravity="right"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:text="22/07/2017 10:56 p.m." />
+
+        <View
+            android:id="@+id/linea"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_below="@+id/textViewFechaHoraTermino"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="#ffd5d5d5" />
+
+        <Button
+            android:id="@+id/buttonActividadIniciada"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linea"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:text="Iniciado" />
+
+        <Button
+            android:id="@+id/button"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/linea"
+
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:text="Terminado" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

@@ -113,9 +113,7 @@
             android:name=".actividades.UnidadReaccionAsignacionActivity"
             android:label="@string/title_activity_unidad_reaccion_asignacion"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <service
             android:name=".ServicioRemoto.FetchAddressIntentService"
@@ -142,8 +140,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+        <activity
+            android:name=".actividades.OrdenInstalacionEjecutarActividadActivity"
+            android:label="@string/title_activity_orden_instalacion_ejecutar_actividad"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -5,6 +5,8 @@ import com.soloparaapasionados.identidadmobile.modelo.Cliente;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 
+import com.soloparaapasionados.identidadmobile.modelo.OrdenInstalacion;
+import com.soloparaapasionados.identidadmobile.modelo.TipoOrdenInstalacion;
 import com.soloparaapasionados.identidadmobile.modelo.TipoUnidadReaccion;
 import com.soloparaapasionados.identidadmobile.modelo.Turno;
 import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicacion;
@@ -18,6 +20,8 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposUn
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.UnidadesReaccion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_UnidadesReaccionUbicacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Clientes;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposOrdenInstalacion;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,7 +37,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 52;
+    private static final int VERSION_ACTUAL = 56;
 
     private final Context contexto;
 
@@ -48,15 +52,19 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         String UNIDAD_REACCION                 = "unidad_reaccion";
         String TURNO_UNIDAD_REACCION_UBICACION = "turno_unidad_reaccion_ubicacion";
         String CLIENTE                         = "cliente";
+        String ORDEN_INSTALACION               = "orden_instalacion";
+        String TIPO_ORDEN_INSTALACION          = "tipo_orden_instalacion";
     }
 
     interface Referencias {
-        String ID_CARGO                = String.format("REFERENCES %s(%s) ", Tablas.CARGO               , Cargos.ID_CARGO);
-        String IMEI                    = String.format("REFERENCES %s(%s) ", Tablas.DISPOSITIVO         , DispositivosEmpleados.IMEI);
-        String ID_EMPLEADO             = String.format("REFERENCES %s(%s) ", Tablas.EMPLEADO            , Empleados.ID_EMPLEADO);
-        String ID_TIPO_UNIDAD_REACCION = String.format("REFERENCES %s(%s) ", Tablas.TIPO_UNIDAD_REACCION, TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION);
-        String ID_TURNO                = String.format("REFERENCES %s(%s) ", Tablas.TURNO               , Turnos.ID_TURNO);
-        String ID_UNIDAD_REACCION      = String.format("REFERENCES %s(%s) ", Tablas.UNIDAD_REACCION     , UnidadesReaccion.ID_UNIDAD_REACCION);
+        String ID_CARGO                  = String.format("REFERENCES %s(%s) ", Tablas.CARGO                  , Cargos.ID_CARGO);
+        String IMEI                      = String.format("REFERENCES %s(%s) ", Tablas.DISPOSITIVO            , DispositivosEmpleados.IMEI);
+        String ID_EMPLEADO               = String.format("REFERENCES %s(%s) ", Tablas.EMPLEADO               , Empleados.ID_EMPLEADO);
+        String ID_TIPO_UNIDAD_REACCION   = String.format("REFERENCES %s(%s) ", Tablas.TIPO_UNIDAD_REACCION   , TiposUnidadReaccion.ID_TIPO_UNIDAD_REACCION);
+        String ID_TURNO                  = String.format("REFERENCES %s(%s) ", Tablas.TURNO                  , Turnos.ID_TURNO);
+        String ID_UNIDAD_REACCION        = String.format("REFERENCES %s(%s) ", Tablas.UNIDAD_REACCION        , UnidadesReaccion.ID_UNIDAD_REACCION);
+        String ID_CLIENTE                = String.format("REFERENCES %s(%s) ", Tablas.CLIENTE                , Clientes.ID_CLIENTE);
+        String ID_TIPO_ORDEN_INSTALACION = String.format("REFERENCES %s(%s) ", Tablas.TIPO_ORDEN_INSTALACION , TiposOrdenInstalacion.ID_TIPO_ORDEN_INSTALACION);
     }
 
     public BaseDatosCotizaciones(Context contexto) {
@@ -65,7 +73,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(SQLiteDatabase db)
+    {
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "%s TEXT UNIQUE NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL,%s TEXT NULL," +
                         "%s INTEGER NOT NULL ,%s INTEGER NOT NULL,%s INTEGER NOT NULL)",
@@ -150,14 +159,31 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 Clientes.RAZON_SOCIAL_CLIENTE, Clientes.RUC_CLIENTE, Clientes.DIRECCION_CLIENTE, Clientes.LATITUD_CLIENTE,
                 Clientes.LONGITUD_CLIENTE, Clientes.MONITOREO_ACTIVO));
 
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL)",
+                Tablas.TIPO_ORDEN_INSTALACION, BaseColumns._ID,
+                TiposOrdenInstalacion.ID_TIPO_ORDEN_INSTALACION,TiposOrdenInstalacion.DESCRIPCION));
+
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT UNIQUE NOT NULL,%s DATETIME NULL ,"+
+                        "%s TEXT NULL %s ,%s TEXT NULL %s ," +
+                        "%s TEXT NULL ,%s TEXT NULL )",
+                Tablas.ORDEN_INSTALACION, BaseColumns._ID,
+                OrdenesInstalacion.ID_ORDEN_INSTALACION,OrdenesInstalacion.FECHA_EMISION,
+                OrdenesInstalacion.ID_CLIENTE,Referencias.ID_CLIENTE,OrdenesInstalacion.ID_TIPO_ORDEN_INSTALACION,Referencias.ID_TIPO_ORDEN_INSTALACION,
+                OrdenesInstalacion.PENDIENTE_PETICION,OrdenesInstalacion.ESTADO_SINCRONIZACION));
+
+
         mockData(db);
         //mockDataTurnos(db);
         //mockDataTiposUnidadReaccion(db);
         //mockDataUnidadesReaccion(db);
         //mockDataTurno_UnidadesReaccionUbicacion(db);
-        //mockDataClientes(db);
+        mockDataClientes(db);
         //mockDataEmpleados(db);
         //mockDataDispositivosEmpleados(db);
+        mockDataTiposOrdenesInstalacion(db);
+        mockDataOrdenesInstalacion(db);
     }
 
     @Override
@@ -184,12 +210,15 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.UNIDAD_REACCION);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.TURNO_UNIDAD_REACCION_UBICACION);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.CLIENTE);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.TIPO_ORDEN_INSTALACION);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.ORDEN_INSTALACION);
 
         onCreate(db);
     }
 
     // Insertar datos ficticios para prueba inicial
-    private void mockData(SQLiteDatabase sqLiteDatabase) {
+    private void mockData(SQLiteDatabase sqLiteDatabase)
+    {
         mockLawyer(sqLiteDatabase, new Cargo("C001", "Vendedor"));
         mockLawyer(sqLiteDatabase, new Cargo("C002", "Técnico Instalador"));
         mockLawyer(sqLiteDatabase, new Cargo("C003", "Técnico Servicio"));
@@ -446,14 +475,14 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private void mockDataClientes(SQLiteDatabase sqLiteDatabase)
     {
-       /* mockCliente(sqLiteDatabase, new Cliente("11111111111","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","",-12.063355,-77.028431,true));
-        mockCliente(sqLiteDatabase, new Cliente("11111111112","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.063746","-77.028479",true));
-        mockCliente(sqLiteDatabase, new Cliente("11111111113","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.065328","-77.034696",true));
-        mockCliente(sqLiteDatabase, new Cliente("11111111114","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.075864","-77.034296",true));
-        mockCliente(sqLiteDatabase, new Cliente("11111111115","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.069483","-77.037914",true));
-        mockCliente(sqLiteDatabase, new Cliente("11111111116","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074459","-77.027633",true));
-        mockCliente(sqLiteDatabase, new Cliente("11111111117","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.079473","-77.033952",true));
-        mockCliente(sqLiteDatabase, new Cliente("11111111118","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.080648","-77.033180",true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111111","Sofia","Sánchez","Cardenas" ,"","","",-12.063355,-77.028431,true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111112","Didier","Rosas","Licuona" ,"","","",-12.063746,-77.028479,true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111113","Victor","Rivero","Pumachagua" ,"","","",-12.065328,-77.034696,true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111114","Melissa","Elera","Garcia" ,"","","",-12.075864,-77.034296,true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111115","Sheyla","Sánchez","Condemarin" ,"","","",-12.069483,-77.037914,true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111116","Eliana","Trujillo","Baza" ,"","","",-12.074459,-77.027633,true));
+        mockCliente(sqLiteDatabase, new Cliente("11111111117","Brenda","Rosas","Licuona" ,"","","",-12.079473,-77.033952,true));
+        /*mockCliente(sqLiteDatabase, new Cliente("11111111118","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.080648","-77.033180",true));
         mockCliente(sqLiteDatabase, new Cliente("11111111119","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.081446","-77.033781",true));
         mockCliente(sqLiteDatabase, new Cliente("11111111110","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.080774","-77.030347",true));
         mockCliente(sqLiteDatabase, new Cliente("11111111211","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.082411","-77.030567",true));
@@ -503,8 +532,26 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         mockCliente(sqLiteDatabase, new Cliente("11111111253","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074566","-77.089542",true));
         mockCliente(sqLiteDatabase, new Cliente("11111111254","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.077462","-77.089735",true));
         mockCliente(sqLiteDatabase, new Cliente("11111111255","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.077546","-77.085991",true));
-        mockCliente(sqLiteDatabase, new Cliente("11111111256","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074846","-77.083170",true));
-*/
+        mockCliente(sqLiteDatabase, new Cliente("11111111256","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.074846","-77.083170",true));*/
+
+    }
+
+    private void mockDataTiposOrdenesInstalacion(SQLiteDatabase sqLiteDatabase)
+    {
+        mockTipoOrdenInstalacion(sqLiteDatabase, new TipoOrdenInstalacion("01", "Residencial"));
+        mockTipoOrdenInstalacion(sqLiteDatabase, new TipoOrdenInstalacion("02", "Comercial"));
+    }
+
+    private void mockDataOrdenesInstalacion(SQLiteDatabase sqLiteDatabase)
+    {
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000001", "22/07/2017","11111111111","01"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000002", "22/07/2017","11111111112","01"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000003", "22/07/2017","11111111113","02"));
+
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000004", "22/07/2017","11111111114","01"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000005", "22/07/2017","11111111115","02"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000006", "22/07/2017","11111111116","01"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000007", "22/07/2017","11111111117","02"));
     }
 /////////////////////////////////////////////////////////////////////////////////////////////
     public long mockLawyer(SQLiteDatabase db, Cargo cargo) {
@@ -580,5 +627,21 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 Tablas.CLIENTE,
                 null,
                 cliente.toContentValues());
+    }
+
+    public long mockTipoOrdenInstalacion(SQLiteDatabase db, TipoOrdenInstalacion tipoOrdenInstalacion)
+    {
+        return db.insert(
+                Tablas.TIPO_ORDEN_INSTALACION,
+                null,
+                tipoOrdenInstalacion.toContentValues());
+    }
+
+    public long mockOrdenInstalacion(SQLiteDatabase db, OrdenInstalacion ordenInstalacion)
+    {
+        return db.insert(
+                Tablas.ORDEN_INSTALACION,
+                null,
+                ordenInstalacion.toContentValues());
     }
 }
