@@ -84,9 +84,9 @@ public class OrdenInstalacionListadoActivity extends AppCompatActivity {
         }
         else
         {
-            tituloActividad= "Ordenes de Instalación";
+            tituloActividad= "Ordenes de Servicio Técnico";
             toolbar.setTitle(tituloActividad);
-            toolbar.setSubtitle("toca para info. de Orden Instalación");
+            toolbar.setSubtitle("toca para info. de Orden Servicio Técnico");
             //toolbar.setSubtitle("hola");
         }
     }

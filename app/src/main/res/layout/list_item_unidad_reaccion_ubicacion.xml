@@ -47,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="72dp"
         android:layout_marginTop="@dimen/padding_top_item_small"
+        android:layout_marginBottom="@dimen/padding_top_item"
         android:layout_below="@+id/textViewPlaca"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Coordinador"

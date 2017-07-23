@@ -14,4 +14,5 @@
     <color name="bg_action_mode">#757575</color>
     <color name="row_activated">#BDBDBD</color>
     <color name="colorContraste">#EDEDED</color>
+    <color name="white">#D0FFFFFF</color>
 </resources>

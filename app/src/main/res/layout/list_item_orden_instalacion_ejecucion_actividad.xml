@@ -164,7 +164,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/linea"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:text="Iniciado" />
+            android:text="Iniciar" />
 
         <Button
             android:id="@+id/buttonActividadTerminada"
@@ -174,7 +174,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/linea"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:text="Terminado" />
+            android:text="Terminar" />
 
     </RelativeLayout>
 

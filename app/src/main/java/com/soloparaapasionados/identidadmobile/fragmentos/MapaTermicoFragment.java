@@ -485,7 +485,7 @@ public class MapaTermicoFragment extends Fragment
 
             Marker marcador =googleMap.addMarker(new MarkerOptions()
                     .position(latLng)
-                    .title("Hito X")
+                    .title(direccionUnidadReaccionUbicacion)
                     .draggable(true));
 
             listaMarkers.add(marcador);

@@ -84,7 +84,7 @@ public class OrdenInstalacionEjecutarActividadFragment extends Fragment
         recyclerViewListadoOrdenInstalacionEjecucionInicioTerminoActividad.setLayoutManager(linearLayoutManager);
 
         ordenInstalacionEjecucionInicioTerminoAdaptador = new OrdenInstalacionEjecucionInicioTerminoAdaptador(getActivity(), this);
-        recyclerViewListadoOrdenInstalacionEjecucionInicioTerminoActividad.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        //recyclerViewListadoOrdenInstalacionEjecucionInicioTerminoActividad.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerViewListadoOrdenInstalacionEjecucionInicioTerminoActividad.setAdapter(ordenInstalacionEjecucionInicioTerminoAdaptador);
 
         textViewListadoOrdenesInstacionEjecucionInicioTerminoActividadVacio=(TextView)root.findViewById(R.id.textViewListadoOrdenesInstacionEjecucionInicioTerminoActividadVacio);
@@ -97,7 +97,7 @@ public class OrdenInstalacionEjecutarActividadFragment extends Fragment
         recyclerViewListadoOrdenInstalacionEjecucionActividad.setLayoutManager(linearLayoutManager);
 
         ordenInstalacionEjecucionActividadAdaptador = new OrdenInstalacionEjecucionActividadAdaptador(getActivity(), this);
-        recyclerViewListadoOrdenInstalacionEjecucionActividad.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        //recyclerViewListadoOrdenInstalacionEjecucionActividad.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerViewListadoOrdenInstalacionEjecucionActividad.setAdapter(ordenInstalacionEjecucionActividadAdaptador);
 
         textViewListadoOrdenInstalacionEjecucionActividadVacio=(TextView)root.findViewById(R.id.textViewListadoOrdenInstalacionEjecucionActividadVacio);

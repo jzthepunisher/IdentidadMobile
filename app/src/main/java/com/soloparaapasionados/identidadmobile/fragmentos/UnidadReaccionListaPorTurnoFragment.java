@@ -21,6 +21,7 @@ import com.soloparaapasionados.identidadmobile.actividades.UnidadReaccionAsignac
 import com.soloparaapasionados.identidadmobile.adaptadores.EmpleadosListaAdaptador;
 import com.soloparaapasionados.identidadmobile.adaptadores.TurnoListaAdaptador;
 import com.soloparaapasionados.identidadmobile.adaptadores.UnidadReaccionPorTurnoAdaptador;
+import com.soloparaapasionados.identidadmobile.helper.DividerItemDecoration;
 import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_UnidadesReaccionUbicacion;
@@ -41,6 +42,7 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     //private LinearLayoutManager linearLayoutManager;
     private UnidadReaccionPorTurnoAdaptador unidadReaccionPorTurnoAdaptador;
     private TextView textViewCantidadTurnosDisponibles;
+    private TextView textViewCantidadUnidadesReaccionDisponibles;
 
     private String ARGUMENTO_ID_TURNO="argumento_id_turno";
 
@@ -68,14 +70,16 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         View root =  inflater.inflate(R.layout.fragment_unidad_reaccion_lista_por_turno, container, false);
 
@@ -88,6 +92,7 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
         recyclerViewTurnos.setLayoutManager(linearLayoutManager);
 
         turnoListaAdaptador = new TurnoListaAdaptador(getActivity(), this);
+        recyclerViewTurnos.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerViewTurnos.setAdapter(turnoListaAdaptador);
 
         // Preparar lista las Ubicaciones de Unidades de Reaccion por Turno
@@ -98,9 +103,11 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
         recyclerViewUbicacionUnidadReaccionPorTurno.setLayoutManager(linearLayoutManager);
 
         unidadReaccionPorTurnoAdaptador = new UnidadReaccionPorTurnoAdaptador(getActivity(), this);
+        recyclerViewUbicacionUnidadReaccionPorTurno.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerViewUbicacionUnidadReaccionPorTurno.setAdapter(unidadReaccionPorTurnoAdaptador);
         //
         textViewCantidadTurnosDisponibles=(TextView)root.findViewById(R.id.textViewCantidadTurnosDisponibles);
+        textViewCantidadUnidadesReaccionDisponibles=(TextView)root.findViewById(R.id.textViewCantidadUnidadesReaccionDisponibles);
         // Iniciar loader
         getActivity().getSupportLoaderManager().restartLoader(1, null,  this);
 
@@ -108,7 +115,8 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
     }
 
     @Override
-    public void onClick(TurnoListaAdaptador.ViewHolder holder, String idTurno,String descripcionTurno,String rangoHorarioTurno, int position) {
+    public void onClick(TurnoListaAdaptador.ViewHolder holder, String idTurno,String descripcionTurno,String rangoHorarioTurno, int position)
+    {
         //Toast.makeText(getActivity()," Hola " + idTurno + "position : " + position,Toast.LENGTH_SHORT).show();
 
         if (UnidadReaccionAsignacionActivity.patronMasterDetalle==true){
@@ -178,6 +186,8 @@ public class UnidadReaccionListaPorTurnoFragment extends Fragment
                 {
                     if (unidadReaccionPorTurnoAdaptador != null && data.getCount()>0) {
                         unidadReaccionPorTurnoAdaptador.swapCursor(data);
+
+                        textViewCantidadUnidadesReaccionDisponibles.setText(String.valueOf(unidadReaccionPorTurnoAdaptador.getItemCount()));
 
                         data.moveToFirst();
 

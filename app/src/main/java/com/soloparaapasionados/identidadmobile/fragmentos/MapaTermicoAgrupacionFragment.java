@@ -82,7 +82,7 @@ public class MapaTermicoAgrupacionFragment extends Fragment  {
         // Toolbar en master-detail
         toolbar = (Toolbar) v.findViewById(R.id.toolbar);
         if (toolbar != null){
-            toolbar.inflateMenu(R.menu.menu_detalle_articulo);
+            //toolbar.inflateMenu(R.menu.menu_detalle_articulo);
             toolbar.setTitle("Clientes Monitoreados Activos");
             //toolbar.setSubtitle("Unidad Reacción: H51 | Turno : Turno Noche ");
             toolbar.setSubtitle(subtitulo);
@@ -183,7 +183,7 @@ public class MapaTermicoAgrupacionFragment extends Fragment  {
         subtitulo+="   " + descripcionUnidadReaccion + " " + direccionUbicacionUnidadReaccion;
         // Toolbar en master-detail
         if (toolbar != null){
-            toolbar.inflateMenu(R.menu.menu_detalle_articulo);
+            //toolbar.inflateMenu(R.menu.menu_detalle_articulo);
             toolbar.setSubtitle(subtitulo);
         }
     }

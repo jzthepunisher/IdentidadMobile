@@ -179,6 +179,6 @@
     <string name="address_found">Address found</string>
     <string name="title_activity_orden_instalacion_listado">OrdenInstalacionListadoActivity</string>
     <string name="title_activity_orden_instalacion_ejecutar_actividad">
-        OrdenInstalacionEjecutarActividadActivity
+        Ejecución de Actividades
     </string>
 </resources>
