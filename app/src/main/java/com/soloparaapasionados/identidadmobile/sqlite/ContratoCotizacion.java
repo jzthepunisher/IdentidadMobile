@@ -8,6 +8,18 @@ import android.net.Uri;
 
 public class ContratoCotizacion {
 
+    interface ColumnasCargo
+    {
+        String ID_CARGO    = "id_cargo";
+        String DESCRIPCION = "descripcion";
+    }
+
+    interface ColumnasDispositivoEmpleado
+    {
+        String IMEI             = "imei";
+        String ID_EMPLEADO      = "id_empleado";
+    }
+
     interface ColumnasDispositivo {
         String IMEI                = "imei";
         String ID_TIPO_DISPOSITIVO = "id_tipo_dispositivo";
@@ -18,7 +30,8 @@ public class ContratoCotizacion {
         String VALIDADO            = "validado";
     }
 
-    interface ColumnasEmpleado{
+    interface ColumnasEmpleado
+    {
         String ID_EMPLEADO      = "id_empleado";
         String NOMBRES          = "nombres";
         String APELLIDO_PATERNO = "apellido_paterno";
@@ -104,15 +117,30 @@ public class ContratoCotizacion {
         String DESCRIPCION = "descripcion";
     }
 
-    interface ColumnasCargo
+    interface ColumnasOrdenInstalacionEjecucionInicioTerminoActividad
     {
-        String ID_CARGO    = "id_cargo";
-        String DESCRIPCION = "descripcion";
+        String FECHA_INICIO_TERMINADO_EJECUCION = "fecha_inicio_terminado_ejecucion";
+        String ID_ORDEN_INSTALACION             = "id_orden_instalacion";
+        String ID_ACTIVIDAD                     = "id_actividad";
+        String INICIADO                         = "iniciado";
+        String FECHA_HORA_INICIO                = "fecha_hora_inicio";
+        String LATITUD_INICIO                   = "latitud_inicio";
+        String LONGITUD_INICIO                  = "longitud_inicio";
+        String DIRECCION_INICIO                 = "direccion_inicio";
+        String TERMINADO                        = "terminado";
+        String FECHA_HORA_TERMINO               = "fecha_hora_termino";
+        String LATITUD_TERMINO                  = "latitud_termino";
+        String LONGITUD_TERMINO                 = "longitud_Termino";
+        String DIRECCION_TERMINO                = "direccion_termino";
+
+        String PENDIENTE_PETICION    = "pendiente_peticion";
+        String ESTADO_SINCRONIZACION = "estado_sincronizacion";
     }
 
-    interface ColumnasDispositivoEmpleado{
-        String IMEI             = "imei";
-        String ID_EMPLEADO      = "id_empleado";
+    interface ColumnasActividad
+    {
+        String ID_ACTIVIDAD   = "id_actividad";
+        String DESCRIPCION = "descripcion";
     }
 
     public interface EstadoRegistro
@@ -148,6 +176,10 @@ public class ContratoCotizacion {
     private static final String RUTA_UBICACIONES="ubicaciones";
     private static final String RUTA_TURNOS_UNIDADES_REACCION_UBICACION="turnos_unidades_reaccion_ubicacion";
     private static final String RUTA_ORDENES_INSTALACION="ordenes_instalacion";
+    private static final String RUTA_ORDENES_INSTALACION_EJECUCION_INICIO_TERMINO_ACTIVIDAD="ordenes_instalacion_ejecucion_inicio_termino_actividad";
+    private static final String RUTA_ACTIVIDADES="actividades";
+
+
     // [/URIS]
 
     // [TIPOS_MIME]
@@ -471,4 +503,36 @@ public class ContratoCotizacion {
     {
 
     }
+
+    //Clase contrato de Turno
+    public static class Actividades implements ColumnasActividad
+    {
+
+    }
+
+    //Clase contrato de Turno
+    public static class OrdenesInstalacionEjecucionInicioTerminoActividad implements ColumnasOrdenInstalacionEjecucionInicioTerminoActividad
+    {
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_ORDENES_INSTALACION_EJECUCION_INICIO_TERMINO_ACTIVIDAD).build();
+
+        public static final String PARAMETRO_SINCRONIZACION = "sincronizacion";
+
+        public static Uri crearUriOrdenesInstalacion_ActividadesListado(String idOrdenInstalacion,String estadoSincronizacion)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(idOrdenInstalacion).appendPath(RUTA_ACTIVIDADES).appendQueryParameter(PARAMETRO_SINCRONIZACION,estadoSincronizacion).build();
+        }
+
+        public static String obtenerIdOrdenInstalacion(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static boolean tieneEstadoSincronizaion(Uri uri)
+        {
+            return uri != null && uri.getQueryParameter(PARAMETRO_SINCRONIZACION) != null;
+        }
+    }
+
+
+
+
 }

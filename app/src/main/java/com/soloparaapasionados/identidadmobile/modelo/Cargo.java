@@ -47,5 +47,4 @@ public class Cargo {
         values.put(Cargos.DESCRIPCION, descripcion);
         return values;
     }
-
 }

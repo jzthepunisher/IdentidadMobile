@@ -1,11 +1,13 @@
 package com.soloparaapasionados.identidadmobile.sqlite;
 
+import com.soloparaapasionados.identidadmobile.modelo.Actividad;
 import com.soloparaapasionados.identidadmobile.modelo.Cargo;
 import com.soloparaapasionados.identidadmobile.modelo.Cliente;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 
 import com.soloparaapasionados.identidadmobile.modelo.OrdenInstalacion;
+import com.soloparaapasionados.identidadmobile.modelo.OrdenInstalacionEjecucionInicioTerminoActividad;
 import com.soloparaapasionados.identidadmobile.modelo.TipoOrdenInstalacion;
 import com.soloparaapasionados.identidadmobile.modelo.TipoUnidadReaccion;
 import com.soloparaapasionados.identidadmobile.modelo.Turno;
@@ -22,6 +24,8 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Turnos_
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Clientes;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposOrdenInstalacion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Actividades;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacionEjecucionInicioTerminoActividad;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -37,7 +41,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 56;
+    private static final int VERSION_ACTUAL = 62;
 
     private final Context contexto;
 
@@ -54,6 +58,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         String CLIENTE                         = "cliente";
         String ORDEN_INSTALACION               = "orden_instalacion";
         String TIPO_ORDEN_INSTALACION          = "tipo_orden_instalacion";
+        String ACTIVIDAD                       = "actividad";
+        String ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD = "orden_instalacion_ejecucion_inicio_termino_actividad";
     }
 
     interface Referencias {
@@ -65,6 +71,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         String ID_UNIDAD_REACCION        = String.format("REFERENCES %s(%s) ", Tablas.UNIDAD_REACCION        , UnidadesReaccion.ID_UNIDAD_REACCION);
         String ID_CLIENTE                = String.format("REFERENCES %s(%s) ", Tablas.CLIENTE                , Clientes.ID_CLIENTE);
         String ID_TIPO_ORDEN_INSTALACION = String.format("REFERENCES %s(%s) ", Tablas.TIPO_ORDEN_INSTALACION , TiposOrdenInstalacion.ID_TIPO_ORDEN_INSTALACION);
+        String ID_ORDEN_INSTALACION      = String.format("REFERENCES %s(%s) ", Tablas.ORDEN_INSTALACION      , OrdenesInstalacion.ID_ORDEN_INSTALACION);
+        String ID_ACTIVIDAD              = String.format("REFERENCES %s(%s) ", Tablas.ACTIVIDAD              , Actividades.ID_ACTIVIDAD);
     }
 
     public BaseDatosCotizaciones(Context contexto) {
@@ -173,6 +181,32 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 OrdenesInstalacion.ID_CLIENTE,Referencias.ID_CLIENTE,OrdenesInstalacion.ID_TIPO_ORDEN_INSTALACION,Referencias.ID_TIPO_ORDEN_INSTALACION,
                 OrdenesInstalacion.PENDIENTE_PETICION,OrdenesInstalacion.ESTADO_SINCRONIZACION));
 
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL)",
+                Tablas.ACTIVIDAD, BaseColumns._ID,
+                Actividades.ID_ACTIVIDAD,Actividades.DESCRIPCION));
+
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT NOT NULL ,%s TEXT NOT NULL %s,"+
+                        "%s TEXT NULL %s ,%s BOOLEAN DEFAULT 0," +
+                        "%s DATETIME NULL , %s TEXT NULL, %s TEXT NULL, " +
+                        "%s TEXT NULL,%s BOOLEAN DEFAULT 0," +
+                        "%s DATETIME NULL,%s TEXT NULL," +
+                        "%s TEXT NULL,%s TEXT NULL," +
+                        "%s TEXT NULL,%s TEXT NULL," +
+                        " UNIQUE (%s, %s) ON CONFLICT REPLACE)",
+                Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD, BaseColumns._ID,
+                OrdenesInstalacionEjecucionInicioTerminoActividad.FECHA_INICIO_TERMINADO_EJECUCION,OrdenesInstalacionEjecucionInicioTerminoActividad.ID_ORDEN_INSTALACION,Referencias.ID_ORDEN_INSTALACION,
+                OrdenesInstalacionEjecucionInicioTerminoActividad.ID_ACTIVIDAD,Referencias.ID_ACTIVIDAD,OrdenesInstalacionEjecucionInicioTerminoActividad.INICIADO,
+                OrdenesInstalacionEjecucionInicioTerminoActividad.FECHA_HORA_INICIO,OrdenesInstalacionEjecucionInicioTerminoActividad.LATITUD_INICIO,OrdenesInstalacionEjecucionInicioTerminoActividad.LONGITUD_INICIO,
+                OrdenesInstalacionEjecucionInicioTerminoActividad.DIRECCION_INICIO,OrdenesInstalacionEjecucionInicioTerminoActividad.TERMINADO,
+                OrdenesInstalacionEjecucionInicioTerminoActividad.FECHA_HORA_TERMINO,OrdenesInstalacionEjecucionInicioTerminoActividad.LATITUD_TERMINO,
+                OrdenesInstalacionEjecucionInicioTerminoActividad.LONGITUD_TERMINO,OrdenesInstalacionEjecucionInicioTerminoActividad.DIRECCION_TERMINO,
+                OrdenesInstalacionEjecucionInicioTerminoActividad.PENDIENTE_PETICION,OrdenesInstalacionEjecucionInicioTerminoActividad.ESTADO_SINCRONIZACION,
+                OrdenesInstalacionEjecucionInicioTerminoActividad.FECHA_INICIO_TERMINADO_EJECUCION,OrdenesInstalacionEjecucionInicioTerminoActividad.ID_ORDEN_INSTALACION));
+
+
+
 
         mockData(db);
         //mockDataTurnos(db);
@@ -184,6 +218,9 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         //mockDataDispositivosEmpleados(db);
         mockDataTiposOrdenesInstalacion(db);
         mockDataOrdenesInstalacion(db);
+
+        mockDataActividades(db);
+        mockOrdenesInstalacionEjecucionInicioTerminoActividad(db);
     }
 
     @Override
@@ -212,6 +249,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.CLIENTE);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.TIPO_ORDEN_INSTALACION);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.ORDEN_INSTALACION);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.ACTIVIDAD);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD);
 
         onCreate(db);
     }
@@ -544,14 +583,43 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private void mockDataOrdenesInstalacion(SQLiteDatabase sqLiteDatabase)
     {
-        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000001", "22/07/2017","11111111111","01"));
-        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000002", "22/07/2017","11111111112","01"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000001", "25/07/2017","11111111111","01"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000002", "25/07/2017","11111111112","01"));
         mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000003", "22/07/2017","11111111113","02"));
 
-        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000004", "22/07/2017","11111111114","01"));
-        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000005", "22/07/2017","11111111115","02"));
-        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000006", "22/07/2017","11111111116","01"));
-        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000007", "22/07/2017","11111111117","02"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000004", "25/07/2017","11111111114","01"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000005", "25/07/2017","11111111115","02"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000006", "25/07/2017","11111111116","01"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000007", "25/07/2017","11111111117","02"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000008", "25/07/2017","11111111111","02"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000009", "25/07/2017","11111111113","02"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000010", "25/07/2017","11111111112","02"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000011", "25/07/2017","11111111115","02"));
+        mockOrdenInstalacion(sqLiteDatabase, new OrdenInstalacion("000012", "25/07/2017","11111111114","02"));
+    }
+
+    private void mockDataActividades(SQLiteDatabase sqLiteDatabase)
+    {
+        mockActividad(sqLiteDatabase, new Actividad("00", "Inicio y Termino de Actividades del día"));
+        mockActividad(sqLiteDatabase, new Actividad("01", "Instalar sensor de ventana"));
+        mockActividad(sqLiteDatabase, new Actividad("02", "Instalar cerca eléctrica"));
+    }
+
+    private void mockOrdenesInstalacionEjecucionInicioTerminoActividad(SQLiteDatabase sqLiteDatabase)
+    {
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000001","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000002","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000003","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000004","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000005","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000006","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000007","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000008","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000009","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000010","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000011","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000012","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+
     }
 /////////////////////////////////////////////////////////////////////////////////////////////
     public long mockLawyer(SQLiteDatabase db, Cargo cargo) {
@@ -622,7 +690,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 turno_unidadReaccionUbicacion.toContentValues());
     }
 
-    public long mockCliente(SQLiteDatabase db, Cliente cliente) {
+    public long mockCliente(SQLiteDatabase db, Cliente cliente)
+    {
         return db.insert(
                 Tablas.CLIENTE,
                 null,
@@ -644,4 +713,21 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 null,
                 ordenInstalacion.toContentValues());
     }
+
+    public long mockActividad(SQLiteDatabase db, Actividad actividad)
+    {
+        return db.insert(
+                Tablas.ACTIVIDAD,
+                null,
+                actividad.toContentValues());
+    }
+
+    public long mockOrdenInstalacionEjecucionInicioTerminoActividad(SQLiteDatabase db, OrdenInstalacionEjecucionInicioTerminoActividad ordenInstalacionEjecucionInicioTerminoActividad)
+    {
+        return db.insertOrThrow(
+                Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD,
+                null,
+                ordenInstalacionEjecucionInicioTerminoActividad.toContentValues());
+    }
+
 }

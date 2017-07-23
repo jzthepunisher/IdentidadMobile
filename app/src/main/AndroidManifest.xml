@@ -134,7 +134,7 @@
         <activity
             android:name=".actividades.OrdenInstalacionListadoActivity"
             android:label="@string/title_activity_orden_instalacion_listado"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -144,7 +144,7 @@
         <activity
             android:name=".actividades.OrdenInstalacionEjecutarActividadActivity"
             android:label="@string/title_activity_orden_instalacion_ejecutar_actividad"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

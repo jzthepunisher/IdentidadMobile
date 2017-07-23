@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
@@ -26,7 +27,7 @@
             android:text="New Text"
             android:textAppearance="?android:attr/textAppearanceListItem"
             android:textStyle="bold"
-            tools:text="Instalar sensor de ventana" />
+            tools:text="Inicio y Termino de Actividades del día" />
 
         <TextView
             android:id="@+id/textViewIniciado"
@@ -38,7 +39,42 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:text="Iniciado"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            tools:text="Iniciado : " />
+            tools:text="Iniciado  " />
+
+        <ImageView
+            android:id="@+id/imageViewTres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_alignBaseline="@+id/textViewDescripcionTipoOrdenInstalacion"
+            android:layout_toLeftOf="@+id/textViewFechaHoraInicio"
+            android:layout_below="@+id/textViewDescripcionActividad"
+            android:layout_marginTop="@dimen/padding_top_item_medium"
+            app:srcCompat="@mipmap/ic_calendar" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewIniciado"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="@dimen/padding_top_item_small"
+            app:srcCompat="@drawable/icono_ubicacion" />
+
+
+        <TextView
+            android:id="@+id/textViewDireccionIniciado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/imageView"
+            android:layout_below="@+id/textViewIniciado"
+            android:layout_marginTop="@dimen/padding_top_item_small"
+            android:layout_toRightOf="@+id/imageView"
+            android:paddingLeft="@dimen/activity_horizontal_margin_dos"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:text="Terminado"
+            tools:text="Av. Javier Prado 1398 Oeste San Borja" />
+
 
         <TextView
             android:id="@+id/textViewFechaHoraInicio"
@@ -47,6 +83,7 @@
             android:layout_alignBaseline="@+id/textViewDescripcionTipoOrdenInstalacion"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="false"
+            android:paddingLeft="@dimen/activity_horizontal_margin_dos"
             android:layout_below="@+id/textViewDescripcionActividad"
             android:layout_marginTop="@dimen/padding_top_item"
             android:layout_toRightOf="@+id/textViewIdOrdenInstalacion"
@@ -58,13 +95,45 @@
             android:id="@+id/textViewTerminado"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textViewIniciado"
-            android:layout_marginTop="@dimen/padding_top_item_small"
+            android:layout_below="@+id/textViewDireccionIniciado"
+            android:layout_marginTop="@dimen/padding_top_item"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:text="Terminado"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            tools:text="Terminado : " />
+            tools:text="Terminado  " />
+
+        <ImageView
+            android:id="@+id/imageViewCuatro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_alignBaseline="@+id/textViewDescripcionTipoOrdenInstalacion"
+            android:layout_toLeftOf="@+id/textViewFechaHoraInicio"
+            android:layout_below="@+id/textViewDireccionIniciado"
+            android:layout_marginTop="@dimen/padding_top_item_medium"
+            app:srcCompat="@mipmap/ic_calendar" />
+
+        <ImageView
+            android:id="@+id/imageViewDos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewTerminado"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="@dimen/padding_top_item_small"
+            app:srcCompat="@drawable/icono_ubicacion" />
+
+        <TextView
+            android:id="@+id/textViewDireccionTerminado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewTerminado"
+            android:layout_marginTop="@dimen/padding_top_item_small"
+            android:layout_toRightOf="@+id/imageViewDos"
+            android:paddingLeft="@dimen/activity_horizontal_margin_dos"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:text="Terminado"
+            tools:text="Av. Javier Prado 1398 Oeste San Borja" />
 
         <TextView
             android:id="@+id/textViewFechaHoraTermino"
@@ -74,7 +143,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="false"
             android:layout_below="@+id/textViewFechaHoraInicio"
-            android:layout_marginTop="@dimen/padding_top_item_small"
+            android:layout_marginTop="@dimen/padding_top_item"
             android:layout_toRightOf="@+id/textViewIdOrdenInstalacion"
             android:gravity="right"
             android:paddingRight="@dimen/activity_horizontal_margin"
@@ -84,7 +153,7 @@
             android:id="@+id/linea"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_below="@+id/textViewFechaHoraTermino"
+            android:layout_below="@+id/textViewDireccionTerminado"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:background="#ffd5d5d5" />
 
@@ -98,13 +167,12 @@
             android:text="Iniciado" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonActividadTerminada"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/linea"
-
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:text="Terminado" />
 

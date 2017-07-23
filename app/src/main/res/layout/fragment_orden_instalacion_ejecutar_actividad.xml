@@ -1,13 +1,67 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.soloparaapasionados.identidadmobile.fragmentos.OrdenInstalacionEjecutarActividadFragment">
+    android:orientation="vertical"
+    android:weightSum="100"
+    android:animateLayoutChanges="true"
+    android:padding="0dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="0dp"
+        android:layout_weight="50">
 
-</FrameLayout>
+        <!-- En caso de lista vacía -->
+        <TextView
+            android:id="@+id/textViewListadoOrdenesInstacionEjecucionInicioTerminoActividadVacio"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:text="@string/mensaje_listado_vacio" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewListadoOrdenInstalacionEjecucionInicioTerminoActividad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/app_bar"
+            tools:listitem="@layout/item_list_orden_instalacion_ejecucion_inicio_termino_actividad"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="50">
+        <!-- En caso de lista vacía -->
+        <TextView
+            android:id="@+id/textViewListadoOrdenInstalacionEjecucionActividadVacio"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:text="@string/mensaje_listado_vacio" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewListadoOrdenInstalacionEjecucionActividad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/app_bar"
+            tools:listitem="@layout/list_item_orden_instalacion_ejecucion_actividad"/>
+
+    </FrameLayout>
+
+</LinearLayout>
+
