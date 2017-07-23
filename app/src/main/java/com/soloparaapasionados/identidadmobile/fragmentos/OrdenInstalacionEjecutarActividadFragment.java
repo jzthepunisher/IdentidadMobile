@@ -16,12 +16,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.adaptadores.OrdenInstalacionEjecucionActividadAdaptador;
 import com.soloparaapasionados.identidadmobile.adaptadores.OrdenInstalacionEjecucionInicioTerminoAdaptador;
 import com.soloparaapasionados.identidadmobile.helper.DividerItemDecoration;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacionEjecucionActividad;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacionEjecucionInicioTerminoActividad;
 
 public class OrdenInstalacionEjecutarActividadFragment extends Fragment
     implements OrdenInstalacionEjecucionInicioTerminoAdaptador.OnItemClickListener,
+        OrdenInstalacionEjecucionActividadAdaptador.OnItemClickListener,
         LoaderManager.LoaderCallbacks<Cursor>{
 
     public static final String ARGUMENTO_ID_ORDEN_INSTALACION="argumento_orden_instalacion";
@@ -32,6 +35,12 @@ public class OrdenInstalacionEjecutarActividadFragment extends Fragment
     LinearLayoutManager linearLayoutManager;
     OrdenInstalacionEjecucionInicioTerminoAdaptador ordenInstalacionEjecucionInicioTerminoAdaptador;
     TextView textViewListadoOrdenesInstacionEjecucionInicioTerminoActividadVacio;
+
+    RecyclerView recyclerViewListadoOrdenInstalacionEjecucionActividad;
+    OrdenInstalacionEjecucionActividadAdaptador ordenInstalacionEjecucionActividadAdaptador;
+    TextView textViewListadoOrdenInstalacionEjecucionActividadVacio;
+
+
     public OrdenInstalacionEjecutarActividadFragment()
     {
         // Required empty public constructor
@@ -67,7 +76,7 @@ public class OrdenInstalacionEjecutarActividadFragment extends Fragment
         // Inflate the layout for this fragment
         View root =  inflater.inflate(R.layout.fragment_orden_instalacion_ejecutar_actividad, container, false);
 
-        // Preparar lista
+               // Preparar lista
         recyclerViewListadoOrdenInstalacionEjecucionInicioTerminoActividad = (RecyclerView) root.findViewById(R.id.recyclerViewListadoOrdenInstalacionEjecucionInicioTerminoActividad);
         recyclerViewListadoOrdenInstalacionEjecucionInicioTerminoActividad.setHasFixedSize(true);
 
@@ -80,8 +89,25 @@ public class OrdenInstalacionEjecutarActividadFragment extends Fragment
 
         textViewListadoOrdenesInstacionEjecucionInicioTerminoActividadVacio=(TextView)root.findViewById(R.id.textViewListadoOrdenesInstacionEjecucionInicioTerminoActividadVacio);
 
+        // Preparar lista actividades
+        recyclerViewListadoOrdenInstalacionEjecucionActividad = (RecyclerView) root.findViewById(R.id.recyclerViewListadoOrdenInstalacionEjecucionActividad);
+        recyclerViewListadoOrdenInstalacionEjecucionActividad.setHasFixedSize(true);
+
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerViewListadoOrdenInstalacionEjecucionActividad.setLayoutManager(linearLayoutManager);
+
+        ordenInstalacionEjecucionActividadAdaptador = new OrdenInstalacionEjecucionActividadAdaptador(getActivity(), this);
+        recyclerViewListadoOrdenInstalacionEjecucionActividad.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        recyclerViewListadoOrdenInstalacionEjecucionActividad.setAdapter(ordenInstalacionEjecucionActividadAdaptador);
+
+        textViewListadoOrdenInstalacionEjecucionActividadVacio=(TextView)root.findViewById(R.id.textViewListadoOrdenInstalacionEjecucionActividadVacio);
+
+
+
+
         // Iniciar loader
         getActivity().getSupportLoaderManager().restartLoader(1, null,  this);
+        getActivity().getSupportLoaderManager().restartLoader(2, null,  this);
 
         return root;
 
@@ -92,10 +118,10 @@ public class OrdenInstalacionEjecutarActividadFragment extends Fragment
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id){
             case 1:
-                return new CursorLoader(getActivity(), OrdenesInstalacionEjecucionInicioTerminoActividad.crearUriOrdenesInstalacion_ActividadesListado(mIdOrdenInstalacion,estadoSincronizacion), null, null, null, null);
-           /* case 2:
-                String filtroBusqueda= args.getString(EXTRA_FILTRO_BUSQUEDA);
-                return new  CursorLoader(getActivity(), OrdenesInstalacion.crearUriOrdenInstalacionConFiltroBusqueda(filtroBusqueda), null, null, null, null);*/
+                return new CursorLoader(getActivity(), OrdenesInstalacionEjecucionInicioTerminoActividad.crearUriOrdenesInstalacion_InicioTerminoActividadesListado(mIdOrdenInstalacion,estadoSincronizacion), null, null, null, null);
+            case 2:
+                return new CursorLoader(getActivity(), OrdenesInstalacionEjecucionActividad.crearUriOrdenesInstalacion_ActividadesListado(mIdOrdenInstalacion,estadoSincronizacion), null, null, null, null);
+
         }
         return null;
     }
@@ -125,10 +151,19 @@ public class OrdenInstalacionEjecutarActividadFragment extends Fragment
                 }
                 break;
             case 2:
-                if(data!=null){
-                    if (ordenInstalacionEjecucionInicioTerminoAdaptador != null) {
-/////////////////////////empleadosSugerenciaListaAdaptador.swapCursor(data);
+                if(data!=null)
+                {
+                    if (ordenInstalacionEjecucionActividadAdaptador != null && data.getCount()>0) {
+                        ordenInstalacionEjecucionActividadAdaptador.swapCursor(data);
+
+                        textViewListadoOrdenInstalacionEjecucionActividadVacio.setVisibility(View.GONE);
+                        recyclerViewListadoOrdenInstalacionEjecucionActividad.setVisibility(View.VISIBLE);
                     }
+                }
+                else
+                {
+                    textViewListadoOrdenInstalacionEjecucionActividadVacio.setVisibility(View.VISIBLE);
+                    recyclerViewListadoOrdenInstalacionEjecucionActividad.setVisibility(View.GONE);
                 }
                 break;
         }
@@ -142,6 +177,11 @@ public class OrdenInstalacionEjecutarActividadFragment extends Fragment
 
     @Override
     public void onClick(OrdenInstalacionEjecucionInicioTerminoAdaptador.ViewHolder holder, String fechaInicioTerminadoEjecucion, String idOrdenInstalacion, String idActividad, int position) {
+
+    }
+
+    @Override
+    public void onClick(OrdenInstalacionEjecucionActividadAdaptador.ViewHolder holder, String idOrdenInstalacion, String idActividad, int position) {
 
     }
 }

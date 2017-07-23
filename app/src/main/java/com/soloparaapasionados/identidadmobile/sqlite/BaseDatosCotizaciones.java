@@ -7,6 +7,7 @@ import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 
 import com.soloparaapasionados.identidadmobile.modelo.OrdenInstalacion;
+import com.soloparaapasionados.identidadmobile.modelo.OrdenInstalacionEjecucionActividad;
 import com.soloparaapasionados.identidadmobile.modelo.OrdenInstalacionEjecucionInicioTerminoActividad;
 import com.soloparaapasionados.identidadmobile.modelo.TipoOrdenInstalacion;
 import com.soloparaapasionados.identidadmobile.modelo.TipoUnidadReaccion;
@@ -26,6 +27,7 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Ordenes
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposOrdenInstalacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Actividades;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacionEjecucionInicioTerminoActividad;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacionEjecucionActividad;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -41,7 +43,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 62;
+    private static final int VERSION_ACTUAL = 64;
 
     private final Context contexto;
 
@@ -60,6 +62,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         String TIPO_ORDEN_INSTALACION          = "tipo_orden_instalacion";
         String ACTIVIDAD                       = "actividad";
         String ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD = "orden_instalacion_ejecucion_inicio_termino_actividad";
+        String ORDEN_INSTALACION_EJECUCION_ACTIVIDAD = "orden_instalacion_ejecucion_actividad";
     }
 
     interface Referencias {
@@ -205,8 +208,24 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 OrdenesInstalacionEjecucionInicioTerminoActividad.PENDIENTE_PETICION,OrdenesInstalacionEjecucionInicioTerminoActividad.ESTADO_SINCRONIZACION,
                 OrdenesInstalacionEjecucionInicioTerminoActividad.FECHA_INICIO_TERMINADO_EJECUCION,OrdenesInstalacionEjecucionInicioTerminoActividad.ID_ORDEN_INSTALACION));
 
-
-
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT NOT NULL %s,"+
+                        "%s TEXT NULL %s ,%s BOOLEAN DEFAULT 0," +
+                        "%s DATETIME NULL , %s TEXT NULL, %s TEXT NULL, " +
+                        "%s TEXT NULL,%s BOOLEAN DEFAULT 0," +
+                        "%s DATETIME NULL,%s TEXT NULL," +
+                        "%s TEXT NULL,%s TEXT NULL," +
+                        "%s TEXT NULL,%s TEXT NULL," +
+                        " UNIQUE (%s, %s) ON CONFLICT REPLACE)",
+                Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD, BaseColumns._ID,
+                OrdenesInstalacionEjecucionActividad.ID_ORDEN_INSTALACION,Referencias.ID_ORDEN_INSTALACION,
+                OrdenesInstalacionEjecucionActividad.ID_ACTIVIDAD,Referencias.ID_ACTIVIDAD,OrdenesInstalacionEjecucionActividad.INICIADO,
+                OrdenesInstalacionEjecucionActividad.FECHA_HORA_INICIO,OrdenesInstalacionEjecucionActividad.LATITUD_INICIO,OrdenesInstalacionEjecucionActividad.LONGITUD_INICIO,
+                OrdenesInstalacionEjecucionActividad.DIRECCION_INICIO,OrdenesInstalacionEjecucionActividad.TERMINADO,
+                OrdenesInstalacionEjecucionActividad.FECHA_HORA_TERMINO,OrdenesInstalacionEjecucionActividad.LATITUD_TERMINO,
+                OrdenesInstalacionEjecucionActividad.LONGITUD_TERMINO,OrdenesInstalacionEjecucionActividad.DIRECCION_TERMINO,
+                OrdenesInstalacionEjecucionActividad.PENDIENTE_PETICION,OrdenesInstalacionEjecucionActividad.ESTADO_SINCRONIZACION,
+                OrdenesInstalacionEjecucionActividad.ID_ORDEN_INSTALACION,OrdenesInstalacionEjecucionActividad.ID_ACTIVIDAD));
 
         mockData(db);
         //mockDataTurnos(db);
@@ -221,6 +240,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
         mockDataActividades(db);
         mockOrdenesInstalacionEjecucionInicioTerminoActividad(db);
+        mockOrdenesInstalacionEjecucionActividad(db);
     }
 
     @Override
@@ -236,7 +256,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.DISPOSITIVO);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.CARGO);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.EMPLEADO);
@@ -251,6 +272,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.ORDEN_INSTALACION);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.ACTIVIDAD);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD);
 
         onCreate(db);
     }
@@ -607,18 +629,37 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private void mockOrdenesInstalacionEjecucionInicioTerminoActividad(SQLiteDatabase sqLiteDatabase)
     {
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000001","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000002","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000003","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000004","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000005","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000006","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000007","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000008","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000009","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000010","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000011","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("22/07/2017","000012","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000001","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000002","00", true ,"25/07/2017 01:00 p.m.", 0.0,0.0, "Av.Javier Prado Oeste 2344 San Borja", true, "25/07/2017 08:00 p.m.", 0.0,0.0, "Av.Javier Prado Oeste 2344 San Borja"));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000003","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000004","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000005","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000006","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000007","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000008","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000009","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000010","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000011","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000012","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+
+    }
+
+    private void mockOrdenesInstalacionEjecucionActividad(SQLiteDatabase sqLiteDatabase)
+    {
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000001","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000002","01", true ,"25/07/2017 01:00 p.m.", 0.0,0.0, "Av.Javier Prado Oeste 2344 San Borja", true, "25/07/2017 08:00 p.m.", 0.0,0.0, "Av.Javier Prado Oeste 2344 San Borja"));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000002","02", true ,"25/07/2017 01:00 p.m.", 0.0,0.0, "Av.Javier Prado Oeste 2344 San Borja", true, "25/07/2017 08:00 p.m.", 0.0,0.0, "Av.Javier Prado Oeste 2344 San Borja"));
+
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000003","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000004","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000005","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000006","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000007","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000008","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000009","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000010","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000011","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000012","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
 
     }
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -728,6 +769,14 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD,
                 null,
                 ordenInstalacionEjecucionInicioTerminoActividad.toContentValues());
+    }
+
+    public long mockOrdenInstalacionEjecucionActividad(SQLiteDatabase db, OrdenInstalacionEjecucionActividad ordenInstalacionEjecucionActividad)
+    {
+        return db.insertOrThrow(
+                Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD,
+                null,
+                ordenInstalacionEjecucionActividad.toContentValues());
     }
 
 }

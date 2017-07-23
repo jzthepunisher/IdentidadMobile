@@ -27,6 +27,7 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposOr
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Actividades;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacionEjecucionInicioTerminoActividad;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacionEjecucionActividad;
 
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
@@ -90,6 +91,7 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int ORDENES_INSTALACION = 1200;
     public static final int ORDENES_INSTALACION_ID = 1201;
     public static final int ORDENES_INSTALACION_EJECUCION_INICIO_TERMINO_ACTIVIDAD_ACTIVIDADES= 1300;
+    public static final int ORDENES_INSTALACION_EJECUCION_ACTIVIDAD_ACTIVIDADES= 1400;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
@@ -123,7 +125,7 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion"                  , ORDENES_INSTALACION);
         uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion/*"                , ORDENES_INSTALACION_ID);
         uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion_ejecucion_inicio_termino_actividad/*/actividades", ORDENES_INSTALACION_EJECUCION_INICIO_TERMINO_ACTIVIDAD_ACTIVIDADES);
-
+        uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion_ejecucion_actividad/*/actividades", ORDENES_INSTALACION_EJECUCION_ACTIVIDAD_ACTIVIDADES);
     }
     // [/URI_MATCHER]
 
@@ -244,6 +246,17 @@ public class ProviderCotizacion extends ContentProvider {
             Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.FECHA_HORA_TERMINO,
             Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.DIRECCION_TERMINO};
 
+    private final String[] proyOrdenInstalacionEjecucionActividad = new String[]{
+            Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD + "." + BaseColumns._ID,
+            Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.ID_ACTIVIDAD,
+            Tablas.ACTIVIDAD + "." + Actividades.DESCRIPCION,
+            Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.INICIADO,
+            Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.FECHA_HORA_INICIO,
+            Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.DIRECCION_INICIO,
+            Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.TERMINADO,
+            Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.FECHA_HORA_TERMINO,
+            Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.DIRECCION_TERMINO};
+
     // [/CAMPOS_AUXILIARES]
 
 
@@ -284,6 +297,11 @@ public class ProviderCotizacion extends ContentProvider {
     private static final String ORDEN_INSTALACION_EJECUCION_INICIO_TERMINO_ACTIVIDAD=
             "actividad INNER JOIN orden_instalacion_ejecucion_inicio_termino_actividad " +
                     "ON actividad.id_actividad = orden_instalacion_ejecucion_inicio_termino_actividad.id_actividad";
+
+    private static final String ORDEN_INSTALACION_EJECUCION_ACTIVIDAD=
+            "actividad INNER JOIN orden_instalacion_ejecucion_actividad " +
+                    "ON actividad.id_actividad = orden_instalacion_ejecucion_actividad.id_actividad";
+
 
 
     int offSet=30;
@@ -731,6 +749,29 @@ public class ProviderCotizacion extends ContentProvider {
                 }
 
                 break;
+            case ORDENES_INSTALACION_EJECUCION_ACTIVIDAD_ACTIVIDADES:
+                id = OrdenesInstalacionEjecucionActividad.obtenerIdOrdenInstalacion(uri);
+
+                // Consultando todos los ordenes instalacion
+                builder.setTables(ORDEN_INSTALACION_EJECUCION_ACTIVIDAD);
+                c = builder.query(bd, proyOrdenInstalacionEjecucionActividad,
+                        Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD + '.' + OrdenesInstalacionEjecucionActividad.ID_ORDEN_INSTALACION + "=" + "\'" + id + "\'"
+                                + (!TextUtils.isEmpty(selection) ?" AND (" + selection + ')' : ""),
+                        selectionArgs, null, null,OrdenesInstalacionEjecucionActividad.ID_ORDEN_INSTALACION);
+
+                estadoSincronizacion="desactivado";
+                if (OrdenesInstalacion.tieneEstadoSincronizaion(uri))
+                {
+                    estadoSincronizacion=String.valueOf(uri.getQueryParameter(OrdenesInstalacionEjecucionActividad.PARAMETRO_SINCRONIZACION)) ;
+                }
+
+                if (estadoSincronizacion.equals("activado"))
+                {
+                    //leerTurnosUnidadesReaccionUbicacionRemotamente();
+                }
+
+                break;
+
 
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);

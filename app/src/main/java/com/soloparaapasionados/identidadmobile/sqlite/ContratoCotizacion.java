@@ -143,6 +143,25 @@ public class ContratoCotizacion {
         String DESCRIPCION = "descripcion";
     }
 
+    interface ColumnasOrdenInstalacionEjecucionActividad
+    {
+        String ID_ORDEN_INSTALACION             = "id_orden_instalacion";
+        String ID_ACTIVIDAD                     = "id_actividad";
+        String INICIADO                         = "iniciado";
+        String FECHA_HORA_INICIO                = "fecha_hora_inicio";
+        String LATITUD_INICIO                   = "latitud_inicio";
+        String LONGITUD_INICIO                  = "longitud_inicio";
+        String DIRECCION_INICIO                 = "direccion_inicio";
+        String TERMINADO                        = "terminado";
+        String FECHA_HORA_TERMINO               = "fecha_hora_termino";
+        String LATITUD_TERMINO                  = "latitud_termino";
+        String LONGITUD_TERMINO                 = "longitud_Termino";
+        String DIRECCION_TERMINO                = "direccion_termino";
+
+        String PENDIENTE_PETICION    = "pendiente_peticion";
+        String ESTADO_SINCRONIZACION = "estado_sincronizacion";
+    }
+
     public interface EstadoRegistro
     {
         String REGISTRADO_LOCALMENTE= "registrado.localmente";
@@ -178,7 +197,7 @@ public class ContratoCotizacion {
     private static final String RUTA_ORDENES_INSTALACION="ordenes_instalacion";
     private static final String RUTA_ORDENES_INSTALACION_EJECUCION_INICIO_TERMINO_ACTIVIDAD="ordenes_instalacion_ejecucion_inicio_termino_actividad";
     private static final String RUTA_ACTIVIDADES="actividades";
-
+    private static final String RUTA_ORDENES_INSTALACION_EJECUCION_ACTIVIDAD="ordenes_instalacion_ejecucion_actividad";
 
     // [/URIS]
 
@@ -514,6 +533,27 @@ public class ContratoCotizacion {
     public static class OrdenesInstalacionEjecucionInicioTerminoActividad implements ColumnasOrdenInstalacionEjecucionInicioTerminoActividad
     {
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_ORDENES_INSTALACION_EJECUCION_INICIO_TERMINO_ACTIVIDAD).build();
+
+        public static final String PARAMETRO_SINCRONIZACION = "sincronizacion";
+
+        public static Uri crearUriOrdenesInstalacion_InicioTerminoActividadesListado(String idOrdenInstalacion,String estadoSincronizacion)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(idOrdenInstalacion).appendPath(RUTA_ACTIVIDADES).appendQueryParameter(PARAMETRO_SINCRONIZACION,estadoSincronizacion).build();
+        }
+
+        public static String obtenerIdOrdenInstalacion(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static boolean tieneEstadoSincronizaion(Uri uri)
+        {
+            return uri != null && uri.getQueryParameter(PARAMETRO_SINCRONIZACION) != null;
+        }
+    }
+
+    public static class OrdenesInstalacionEjecucionActividad implements ColumnasOrdenInstalacionEjecucionActividad
+    {
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_ORDENES_INSTALACION_EJECUCION_ACTIVIDAD).build();
 
         public static final String PARAMETRO_SINCRONIZACION = "sincronizacion";
 
