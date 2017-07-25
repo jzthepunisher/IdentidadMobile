@@ -90,6 +90,7 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int TIPOS_ORDEN_INSTALACION_ID = 1101;
     public static final int ORDENES_INSTALACION = 1200;
     public static final int ORDENES_INSTALACION_ID = 1201;
+    public static final int ORDENES_INSTALACION_ID_ACTIVIDADES_ID = 1202;
     public static final int ORDENES_INSTALACION_EJECUCION_INICIO_TERMINO_ACTIVIDAD_ACTIVIDADES= 1300;
     public static final int ORDENES_INSTALACION_EJECUCION_ACTIVIDAD_ACTIVIDADES= 1400;
 
@@ -124,6 +125,7 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "tipos_orden_instalacion/*"            , TIPOS_ORDEN_INSTALACION_ID);
         uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion"                  , ORDENES_INSTALACION);
         uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion/*"                , ORDENES_INSTALACION_ID);
+        uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion/*/actividadesit/*"  , ORDENES_INSTALACION_ID_ACTIVIDADES_ID);
         uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion_ejecucion_inicio_termino_actividad/*/actividades", ORDENES_INSTALACION_EJECUCION_INICIO_TERMINO_ACTIVIDAD_ACTIVIDADES);
         uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion_ejecucion_actividad/*/actividades", ORDENES_INSTALACION_EJECUCION_ACTIVIDAD_ACTIVIDADES);
     }
@@ -236,6 +238,7 @@ public class ProviderCotizacion extends ContentProvider {
 
     private final String[] proyOrdenInstalacionEjecucionInicioTerminoActividad = new String[]{
             Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD + "." + BaseColumns._ID,
+            Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.ID_ORDEN_INSTALACION,
             Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.FECHA_INICIO_TERMINADO_EJECUCION,
             Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.ID_ACTIVIDAD,
             Tablas.ACTIVIDAD + "." + Actividades.DESCRIPCION,
@@ -841,6 +844,18 @@ public class ProviderCotizacion extends ContentProvider {
                 afectados = bd.update(Tablas.TURNO_UNIDAD_REACCION_UBICACION, values, selection, selectionArgs);
 
                 notificarCambio(uri);
+                break;
+
+            case ORDENES_INSTALACION_ID_ACTIVIDADES_ID:
+                String idOrdenInstalacion = OrdenesInstalacion.obtenerIdOrdenInstalacion(uri);
+                String idFechaInicioTerminadoEjecucion  = OrdenesInstalacion.obtenerFechaInicioTerminadoEjecucion(uri);
+
+                String[] argumentos4={idOrdenInstalacion,idFechaInicioTerminadoEjecucion};
+
+                seleccion = String.format("%s=? ", OrdenesInstalacionEjecucionInicioTerminoActividad.ID_ORDEN_INSTALACION) + " AND " + String.format("%s=? ", OrdenesInstalacionEjecucionInicioTerminoActividad.FECHA_INICIO_TERMINADO_EJECUCION);
+
+                afectados = bd.update(Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD, values, seleccion, argumentos4);
+                notificarCambio(OrdenesInstalacionEjecucionInicioTerminoActividad.crearUriOrdenesInstalacion_InicioTerminoActividadesListado(idOrdenInstalacion, "desactivado"));
                 break;
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);

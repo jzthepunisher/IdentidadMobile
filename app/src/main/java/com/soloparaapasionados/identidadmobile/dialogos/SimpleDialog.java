@@ -39,7 +39,7 @@ public class SimpleDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle("Advertencia")
-                .setMessage("Se eliminará el registro.")
+                .setMessage("Está seguro de salvar la información?.")
                 .setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
                             @Override

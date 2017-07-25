@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".aplicacion.DeviceDatabaseApplication"
@@ -14,7 +14,6 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
-
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -115,10 +114,7 @@
             android:name=".actividades.UnidadReaccionAsignacionActivity"
             android:label="@string/title_activity_unidad_reaccion_asignacion"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar">
-
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <service
             android:name=".ServicioRemoto.FetchAddressIntentService"
@@ -149,7 +145,11 @@
         <activity
             android:name=".actividades.OrdenInstalacionEjecutarActividadActivity"
             android:label="@string/title_activity_orden_instalacion_ejecutar_actividad"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".ServicioLocal.EjecucionActividadInicioTerminoServicioLocal"
+            android:exported="false"></service>
     </application>
 
 </manifest>

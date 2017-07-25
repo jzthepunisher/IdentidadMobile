@@ -496,6 +496,10 @@ public class ContratoCotizacion {
             return uri.getPathSegments().get(1);
         }
 
+        public static String obtenerFechaInicioTerminadoEjecucion(Uri uri) {
+            return uri.getPathSegments().get(3);
+        }
+
         public static Uri crearUriOrdenInstalacion(String id) {
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
@@ -516,6 +520,11 @@ public class ContratoCotizacion {
 
         public static boolean tieneFiltroBusqueda(Uri uri) {
             return uri != null && uri.getQueryParameter(PARAMETRO_FILTRO_BUSQUEDA) != null;
+        }
+
+        public static Uri crearUriOrdenesInstalacion_InicioTerminoActividades(String idOrdenInstalacion,String fechaInicioTerminadoEjecucion,String estadoSincronizacion)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(idOrdenInstalacion).appendPath(RUTA_ACTIVIDADES+"it").appendPath(fechaInicioTerminadoEjecucion).appendQueryParameter(PARAMETRO_SINCRONIZACION,estadoSincronizacion).build();
         }
 
     }
@@ -552,6 +561,8 @@ public class ContratoCotizacion {
         {
             return uri != null && uri.getQueryParameter(PARAMETRO_SINCRONIZACION) != null;
         }
+
+
     }
 
     public static class OrdenesInstalacionEjecucionActividad implements ColumnasOrdenInstalacionEjecucionActividad
@@ -574,8 +585,5 @@ public class ContratoCotizacion {
             return uri != null && uri.getQueryParameter(PARAMETRO_SINCRONIZACION) != null;
         }
     }
-
-
-
 
 }

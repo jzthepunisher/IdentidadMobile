@@ -213,15 +213,15 @@ public class OrdenInstalacionEjecutarActividadFragment extends Fragment
     }
 
     @Override
-    public void onButtonActividadIniciada_IT_Clicked(int position) {
+    public void onButtonActividadIniciada_IT_Clicked(String fechaInicioTerminadoEjecucion, String idOrdenInstalacion, String idActividad, int position) {
         //Toast.makeText(getActivity(), "IT onButtonActividadIniciadaClicked : " + String.valueOf(position), Toast.LENGTH_SHORT).show();
-        listener.onButtonActividadIniciada_IT_Clicked(position);
+        listener.onButtonActividadIniciada_IT_Clicked(fechaInicioTerminadoEjecucion, idOrdenInstalacion,  idActividad,  position);
     }
 
     @Override
-    public void onButtonActividadTerminada_IT_Clicked(int position) {
+    public void onButtonActividadTerminada_IT_Clicked(String fechaInicioTerminadoEjecucion, String idOrdenInstalacion, String idActividad, int position) {
         //Toast.makeText(getActivity(), "IT onButtonActividadTerminadaClicked : " + String.valueOf(position), Toast.LENGTH_SHORT).show();
-        listener.onButtonActividadTerminada_IT_Clicked(position);
+        listener.onButtonActividadTerminada_IT_Clicked( fechaInicioTerminadoEjecucion,  idOrdenInstalacion,  idActividad,  position);
     }
 
 
@@ -239,7 +239,8 @@ public class OrdenInstalacionEjecutarActividadFragment extends Fragment
 
 
     public interface OrdenInstalacionEjecutarActividadFragmentListener {
-        void onButtonActividadIniciada_IT_Clicked(int position);
-        void onButtonActividadTerminada_IT_Clicked(int position);
+        void onButtonActividadIniciada_IT_Clicked(String fechaInicioTerminadoEjecucion, String idOrdenInstalacion, String idActividad, int position);
+        void onButtonActividadTerminada_IT_Clicked(String fechaInicioTerminadoEjecucion, String idOrdenInstalacion, String idActividad, int position);
+
     }
 }

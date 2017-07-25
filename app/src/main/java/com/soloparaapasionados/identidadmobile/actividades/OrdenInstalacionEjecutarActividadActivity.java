@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,8 +26,10 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.ServicioLocal.EjecucionActividadInicioTerminoServicioLocal;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.Constants;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.FetchAddressIntentService;
+import com.soloparaapasionados.identidadmobile.dialogos.SimpleDialog;
 import com.soloparaapasionados.identidadmobile.fragmentos.OrdenInstalacionEjecutarActividadFragment;
 
 import java.text.DateFormat;
@@ -36,19 +39,29 @@ import java.util.Date;
 
 public class OrdenInstalacionEjecutarActividadActivity extends AppCompatActivity
 implements OrdenInstalacionEjecutarActividadFragment.OrdenInstalacionEjecutarActividadFragmentListener ,
-        ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
+        ConnectionCallbacks, OnConnectionFailedListener, LocationListener,
+        SimpleDialog.OnSimpleDialogListener {
 
     private final String LOG_TAG = "EjecutarActividades";
     private String idOrdenInstalacion;
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
 
+    public static String mFechaInicioTerminadoEjecucion;
+    public static String mIdOrdenInstalacion;
+
     public static double mLongitudInicio_TerminoInicio;
     public static double mLatitudInicio_TerminoInicio;
     public static String mdireccionInicio_TerminoInicio;
     public static String mFechaHoraInicio_TerminoInicio;
 
+    public static double mLongitudTermino_TerminoInicio;
+    public static double mLatitudTermino_TerminoInicio;
+    public static String mdireccionTermino_TerminoInicio;
+    public static String mFechaHoraTermino_TerminoInicio;
 
+    Boolean mOnButtonActividadIniciada_IT_Clicked=false;
+    Boolean mOnButtonActividadTerminada_IT_Clicked=false;
 
     private AddressResultReceiver mResultReceiver;
     private String mAddressOutput;
@@ -95,13 +108,41 @@ implements OrdenInstalacionEjecutarActividadFragment.OrdenInstalacionEjecutarAct
     }
 
     @Override
-    public void onButtonActividadIniciada_IT_Clicked(int position) {
+    public void onButtonActividadIniciada_IT_Clicked(String fechaInicioTerminadoEjecucion, String idOrdenInstalacion, String idActividad, int position) {
+        mFechaInicioTerminadoEjecucion=fechaInicioTerminadoEjecucion;
+        mIdOrdenInstalacion=idOrdenInstalacion;
+        mOnButtonActividadIniciada_IT_Clicked=true;
+        mOnButtonActividadTerminada_IT_Clicked=false;
+
+        // Obtención del manejador de fragmentos
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        new SimpleDialog().show(fragmentManager, "SimpleDialog");
+    }
+
+    @Override
+    public void onPossitiveButtonClick() {
         obtienGeoReferencia();
     }
 
     @Override
-    public void onButtonActividadTerminada_IT_Clicked(int position) {
-        obtienGeoReferencia();
+    public void onNegativeButtonClick() {
+       /* Toast.makeText(
+                this,
+                "Botón Negativo Pulsado",
+                Toast.LENGTH_LONG)
+                .show();*/
+    }
+
+    @Override
+    public void onButtonActividadTerminada_IT_Clicked(String fechaInicioTerminadoEjecucion, String idOrdenInstalacion, String idActividad, int position) {
+        mOnButtonActividadTerminada_IT_Clicked=true;
+        mOnButtonActividadIniciada_IT_Clicked=false;
+        mFechaInicioTerminadoEjecucion=fechaInicioTerminadoEjecucion;
+        mIdOrdenInstalacion=idOrdenInstalacion;
+
+        // Obtención del manejador de fragmentos
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        new SimpleDialog().show(fragmentManager, "SimpleDialog");
     }
 
     @Override
@@ -157,15 +198,11 @@ implements OrdenInstalacionEjecutarActividadFragment.OrdenInstalacionEjecutarAct
         {
             Date miFecha = Calendar.getInstance().getTime();
             String miFechaCadena=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(miFecha);
-
+            mFechaHoraInicio_TerminoInicio=miFechaCadena;
+            mFechaHoraTermino_TerminoInicio=miFechaCadena;
             Toast.makeText(this,miFechaCadena + "  Latitud : " + String.valueOf(location.getLatitude())
                             + " Longitud : " + String.valueOf(location.getLongitude()),
                     Toast.LENGTH_LONG ).show();
-
-
-
-
-
 
 
             mLastLocation=new Location("");
@@ -218,7 +255,17 @@ implements OrdenInstalacionEjecutarActividadFragment.OrdenInstalacionEjecutarAct
             if (resultCode == Constants.SUCCESS_RESULT) {
                 //showToast(getString(R.string.address_found));
                 OrdenInstalacionEjecutarActividadActivity.mdireccionInicio_TerminoInicio=mAddressOutput;
+                OrdenInstalacionEjecutarActividadActivity.mdireccionTermino_TerminoInicio=mAddressOutput;
                 //MapaTermicoAgrupacionFragment.setSubTitulo();
+            }
+
+            if (mOnButtonActividadIniciada_IT_Clicked==true)
+            {
+                actualizarOrdenInstalacionEjecucionInicioTermino_Inicio_ActividadLocalmente();
+            }
+            else
+            {
+                actualizarOrdenInstalacionEjecucionInicioTermino_Termino_ActividadLocalmente();
             }
 
             // Reset. Enable the Fetch Address button and stop showing the progress bar.
@@ -232,7 +279,41 @@ implements OrdenInstalacionEjecutarActividadFragment.OrdenInstalacionEjecutarAct
         showToast(mAddressOutput);
     }
 
-    private void showToast(String text) {
+    private void showToast(String text)
+    {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    }
+
+    private void actualizarOrdenInstalacionEjecucionInicioTermino_Inicio_ActividadLocalmente()
+    {
+        Intent intent = new Intent(this, EjecucionActividadInicioTerminoServicioLocal.class);
+        intent.setAction(EjecucionActividadInicioTerminoServicioLocal.ACCION_ACTUALIZAR_EJECUCION_ACTIVIDAD_INICIO_TERMINO_INICIO_ISERVICE);
+
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_FECHA_INICIO_TERMINADO_EJECUCION,this.mFechaInicioTerminadoEjecucion);
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_ID_ORDEN_INSTALACION,this.mIdOrdenInstalacion);
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_INICIADO,true);
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_FECHA_HORA_INICIO,this.mFechaHoraInicio_TerminoInicio);
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_LATITUD_INICIO,mLatitudInicio_TerminoInicio);
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_LONGITUD_INICIO,mLongitudInicio_TerminoInicio);
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_DIRECCION_INICIO,this.mdireccionInicio_TerminoInicio);
+
+        this.startService(intent);
+    }
+
+    private void actualizarOrdenInstalacionEjecucionInicioTermino_Termino_ActividadLocalmente()
+    {
+        Intent intent = new Intent(this, EjecucionActividadInicioTerminoServicioLocal.class);
+        intent.setAction(EjecucionActividadInicioTerminoServicioLocal.ACCION_ACTUALIZAR_EJECUCION_ACTIVIDAD_INICIO_TERMINO_TERMINO_ISERVICE);
+
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_FECHA_INICIO_TERMINADO_EJECUCION,this.mFechaInicioTerminadoEjecucion);
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_ID_ORDEN_INSTALACION,this.mIdOrdenInstalacion);
+
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_TERMINADO,true);
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_FECHA_HORA_TERMINO,this.mFechaHoraTermino_TerminoInicio);
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_LATITUD_TERMINO,mLatitudTermino_TerminoInicio);
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_LONGITUD_TERMINO,mLongitudTermino_TerminoInicio);
+        intent.putExtra(EjecucionActividadInicioTerminoServicioLocal.EXTRA_DIRECCION_TERMINO,this.mdireccionTermino_TerminoInicio);
+
+        this.startService(intent);
     }
 }
