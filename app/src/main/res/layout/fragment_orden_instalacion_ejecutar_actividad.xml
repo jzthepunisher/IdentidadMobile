@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/app_bar"
-            tools:listitem="@layout/item_list_orden_instalacion_ejecucion_inicio_termino_actividad"/>
+            tools:listitem="@layout/list_item_orden_instalacion_ejecucion_inicio_termino_actividad"/>
 
     </FrameLayout>
 

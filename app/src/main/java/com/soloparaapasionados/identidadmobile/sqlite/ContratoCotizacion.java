@@ -50,20 +50,23 @@ public class ContratoCotizacion {
         String ESTADO           = "estado";
     }
 
-    interface ColumnasTurno{
+    interface ColumnasTurno
+    {
         String ID_TURNO    = "id_turno";
         String DESCRIPCION = "descripcion";
         String HORA_INICIO = "hora_inicio";
         String HORA_FIN    = "hora_fin";
     }
 
-    interface ColumnasTipoUnidadReaccion{
+    interface ColumnasTipoUnidadReaccion
+    {
         String ID_TIPO_UNIDAD_REACCION = "id_tipo_unidad_reaccion";
         String DESCRIPCION = "descripcion";
         String FOTO        = "foto";
     }
 
-    interface ColumnasUnidadReaccion{
+    interface ColumnasUnidadReaccion
+    {
         String ID_UNIDAD_REACCION      = "id_unidad_reaccion";
         String ID_TIPO_UNIDAD_REACCION = "id_tipo_unidad_reaccion";
         String DESCRIPCION             = "descripcion";

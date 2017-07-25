@@ -43,7 +43,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 66;
+    private static final int VERSION_ACTUAL = 67;
 
     private final Context contexto;
 
@@ -629,7 +629,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private void mockOrdenesInstalacionEjecucionInicioTerminoActividad(SQLiteDatabase sqLiteDatabase)
     {
-        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000001","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000001","00", true ,"25/07/2017 02:00 p.m.", 0.0,0.0, "Jr. Riva Aguero 2344 San Luis", false, "", 0.0,0.0,""));
         mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000002","00", true ,"25/07/2017 01:00 p.m.", 0.0,0.0, "Av.Javier Prado Oeste 2344 San Borja", true, "25/07/2017 08:00 p.m.", 0.0,0.0, "Av.Javier Prado Oeste 2344 San Borja"));
         mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000003","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
         mockOrdenInstalacionEjecucionInicioTerminoActividad(sqLiteDatabase, new OrdenInstalacionEjecucionInicioTerminoActividad("25/07/2017","000004","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
@@ -646,20 +646,41 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private void mockOrdenesInstalacionEjecucionActividad(SQLiteDatabase sqLiteDatabase)
     {
-        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000001","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000001","01", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000001","02", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+
         mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000002","01", true ,"25/07/2017 01:00 p.m.", 0.0,0.0, "Av.Javier Prado Oeste 2344 San Borja", true, "25/07/2017 08:00 p.m.", 0.0,0.0, "Av.Javier Prado Oeste 2344 San Borja"));
         mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000002","02", true ,"25/07/2017 01:00 p.m.", 0.0,0.0, "Av.Javier Prado Oeste 2344 San Borja", true, "25/07/2017 08:00 p.m.", 0.0,0.0, "Av.Javier Prado Oeste 2344 San Borja"));
 
-        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000003","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000004","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000005","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000006","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000007","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000008","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000009","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000010","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000011","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
-        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000012","00", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000003","01", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000003","02", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000004","01", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000004","02", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000005","01", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000005","02", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000006","01", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000006","02", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000007","01", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000007","02", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000008","01", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000008","02", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000009","01", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000009","02", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000010","01", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000010","02", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000011","01", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000011","02", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000012","01", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
+        mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000012","02", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
 
     }
 /////////////////////////////////////////////////////////////////////////////////////////////

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.soloparaapasionados.identidadmobile.R;
@@ -27,6 +28,7 @@ public class OrdenesInstalacionListaAdaptador extends RecyclerView.Adapter<Orden
     private static int indiceSeleccionadoActual = -1;
 
     private OnItemClickListener escucha;
+
 
     public interface OnItemClickListener {
         public void onClick(ViewHolder holder, String idEmpleado,int position);
@@ -52,12 +54,14 @@ public class OrdenesInstalacionListaAdaptador extends RecyclerView.Adapter<Orden
         public TextView textViewFechaEmision;
         public TextView textViewDescripcionTipoOrdenInstalacion;
         public TextView textViewIdOrdenInstalacion;
+
         public ViewHolder(View v) {
             super(v);
             textViewNombresCliente = (TextView) v.findViewById(R.id.textViewNombresCliente);
             textViewFechaEmision = (TextView) v.findViewById(R.id.textViewFechaEmision);
             textViewDescripcionTipoOrdenInstalacion = (TextView) v.findViewById(R.id.textViewDescripcionTipoOrdenInstalacion);
             textViewIdOrdenInstalacion = (TextView) v.findViewById(R.id.textViewIdOrdenInstalacion);
+
             v.setOnClickListener(this);
         }
 
@@ -83,6 +87,7 @@ public class OrdenesInstalacionListaAdaptador extends RecyclerView.Adapter<Orden
         holder.textViewDescripcionTipoOrdenInstalacion.setText(items.getString(items.getColumnIndex(TiposOrdenInstalacion.DESCRIPCION)));
         holder.textViewIdOrdenInstalacion.setText("Nro: " + items.getString(items.getColumnIndex(OrdenesInstalacion.ID_ORDEN_INSTALACION)));
 
+
         // change the row state to activated
 ////////holder.itemView.setActivated(elementosSeleccionados.get(position, false));
     }
@@ -105,11 +110,6 @@ public class OrdenesInstalacionListaAdaptador extends RecyclerView.Adapter<Orden
         }
         return null;
     }
-
-
-
-
-
 
 
     @Override
@@ -172,4 +172,5 @@ public class OrdenesInstalacionListaAdaptador extends RecyclerView.Adapter<Orden
         }
 
     }*/
+
 }

@@ -24,13 +24,16 @@ public class OrdenInstalacionEjecucionActividadAdaptador extends RecyclerView.Ad
     private String idOrdenInstalacion;
     private String idActividad;
 
+    private OrdenInstalacionEjecucionActividadListener listener;
+
 ////private SparseBooleanArray elementosSeleccionados;
 ////private static int indiceSeleccionadoActual = -1;
 
-    public OrdenInstalacionEjecucionActividadAdaptador(Context contexto, OnItemClickListener escucha) {
+    public OrdenInstalacionEjecucionActividadAdaptador(Context contexto, OnItemClickListener escucha,OrdenInstalacionEjecucionActividadListener listener) {
         this.contexto = contexto;
         this.escucha = escucha;
 
+        this.listener = listener;
 ////////this.elementosSeleccionados = new SparseBooleanArray();
     }
 
@@ -48,8 +51,7 @@ public class OrdenInstalacionEjecucionActividadAdaptador extends RecyclerView.Ad
         public TextView textViewDireccionIniciado;
         public TextView textViewFechaHoraTermino;
         public TextView textViewDireccionTerminado;
-        public Button buttonActividadIniciada;
-        public Button buttonActividadTerminada;
+        public Button buttonActividadIniciada,buttonActividadTerminada;
 
         public ViewHolder(View v) {
             super(v);
@@ -95,6 +97,27 @@ public class OrdenInstalacionEjecucionActividadAdaptador extends RecyclerView.Ad
         boolean actividadTerminada=false;
         actividadTerminada=Boolean.valueOf( items.getString(items.getColumnIndex(OrdenesInstalacionEjecucionActividad.TERMINADO)));
         holder.buttonActividadTerminada.setEnabled(!actividadTerminada);
+
+        // apply click events
+        applyClickEvents(holder, position);
+
+    }
+
+    private void applyClickEvents(ViewHolder holder, final int position) {
+
+        holder.buttonActividadIniciada.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onButtonActividadIniciadaClicked(position);
+            }
+        });
+
+        holder.buttonActividadTerminada.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onButtonActividadTerminadaClicked(position);
+            }
+        });
     }
 
     private Void obtenerFechaInicioTerminadoEjecucion(int posicion)
@@ -144,5 +167,8 @@ public class OrdenInstalacionEjecucionActividadAdaptador extends RecyclerView.Ad
     {
         public void onClick(ViewHolder holder,String idOrdenInstalacion,String idActividad,int position);
     }
-
+    public interface OrdenInstalacionEjecucionActividadListener {
+        void onButtonActividadIniciadaClicked(int position);
+        void onButtonActividadTerminadaClicked(int position);
+    }
 }

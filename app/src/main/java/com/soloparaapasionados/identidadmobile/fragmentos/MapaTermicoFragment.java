@@ -3,6 +3,7 @@ package com.soloparaapasionados.identidadmobile.fragmentos;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.Constants;
@@ -91,6 +94,65 @@ public class MapaTermicoFragment extends Fragment
      */
     private String mAddressOutput;
 
+    private boolean mDefaultGradient = true;
+    private boolean mDefaultRadius = true;
+    private boolean mDefaultOpacity = true;
+    /**
+     * Alternative radius for convolution
+     */
+    private static final int ALT_HEATMAP_RADIUS = 10;
+
+    /**
+     * Alternative opacity of heatmap overlay
+     */
+    private static final double ALT_HEATMAP_OPACITY = 0.4;
+    /**
+     * Alternative heatmap gradient (blue -> red)
+     * Copied from Javascript version
+     */
+    private static final int[] ALT_HEATMAP_GRADIENT_COLORS = {
+            Color.argb(0, 0, 255, 255),// transparent
+            Color.argb(255 / 3 * 2, 0, 255, 255),
+            Color.rgb(0, 191, 255),
+            Color.rgb(0, 0, 127),
+            Color.rgb(255, 0, 0)
+    };
+
+    public static final float[] ALT_HEATMAP_GRADIENT_START_POINTS = {
+            0.0f, 0.10f, 0.20f, 0.60f, 1.0f
+    };
+
+    public static final Gradient ALT_HEATMAP_GRADIENT = new Gradient(ALT_HEATMAP_GRADIENT_COLORS,
+            ALT_HEATMAP_GRADIENT_START_POINTS);
+
+    public void CambiaARadio() {
+        if (mDefaultRadius) {
+            mProvider.setRadius(ALT_HEATMAP_RADIUS);
+        } else {
+            mProvider.setRadius(HeatmapTileProvider.DEFAULT_RADIUS);
+        }
+        mOverlay.clearTileCache();
+        mDefaultRadius = !mDefaultRadius;
+    }
+    public void CambiaAGradiente() {
+        if (mDefaultGradient) {
+            mProvider.setGradient(ALT_HEATMAP_GRADIENT);
+        } else {
+            mProvider.setGradient(HeatmapTileProvider.DEFAULT_GRADIENT);
+        }
+        mOverlay.clearTileCache();
+        mDefaultGradient = !mDefaultGradient;
+    }
+
+    public void CambiaAOpaco() {
+        if (mDefaultOpacity) {
+            mProvider.setOpacity(ALT_HEATMAP_OPACITY);
+        } else {
+            mProvider.setOpacity(HeatmapTileProvider.DEFAULT_OPACITY);
+        }
+        mOverlay.clearTileCache();
+        mDefaultOpacity = !mDefaultOpacity;
+    }
 
     public static final CameraPosition ESTADIO_NACIONAL =
             new CameraPosition.Builder().target(new LatLng(-12.066886, -77.033745))
@@ -139,6 +201,32 @@ public class MapaTermicoFragment extends Fragment
 
         mAddressRequested = false;
         mResultReceiver = new AddressResultReceiver(new Handler());
+
+        Button buttonCambiaARadio=(Button)view.findViewById(R.id.buttonCambiaARadio);
+        buttonCambiaARadio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CambiaARadio();
+            }
+        });
+
+        Button buttonCambiaAGradiente=(Button)view.findViewById(R.id.buttonCambiaAGradiente);
+        buttonCambiaAGradiente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CambiaAGradiente();
+            }
+        });
+
+        Button buttonCambiaAOpaco=(Button)view.findViewById(R.id.buttonCambiaAOpaco);
+        buttonCambiaAOpaco.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CambiaAOpaco();
+            }
+        });
+
+
 
         return  view;
     }

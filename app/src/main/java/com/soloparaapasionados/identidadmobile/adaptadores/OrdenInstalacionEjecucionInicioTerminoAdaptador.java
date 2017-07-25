@@ -25,20 +25,26 @@ public class OrdenInstalacionEjecucionInicioTerminoAdaptador extends RecyclerVie
     private String idOrdenInstalacion;
     private String idActividad;
 
+    private OrdenInstalacionEjecucionInicioTerminoAdaptadorListener listener;
+
+
 ////private SparseBooleanArray elementosSeleccionados;
 ////private static int indiceSeleccionadoActual = -1;
 
-    public OrdenInstalacionEjecucionInicioTerminoAdaptador(Context contexto, OnItemClickListener escucha) {
+
+
+    public OrdenInstalacionEjecucionInicioTerminoAdaptador(Context contexto, OnItemClickListener escucha,OrdenInstalacionEjecucionInicioTerminoAdaptadorListener listener) {
         this.contexto = contexto;
         this.escucha = escucha;
 
+        this.listener = listener;
 ////////this.elementosSeleccionados = new SparseBooleanArray();
     }
 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_orden_instalacion_ejecucion_inicio_termino_actividad, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_orden_instalacion_ejecucion_inicio_termino_actividad, parent, false);
         return new ViewHolder(itemView);
     }
 
@@ -50,8 +56,8 @@ public class OrdenInstalacionEjecucionInicioTerminoAdaptador extends RecyclerVie
         public TextView textViewDireccionIniciado;
         public TextView textViewFechaHoraTermino;
         public TextView textViewDireccionTerminado;
-        public Button buttonActividadIniciada;
-        public Button buttonActividadTerminada;
+
+        public Button buttonActividadIniciada,buttonActividadTerminada;
 
         public ViewHolder(View v) {
             super(v);
@@ -63,8 +69,8 @@ public class OrdenInstalacionEjecucionInicioTerminoAdaptador extends RecyclerVie
             textViewFechaHoraTermino= (TextView) v.findViewById(R.id.textViewFechaHoraTermino);
             textViewDireccionTerminado= (TextView) v.findViewById(R.id.textViewDireccionTerminado);
 
-            buttonActividadIniciada= (Button) v.findViewById(R.id.buttonActividadIniciada);
-            buttonActividadTerminada= (Button) v.findViewById(R.id.buttonActividadTerminada);
+            buttonActividadIniciada=(Button)v.findViewById(R.id.buttonActividadIniciada);
+            buttonActividadTerminada=(Button)v.findViewById(R.id.buttonActividadTerminada);
 
             v.setOnClickListener(this);
         }
@@ -99,6 +105,27 @@ public class OrdenInstalacionEjecucionInicioTerminoAdaptador extends RecyclerVie
         boolean actividadTerminada=false;
         actividadTerminada=Boolean.valueOf( items.getString(items.getColumnIndex(OrdenesInstalacionEjecucionInicioTerminoActividad.TERMINADO)));
         holder.buttonActividadTerminada.setEnabled(!actividadTerminada);
+
+        // apply click events
+        applyClickEvents(holder, position);
+
+    }
+
+    private void applyClickEvents(ViewHolder holder, final int position) {
+
+        holder.buttonActividadIniciada.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onButtonActividadIniciada_IT_Clicked(position);
+            }
+        });
+
+        holder.buttonActividadTerminada.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onButtonActividadTerminada_IT_Clicked(position);
+            }
+        });
     }
 
     private Void obtenerFechaInicioTerminadoEjecucion(int posicion)
@@ -152,4 +179,9 @@ public class OrdenInstalacionEjecucionInicioTerminoAdaptador extends RecyclerVie
                             String idOrdenInstalacion,String idActividad,int position);
     }
 
+
+    public interface OrdenInstalacionEjecucionInicioTerminoAdaptadorListener {
+        void onButtonActividadIniciada_IT_Clicked(int position);
+        void onButtonActividadTerminada_IT_Clicked(int position);
+    }
 }

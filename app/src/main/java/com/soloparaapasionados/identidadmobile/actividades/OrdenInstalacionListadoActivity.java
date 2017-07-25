@@ -180,6 +180,14 @@ public class OrdenInstalacionListadoActivity extends AppCompatActivity {
                                 startActivity(intent4);
 
                                 return true;
+                            case R.id.item_navigation_drawer_asignacion_unidades_reaccion:
+                                menuItem.setChecked(true);
+
+                                navigationDrawerLayout.closeDrawer(GravityCompat.START);
+                                Intent intent5 = new Intent(OrdenInstalacionListadoActivity.this, UnidadReaccionAsignacionActivity.class);
+                                startActivity(intent5);
+
+                                return true;
                             case R.id.item_navigation_geocerca:
                                 menuItem.setChecked(true);
 

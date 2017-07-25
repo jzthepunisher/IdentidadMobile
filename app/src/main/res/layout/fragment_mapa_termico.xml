@@ -25,7 +25,9 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Radio"
-            android:onClick="changeRadius" />
+            android:id="@+id/buttonCambiaARadio"
+             />
+
 
         <Button
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
@@ -33,7 +35,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Gradiente"
-            android:onClick="changeGradient" />
+            android:id="@+id/buttonCambiaAGradiente" />
 
 
         <Button
@@ -42,7 +44,8 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Opaco"
-            android:onClick="changeOpacity" />
+            android:id="@+id/buttonCambiaAOpaco"
+            />
 
     </LinearLayout>
 
