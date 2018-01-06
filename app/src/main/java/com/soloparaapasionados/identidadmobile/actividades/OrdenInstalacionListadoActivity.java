@@ -31,7 +31,8 @@ public class OrdenInstalacionListadoActivity extends AppCompatActivity {
     DrawerLayout navigationDrawerLayout;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orden_instalacion_listado);
 
@@ -217,6 +218,4 @@ public class OrdenInstalacionListadoActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
 }

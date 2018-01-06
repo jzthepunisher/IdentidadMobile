@@ -195,16 +195,19 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
         return root;
     }
 
-    private void cargaEmpleado(){
+    private void cargaEmpleado()
+    {
         getActivity().getSupportLoaderManager().restartLoader(2,null,this);
         this.editTextIdEmpleado.setEnabled(false);
     }
 
     //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args)
+    {
         idCursor=id;
-        switch (id){
+        switch (id)
+        {
             case 1:
                 //cursorCargos=getContentResolver().query(ContratoCotizacion.Cargos.crearUriCargoLista(), null, null, null, null);
                 return new CursorLoader(getActivity(), Cargos.crearUriCargoLista(), null, null, null, null);
@@ -217,11 +220,14 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data)
+    {
         //Creando Adaptador para CargoSpinner
-        switch (loader.getId()){
+        switch (loader.getId())
+        {
         case 1:
-            if(data!=null){
+            if(data!=null)
+            {
                 cargoSpinnerAdapter = new SimpleCursorAdapter(getActivity(),
                     android.R.layout.simple_selectable_list_item,
                     data,
@@ -236,11 +242,14 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
             break;
         case 2:
 
-            if (data != null && data.moveToLast()) {
+            if (data != null && data.moveToLast())
+            {
                 muestraEmpleado(data);
                 //spinnerCargos.setSelection(getIndex(data,Cargos.ID_CARGO,idCargoEmpleado));
                 spinnerCargos.setSelection(getIndex(spinnerCargos,Cargos.ID_CARGO,idCargoEmpleado));
-            } else {
+            }
+            else
+            {
                 muestraErrorCarga();
             }
 
@@ -366,13 +375,13 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
             insertarEmpleadoLocalmente();
             muestraPantallaDetalleEmpleados();
         }
-
     }
 
-    private void insertarEmpleadoLocalmente(){
+    private void insertarEmpleadoLocalmente()
+    {
         Intent intent = new Intent(getActivity(), EmpleadoServicioLocal.class);
         intent.setAction(EmpleadoServicioLocal.ACCION_INSERTAR_EMPLEADO_ISERVICE);
-        Empleado empleado=generarEntidadEmpleado();
+        Empleado empleado = generarEntidadEmpleado();
         intent.putExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO, empleado);
         getActivity().startService(intent);
     }
@@ -386,7 +395,8 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
     }
 
     //Generar entidad empleado
-    private Empleado generarEntidadEmpleado(){
+    private Empleado generarEntidadEmpleado()
+    {
         Empleado empleado =new Empleado();
 
         empleado.setIdEmpleado(this.editTextIdEmpleado.getText().toString().trim());
@@ -777,7 +787,8 @@ implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cur
                 "No se ha cargado información", Toast.LENGTH_SHORT).show();
     }
 
-    private void muestraEmpleado(Cursor cursorEmpleado){
+    private void muestraEmpleado(Cursor cursorEmpleado)
+    {
         idCargoEmpleado="";
         String nombresCompletos="";
         nombresCompletos+=cursorEmpleado.getString(cursorEmpleado.getColumnIndex(Empleados.NOMBRES));

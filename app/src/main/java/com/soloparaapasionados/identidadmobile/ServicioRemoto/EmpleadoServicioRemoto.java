@@ -42,7 +42,8 @@ import java.util.Map;
  * Created by USUARIO on 04/06/2017.
  */
 
-public class EmpleadoServicioRemoto extends IntentService {
+public class EmpleadoServicioRemoto extends IntentService
+{
     private static final String TAG = EmpleadoServicioLocal.class.getSimpleName();
 
     public static final String ACCION_LEER_EMPLEADO_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_LEER_EMPLEADO_ISERVICE";
@@ -157,8 +158,8 @@ public class EmpleadoServicioRemoto extends IntentService {
         }*/
     }
 
-    private void insertarEmpleadoRemoto(Empleado empleado){
-
+    private void insertarEmpleadoRemoto(Empleado empleado)
+    {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(android.R.drawable.stat_sys_download_done)
                 .setContentTitle("Servicio Remoto en segundo plano")
@@ -403,67 +404,76 @@ public class EmpleadoServicioRemoto extends IntentService {
         }
     }
 
-    public void solicitudEmpleadosPost(Empleado empleado) {
-
+    public void solicitudEmpleadosPost(Empleado empleado)
+    {
         Gson gson = new Gson();
         JSONObject jsonObject=null;
 
         String jsonString=gson.toJson(empleado);
 
-        try {
+        try
+        {
             // Crear nuevo objeto Json basado en el mapa
             jsonObject = new JSONObject(jsonString);
         }catch (JSONException e){
             Log.d(TAG, e.getMessage());
         }
 
-
-
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.POST,
-                Constantes.EMPLEADOS_POST,
-                jsonObject,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // Procesar la respuesta del servidor
-                        procesarRespuestaEmpleadoPost(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "Error Volley: " + error.getMessage());
-                    }
+            Request.Method.POST,
+            Constantes.EMPLEADOS_POST,
+            jsonObject,
+            new Response.Listener<JSONObject>()
+            {
+                @Override
+                public void onResponse(JSONObject response)
+                {
+                    // Procesar la respuesta del servidor
+                    procesarRespuestaEmpleadoPost(response);
                 }
-        ) {
+            },
+            new Response.ErrorListener()
+            {
+                @Override
+                public void onErrorResponse(VolleyError error)
+                {
+                    Log.d(TAG, "Error Volley: " + error.getMessage());
+                }
+            }
+        )
+        {
             @Override
-            public Map<String, String> getHeaders() {
+            public Map<String, String> getHeaders()
+            {
                 Map<String, String> headers = new HashMap<String, String>();
                 headers.put("Content-Type", "application/json; charset=utf-8");
                 headers.put("Accept", "application/json");
                 return headers;
             }
-
             @Override
-            public String getBodyContentType() {
+            public String getBodyContentType()
+            {
                 return "application/json; charset=utf-8" ;
             }
         };
 
-        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy()
+        {
             @Override
-            public int getCurrentTimeout() {
+            public int getCurrentTimeout()
+            {
                 return 50000;
             }
 
             @Override
-            public int getCurrentRetryCount() {
+            public int getCurrentRetryCount()
+            {
                 return 50000;
             }
 
             @Override
-            public void retry(VolleyError error) throws VolleyError {
+            public void retry(VolleyError error) throws VolleyError
+            {
 
             }
         });
@@ -477,8 +487,10 @@ public class EmpleadoServicioRemoto extends IntentService {
      *
      * @param response Objeto Json con la respuesta
      */
-    private void procesarRespuestaEmpleadoPost(JSONObject response) {
-        try {
+    private void procesarRespuestaEmpleadoPost(JSONObject response)
+    {
+        try
+        {
             // Obtener estado
             String estado = response.getString("Estado");
             // Obtener mensaje
@@ -486,7 +498,8 @@ public class EmpleadoServicioRemoto extends IntentService {
             // Obtener idEmpleado
             String idEmpleado = response.getString("IdEmpleado");
 
-            switch (estado) {
+            switch (estado)
+            {
                 case "1":
                     // Mostrar mensaje
                     Toast.makeText(getBaseContext(),mensaje,Toast.LENGTH_LONG).show();
@@ -496,7 +509,6 @@ public class EmpleadoServicioRemoto extends IntentService {
                     // Terminar actividad
                     //getActivity().finish();
                     break;
-
                 case "2":
                     // Mostrar mensaje
                     Toast.makeText( getBaseContext(), mensaje, Toast.LENGTH_LONG).show();
@@ -512,7 +524,8 @@ public class EmpleadoServicioRemoto extends IntentService {
 
     }
 
-    private void actualizarEstadoEmpleado(String idEmpleado,String estadoRegistro){
+    private void actualizarEstadoEmpleado(String idEmpleado,String estadoRegistro)
+    {
         Intent intent = new Intent(this, EmpleadoServicioLocal.class);
         intent.setAction(EmpleadoServicioLocal.ACCION_ACTUALIZAR_ESTADO_EMPLEADO_ISERVICE);
         intent.putExtra(EmpleadoServicioLocal.EXTRA_ID_EMPLEADO, idEmpleado);

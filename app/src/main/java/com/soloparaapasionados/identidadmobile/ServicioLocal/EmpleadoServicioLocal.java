@@ -43,9 +43,10 @@ public class EmpleadoServicioLocal extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-
-        if (intent != null) {
+    protected void onHandleIntent(Intent intent)
+    {
+        if (intent != null)
+        {
             final String action = intent.getAction();
 
             if (EmpleadoServicioLocal.ACCION_INSERTAR_EMPLEADO_ISERVICE.equals(action)) {
@@ -55,22 +56,24 @@ public class EmpleadoServicioLocal extends IntentService {
                 insertarEmpleadoLocal(empleado);
             }
 
-            if (EmpleadoServicioLocal.ACCION_ACTUALIZAR_EMPLEADO_ISERVICE.equals(action)) {
+            if (EmpleadoServicioLocal.ACCION_ACTUALIZAR_EMPLEADO_ISERVICE.equals(action))
+            {
 
                 Empleado empleado=(Empleado)intent.getSerializableExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO);
 
                 actualizarEmpleadoLocal(empleado);
             }
 
-            if (EmpleadoServicioLocal.ACCION_ELIMINAR_EMPLEADO_ISERVICE.equals(action)) {
+            if (EmpleadoServicioLocal.ACCION_ELIMINAR_EMPLEADO_ISERVICE.equals(action))
+            {
 
                 String idEmpleado = intent.getStringExtra(EmpleadoServicioLocal.EXTRA_ID_EMPLEADO);
 
                 eliminarEmpleadoLocal(idEmpleado);
             }
 
-            if (EmpleadoServicioLocal.ACCION_ACTUALIZAR_ESTADO_EMPLEADO_ISERVICE.equals(action)) {
-
+            if (EmpleadoServicioLocal.ACCION_ACTUALIZAR_ESTADO_EMPLEADO_ISERVICE.equals(action))
+            {
                 String idEmpleado = intent.getStringExtra(EmpleadoServicioLocal.EXTRA_ID_EMPLEADO);
                 String estadoRegistro = intent.getStringExtra(EmpleadoServicioLocal.EXTRA_ESTADO_EMPLEADO);
 
@@ -80,8 +83,10 @@ public class EmpleadoServicioLocal extends IntentService {
         }
     }
 
-    private void insertarEmpleadoLocal(Empleado empleado){
-        try {
+    private void insertarEmpleadoLocal(Empleado empleado)
+    {
+        try
+        {
             // Se construye la notificación
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .setSmallIcon(android.R.drawable.stat_sys_download_done)
@@ -125,14 +130,17 @@ public class EmpleadoServicioLocal extends IntentService {
             builder.setProgress( 2, 2, false);
             stopForeground(true);
 
-        } catch (RemoteException e) {
+        } catch (RemoteException e)
+        {
             e.printStackTrace();
-        } catch (OperationApplicationException e) {
+        } catch (OperationApplicationException e)
+        {
             e.printStackTrace();
         }
     }
 
-    private void actualizarEmpleadoLocal(Empleado empleado){
+    private void actualizarEmpleadoLocal(Empleado empleado)
+    {
         try {
             // Se construye la notificación
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
@@ -210,8 +218,10 @@ public class EmpleadoServicioLocal extends IntentService {
         }
     }
 
-    private void actualizarEstadoEmpleadoLocal(String idEmpleado,String estadoRegistro){
-        try {
+    private void actualizarEstadoEmpleadoLocal(String idEmpleado,String estadoRegistro)
+    {
+        try
+        {
             // Se construye la notificación
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .setSmallIcon(android.R.drawable.stat_sys_download_done)
@@ -237,9 +247,11 @@ public class EmpleadoServicioLocal extends IntentService {
             builder.setProgress( 2, 2, false);
             stopForeground(true);
 
-        } catch (RemoteException e) {
+        } catch (RemoteException e)
+        {
             e.printStackTrace();
-        } catch (OperationApplicationException e) {
+        } catch (OperationApplicationException e)
+        {
             e.printStackTrace();
         }
     }

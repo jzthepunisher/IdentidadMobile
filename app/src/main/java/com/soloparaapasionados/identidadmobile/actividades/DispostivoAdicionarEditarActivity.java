@@ -42,18 +42,20 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Disposi
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class DispostivoAdicionarEditarActivity extends AppCompatActivity {
+public class DispostivoAdicionarEditarActivity extends AppCompatActivity
+{
 
     public static final String EXTRA_IMEI = "extra_imei";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dispositivo_adicionar_editar);
 
         setupWindowAnimations();
 
-        //Establec el toolbar de la actividad.
+        //Establece el toolbar de la actividad.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -88,9 +90,5 @@ public class DispostivoAdicionarEditarActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
-
-
-
-
 
 }

@@ -43,11 +43,12 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 69;
+    private static final int VERSION_ACTUAL = 72;
 
     private final Context contexto;
 
-    public static interface Tablas {
+    public static interface Tablas
+    {
         String DISPOSITIVO                     = "dispositivo";
         String EMPLEADO                        = "empleado";
         String CARGO                           = "cargo";
@@ -87,16 +88,18 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db)
     {
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "%s TEXT UNIQUE NOT NULL,%s INTEGER NOT NULL,%s TEXT NOT NULL,%s TEXT NULL," +
-                        "%s INTEGER NOT NULL ,%s INTEGER NOT NULL,%s INTEGER NOT NULL)",
-                Tablas.DISPOSITIVO, BaseColumns._ID,
-                Dispositivos.IMEI,Dispositivos.ID_TIPO_DISPOSITIVO, Dispositivos.ID_SIM_CARD,Dispositivos.NUMERO_CELULAR,
-                Dispositivos.ENVIADO, Dispositivos.RECIBIDO, Dispositivos.VALIDADO));
+                    "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL,%s TEXT NULL," +
+                    "%s TEXT NULL,%s INTEGER NOT NULL ,%s INTEGER NOT NULL,%s INTEGER NOT NULL," +
+                    "%s TEXT NULL)",
+                    Tablas.DISPOSITIVO, BaseColumns._ID,
+                    Dispositivos.IMEI, Dispositivos.ID_SIM_CARD,Dispositivos.DESCRIPCION,
+                    Dispositivos.NUMERO_CELULAR, Dispositivos.ENVIADO, Dispositivos.RECIBIDO, Dispositivos.VALIDADO,
+                    Dispositivos.ESTADO_SINCRONIZACION));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL)",
-                Tablas.CARGO, BaseColumns._ID,
-                Cargos.ID_CARGO,Cargos.DESCRIPCION));
+                    "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL)",
+                    Tablas.CARGO, BaseColumns._ID,
+                    Cargos.ID_CARGO,Cargos.DESCRIPCION));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL,%s TEXT NULL,%s TEXT NULL," +

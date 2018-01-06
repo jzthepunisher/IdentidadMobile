@@ -134,8 +134,8 @@ public class ProviderCotizacion extends ContentProvider {
     // [CAMPOS_AUXILIARES DE PROYECCCIONES]
     private final String[] proyDispositivo = new String[]{
            Tablas.DISPOSITIVO + "." + ContratoCotizacion.Dispositivos.IMEI,
-            ContratoCotizacion.Dispositivos.ID_TIPO_DISPOSITIVO,
             ContratoCotizacion.Dispositivos.ID_SIM_CARD,
+            ContratoCotizacion.Dispositivos.DESCRIPCION,
             ContratoCotizacion.Dispositivos.NUMERO_CELULAR,
             ContratoCotizacion.Dispositivos.ENVIADO,
             ContratoCotizacion.Dispositivos.RECIBIDO,
@@ -191,7 +191,8 @@ public class ProviderCotizacion extends ContentProvider {
             Tablas.TURNO_UNIDAD_REACCION_UBICACION + "." + Turnos_UnidadesReaccionUbicacion.LATITUD,
             Tablas.TURNO_UNIDAD_REACCION_UBICACION + "." + Turnos_UnidadesReaccionUbicacion.LONGITUD};
 
-    private final String[] proyCliente = new String[]{
+    private final String[] proyCliente = new String[]
+            {
             BaseColumns._ID,
             Tablas.CLIENTE + "." + Clientes.ID_CLIENTE,
             Tablas.CLIENTE + "." + Clientes.NOMBRES_CLIENTE,
@@ -396,23 +397,31 @@ public class ProviderCotizacion extends ContentProvider {
         // Comparar Uri
         int match = uriMatcher.match(uri);
 
-        switch (match) {
+        switch (match)
+        {
             case DISPOSITIVOS:
                 id = values.getAsString(Dispositivos.IMEI);
+
                 bd.insertOrThrow(Tablas.DISPOSITIVO, null, values);
                 notificarCambio(uri);
+
                 return Dispositivos.crearUriDispositivo(id);
+
             case EMPLEADOS:
                 id = values.getAsString(Empleados.ID_EMPLEADO);
+
                 bd.insertOrThrow(Tablas.EMPLEADO,null,values);
                 notificarCambio(uri);
 
                 actualizaIntentoInsercionEmpleadoRemotamente(bd,id);
+
                 insertarEmpleadoRemotamente(values);
 
                 return Empleados.crearUriEmpleado(id);
+
             case DISPOSITIVOS_EMPLEADOS_ID:
                 String[] claves = DispositivosEmpleados.obtenerIdDispositivoEmpleado(uri);
+
                 String imei=claves[0];
                 String idEmpleado=claves[1];
 
@@ -499,11 +508,12 @@ public class ProviderCotizacion extends ContentProvider {
             case DISPOSITIVOS_ID:
                 // Consultando una cabecera de pedido
                 id = Dispositivos.obtenerIdDispostivo(uri);
+
                 builder.setTables(Tablas.DISPOSITIVO);
+
                 c = builder.query(bd, proyDispositivo,
                         Dispositivos.IMEI + "=" + "\'" + id + "\'"
-                                + (!TextUtils.isEmpty(selection) ?
-                                " AND (" + selection + ')' : ""),
+                                + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""),
                         selectionArgs, null, null, null);
                 break;
             case CARGOS:
@@ -796,8 +806,8 @@ public class ProviderCotizacion extends ContentProvider {
         // Comparar Uri
         int match = uriMatcher.match(uri);
 
-        switch (match) {
-
+        switch (match)
+        {
             case DISPOSITIVOS_ID:
 
                 id = Dispositivos.obtenerIdDispostivo(uri);
@@ -861,8 +871,6 @@ public class ProviderCotizacion extends ContentProvider {
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }
 
-
-
         return afectados;
     }
 
@@ -909,7 +917,6 @@ public class ProviderCotizacion extends ContentProvider {
 
     private void actualizaIntentoInsercionEmpleadoRemotamente(SQLiteDatabase bd,String idEmpleado)
     {
-
         String seleccion = String.format("%s=? ", Empleados.ID_EMPLEADO);
         String[] argumentos={idEmpleado};
 

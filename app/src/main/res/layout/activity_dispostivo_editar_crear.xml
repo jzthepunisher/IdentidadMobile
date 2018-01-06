@@ -13,37 +13,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="@bool/fitsSystemWindows"
-        tools:context="com.soloparaapasionados.identidadmobile.actividades.OrdenInstalacionListadoActivity">
+        tools:context="com.soloparaapasionados.identidadmobile.actividades.DispostivoEditarCrearActivity">
 
+        <!-- App Bar -->
         <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:theme="@style/AppTheme.AppBarOverlay">
 
+            <!-- Toolbar -->
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:layout_collapseMode="pin"
                 android:elevation="16dp"
+                app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/content_orden_instalacion_listado" />
+        <include layout="@layout/content_dispostivo_editar_crear" />
 
-        <!--<android.support.design.widget.FloatingActionButton
-            android:id="@+id/floatingActionButton"
+        <!-- FAB -->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButtonSalvar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            android:clickable="true"
-            app:srcCompat="@android:drawable/ic_dialog_email"
-            android:layout_gravity="bottom|right|end"/>-->
+            android:src="@drawable/ic_save_white_24dp" />
 
     </android.support.design.widget.CoordinatorLayout>
 
+    <!-- NavigationView -->
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
@@ -53,4 +57,5 @@
         app:headerLayout="@layout/navigation_drawer_header"
         app:menu="@menu/navigation_drawer_menu"
         app:theme="@style/NavigationViewTheme" />
+
 </android.support.v4.widget.DrawerLayout>

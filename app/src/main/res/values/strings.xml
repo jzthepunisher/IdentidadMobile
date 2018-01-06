@@ -4,6 +4,7 @@
     <string name="hint_imei">IMEI</string>
     <string name="hint_id_card_sim">Id Card SIM</string>
     <string name="hint_celular">Número Celular</string>
+    <string name="hint_descripcion">Descripción</string>
 
     <string name="hint_id_empleado">Id empleado</string>
     <string name="hint_nombres_empleado">Nombres</string>
@@ -181,4 +182,5 @@
     <string name="title_activity_orden_instalacion_ejecutar_actividad">
         Ejecución de Actividades
     </string>
+    <string name="title_activity_dispostivo_editar_crear">Registro Dispositivo</string>
 </resources>

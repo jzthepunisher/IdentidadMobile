@@ -33,7 +33,7 @@
         <activity
             android:name=".actividades.DispostivoAdicionarEditarActivity"
             android:label="@string/title_activity_dispostivo_registro"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <provider
             android:name=".sqlite.ProviderCotizacion"
@@ -114,7 +114,7 @@
             android:name=".actividades.UnidadReaccionAsignacionActivity"
             android:label="@string/title_activity_unidad_reaccion_asignacion"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".ServicioRemoto.FetchAddressIntentService"
@@ -136,12 +136,9 @@
             android:name=".actividades.OrdenInstalacionListadoActivity"
             android:label="@string/title_activity_orden_instalacion_listado"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+
         <activity
             android:name=".actividades.OrdenInstalacionEjecutarActividadActivity"
             android:label="@string/title_activity_orden_instalacion_ejecutar_actividad"
@@ -149,7 +146,18 @@
 
         <service
             android:name=".ServicioLocal.EjecucionActividadInicioTerminoServicioLocal"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity
+            android:name=".actividades.DispostivoEditarCrearActivity"
+            android:label="@string/title_activity_dispostivo_editar_crear"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

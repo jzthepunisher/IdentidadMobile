@@ -6,8 +6,8 @@ import android.net.Uri;
  * Created by USUARIO on 25/03/2017.
  */
 
-public class ContratoCotizacion {
-
+public class ContratoCotizacion
+{
     interface ColumnasCargo
     {
         String ID_CARGO    = "id_cargo";
@@ -20,14 +20,16 @@ public class ContratoCotizacion {
         String ID_EMPLEADO      = "id_empleado";
     }
 
-    interface ColumnasDispositivo {
-        String IMEI                = "imei";
-        String ID_TIPO_DISPOSITIVO = "id_tipo_dispositivo";
-        String ID_SIM_CARD         = "id_sim_card";
-        String NUMERO_CELULAR      = "numero_celular";
-        String ENVIADO             = "enviado";
-        String RECIBIDO            = "recibido";
-        String VALIDADO            = "validado";
+    interface ColumnasDispositivo
+    {
+        String IMEI                  = "imei";
+        String ID_SIM_CARD           = "id_sim_card";
+        String DESCRIPCION           = "descripcion";
+        String NUMERO_CELULAR        = "numero_celular";
+        String ENVIADO               = "enviado";
+        String RECIBIDO              = "recibido";
+        String VALIDADO              = "validado";
+        String ESTADO_SINCRONIZACION = "estado_sincronizacion";
     }
 
     interface ColumnasEmpleado
@@ -231,17 +233,20 @@ public class ContratoCotizacion {
     // [/TIPOS_MIME]
 
     public int OFF_SET=10;
+
     //Clase contrato de Dispositivo
     public static class Dispositivos implements ColumnasDispositivo
     {
-
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_DISPOSITIVOS).build();
 
-        public static String obtenerIdDispostivo(Uri uri) {
+        public static String obtenerIdDispostivo(Uri uri)
+        {
             return uri.getPathSegments().get(1);
         }
 
-        public static Uri crearUriDispositivo(String id) {
+        public static Uri crearUriDispositivo(String id)
+        {
+
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
     }
@@ -325,7 +330,8 @@ public class ContratoCotizacion {
             return URI_CONTENIDO.buildUpon().appendPath(imei + "%s" + idEmpleado).build();
         }
 
-        public static String[] obtenerIdDispositivoEmpleado(Uri uri) {
+        public static String[] obtenerIdDispositivoEmpleado(Uri uri)
+        {
             return uri.getLastPathSegment().split("%s");
         }
     }

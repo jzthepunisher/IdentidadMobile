@@ -175,9 +175,11 @@ public class DispositivoAdicionarEditarFragment extends Fragment
         // Setear escucha al FAB
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButtonSalvar);
         fab.setOnClickListener(
-                new View.OnClickListener() {
+                new View.OnClickListener()
+                {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View v)
+                    {
                         // validarDatos()
                         insertarDispositivo();
 
@@ -331,12 +333,12 @@ public class DispositivoAdicionarEditarFragment extends Fragment
         getActivity().unregisterReceiver(smsEntrandoReceiver);
     }
 
-    public void insertarDispositivo() {
+    public void insertarDispositivo()
+    {
         ContentResolver r = getActivity().getContentResolver();
 
         // Lista de operaciones
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
-
 
         Log.d("Cabeceras de pedido", "Cabeceras de pedido");
         DatabaseUtils.dumpCursor(r.query(ContratoCotizacion.Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()), null, null, null, null));
@@ -346,7 +348,7 @@ public class DispositivoAdicionarEditarFragment extends Fragment
         if (cursorDispositivo.getCount()==0)   {
             ops.add(ContentProviderOperation.newInsert(ContratoCotizacion.Dispositivos.URI_CONTENIDO)
                     .withValue(ContratoCotizacion.Dispositivos.IMEI, this.editTextIMEI.getText().toString())
-                    .withValue(ContratoCotizacion.Dispositivos.ID_TIPO_DISPOSITIVO, 1)
+
                     .withValue(ContratoCotizacion.Dispositivos.ID_SIM_CARD, this.editTextIdCardSim.getText().toString())
                     .withValue(ContratoCotizacion.Dispositivos.NUMERO_CELULAR, this.editTextCelular.getText().toString())
                     .withValue(ContratoCotizacion.Dispositivos.ENVIADO, 0)
@@ -356,7 +358,7 @@ public class DispositivoAdicionarEditarFragment extends Fragment
         }else{
             ops.add(ContentProviderOperation.newUpdate(ContratoCotizacion.Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()))
                     .withValue(ContratoCotizacion.Dispositivos.IMEI, this.editTextIMEI.getText().toString())
-                    .withValue(ContratoCotizacion.Dispositivos.ID_TIPO_DISPOSITIVO, 1)
+
                     .withValue(ContratoCotizacion.Dispositivos.ID_SIM_CARD, this.editTextIdCardSim.getText().toString())
                     .withValue(ContratoCotizacion.Dispositivos.NUMERO_CELULAR, this.editTextCelular.getText().toString())
                     .withValue(ContratoCotizacion.Dispositivos.ENVIADO, 0)
