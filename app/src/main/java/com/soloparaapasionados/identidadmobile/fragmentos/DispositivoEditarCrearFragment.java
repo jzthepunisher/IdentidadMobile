@@ -402,7 +402,7 @@ public class DispositivoEditarCrearFragment extends Fragment
 
             if (numeroCelularGrabado.equals(numeroCelularEntrante))
             {
-                ops.add(ContentProviderOperation.newUpdate(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()))
+                ops.add(ContentProviderOperation.newUpdate(Dispositivos.crearUriDispositivoValidadoConEstado(this.editTextIMEI.getText().toString(),"1".toString()))
                     .withValue(Dispositivos.VALIDADO, 1)
                     .build());
             }

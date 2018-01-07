@@ -243,7 +243,7 @@ public class ContratoCotizacion
         public static final String PARAMETRO_ESTADO_REGISTRO = "estado_registro";
         public static final String PARAMETRO_ENVIADO_REGISTRO = "enviado_registro";
         public static final String PARAMETRO_RECIBIDO_REGISTRO = "recibido_registro";
-        public static final String PARAMETRO_VALIDADO_REGISTRO = "recibido_registro";
+        public static final String PARAMETRO_VALIDADO_REGISTRO = "validado_registro";
 
         public static String obtenerIdDispostivo(Uri uri)
         {
