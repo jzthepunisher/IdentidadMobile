@@ -76,30 +76,9 @@ public class EmpleadoServicioRemoto extends IntentService
                 insertarEmpleadoRemoto(empleado);
             }
 
-            /*if (EmpleadoServicioRemoto.ACCION_INSERTAR_EMPLEADO_ISERVICE.equals(action)) {
-
-                Empleado empleado=(Empleado)intent.getSerializableExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO);
-
-                insertarEmpleadoLocal(empleado);
-            }
-
-            if (EmpleadoServicioRemoto.ACCION_ACTUALIZAR_EMPLEADO_ISERVICE.equals(action)) {
-
-                Empleado empleado=(Empleado)intent.getSerializableExtra(EmpleadoServicioLocal.EXTRA_MI_EMPLEADO);
-
-                actualizarEmpleadoLocal(empleado);
-            }
-
-            if (EmpleadoServicioRemoto.ACCION_ELIMINAR_EMPLEADO_ISERVICE.equals(action)) {
-
-                String idEmpleado = intent.getStringExtra(EmpleadoServicioLocal.EXTRA_ID_EMPLEADO);
-
-                eliminarEmpleadoLocal(idEmpleado);
-            }*/
-
-
         }
     }
+
     private void leerEmpleadosRemoto(){
         //try {
             // Se construye la notificación
@@ -173,136 +152,6 @@ public class EmpleadoServicioRemoto extends IntentService
         // Quitar de primer plano
         builder.setProgress( 2, 2, false);
         stopForeground(true);
-    }
-
-    private void insertarEmpleadoLocal(Empleado empleado){
-        try {
-            // Se construye la notificación
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(android.R.drawable.stat_sys_download_done)
-                    .setContentTitle("Servicio Local en segundo plano")
-                    .setContentText("Procesando inserción de empleado...");
-
-            builder.setProgress( 2, 1, false);
-            startForeground(1, builder.build());
-
-            ContentResolver r = getContentResolver();
-
-            // Lista de operaciones
-            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
-
-            // [INSERCIONES]
-            //Date miFecha = new Date();
-            Date miFecha = Calendar.getInstance().getTime();
-
-            String miFechaCadena=new SimpleDateFormat("dd/MM/yyyy").format(miFecha);
-
-            ops.add(ContentProviderOperation.newInsert(ContratoCotizacion.Empleados.URI_CONTENIDO)
-                    .withValue(ContratoCotizacion.Empleados.ID_EMPLEADO, empleado.getIdEmpleado())
-                    .withValue(ContratoCotizacion.Empleados.NOMBRES, empleado.getNombres())
-                    .withValue(ContratoCotizacion.Empleados.APELLIDO_PATERNO, empleado.getApellidoPaterno())
-                    .withValue(ContratoCotizacion.Empleados.APELLIDO_MAERNO, empleado.getApellidoMaterno())
-                    .withValue(ContratoCotizacion.Empleados.DIRECCION, empleado.getDireccion())
-                    .withValue(ContratoCotizacion.Empleados.DNI, empleado.getDNI())
-                    .withValue(ContratoCotizacion.Empleados.CELULAR, empleado.getCelular())
-                    .withValue(ContratoCotizacion.Empleados.EMAIL, empleado.getEmail())
-                    .withValue(ContratoCotizacion.Empleados.FECHA_NACIMIENTO, empleado.getFechaNacimiento())
-                    .withValue(ContratoCotizacion.Empleados.ID_CARGO, empleado.getIdCargo())
-                    .withValue(ContratoCotizacion.Empleados.FECHA_INGRESO, empleado.getFechaIngreso())
-                    .withValue(ContratoCotizacion.Empleados.FECHA_BAJA, empleado.getFechaBaja())
-                    .withValue(ContratoCotizacion.Empleados.FECHA_CREACION, miFechaCadena)
-                    .withValue(ContratoCotizacion.Empleados.FOTO, empleado.getFoto())
-                    .build());
-
-            r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
-
-            // Quitar de primer plano
-            builder.setProgress( 2, 2, false);
-            stopForeground(true);
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (OperationApplicationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void actualizarEmpleadoLocal(Empleado empleado){
-        try {
-            // Se construye la notificación
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(android.R.drawable.stat_sys_download_done)
-                    .setContentTitle("Servicio Local en segundo plano")
-                    .setContentText("Procesando edición de empleado...");
-
-            builder.setProgress( 2, 1, false);
-            startForeground(1, builder.build());
-
-            ContentResolver r = getContentResolver();
-
-            // Lista de operaciones
-            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
-
-            // [ACTUALIZACIONES]
-            ops.add(ContentProviderOperation.newUpdate(ContratoCotizacion.Empleados.crearUriEmpleado( empleado.getIdEmpleado()))
-                    .withValue(ContratoCotizacion.Empleados.NOMBRES, empleado.getNombres())
-                    .withValue(ContratoCotizacion.Empleados.APELLIDO_PATERNO, empleado.getApellidoPaterno())
-                    .withValue(ContratoCotizacion.Empleados.APELLIDO_MAERNO, empleado.getApellidoMaterno())
-                    .withValue(ContratoCotizacion.Empleados.DIRECCION, empleado.getDireccion())
-                    .withValue(ContratoCotizacion.Empleados.DNI, empleado.getDNI())
-                    .withValue(ContratoCotizacion.Empleados.CELULAR, empleado.getCelular())
-                    .withValue(ContratoCotizacion.Empleados.EMAIL, empleado.getEmail())
-                    .withValue(ContratoCotizacion.Empleados.FECHA_NACIMIENTO, empleado.getFechaNacimiento())
-                    .withValue(ContratoCotizacion.Empleados.ID_CARGO, empleado.getIdCargo())
-                    .withValue(ContratoCotizacion.Empleados.FECHA_INGRESO, empleado.getFechaIngreso())
-                    .withValue(ContratoCotizacion.Empleados.FECHA_BAJA, empleado.getFechaBaja())
-                    .withValue(ContratoCotizacion.Empleados.FOTO, empleado.getFoto())
-                    .build());
-
-            r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
-
-            // Quitar de primer plano
-            builder.setProgress( 2, 2, false);
-            stopForeground(true);
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (OperationApplicationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void eliminarEmpleadoLocal(String idEmpleado){
-        try {
-            // Se construye la notificación
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(android.R.drawable.stat_sys_download_done)
-                    .setContentTitle("Servicio Local en segundo plano")
-                    .setContentText("Procesando eliminación de empleado...");
-
-            builder.setProgress( 2, 1, false);
-            startForeground(1, builder.build());
-
-            ContentResolver r = getContentResolver();
-
-            // Lista de operaciones
-            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
-
-            // [ACTUALIZACIONES]
-            ops.add(ContentProviderOperation.newDelete(ContratoCotizacion.Empleados.crearUriEmpleado(idEmpleado))
-                    .build());
-
-            r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
-
-            // Quitar de primer plano
-            builder.setProgress( 2, 2, false);
-            stopForeground(true);
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (OperationApplicationException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

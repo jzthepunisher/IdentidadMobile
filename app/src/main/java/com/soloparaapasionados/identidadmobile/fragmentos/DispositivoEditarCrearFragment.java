@@ -117,7 +117,7 @@ public class DispositivoEditarCrearFragment extends Fragment
 
         EstablecerEventos(root);
         MostrarInformacionCelular();
-        //editTextCelular.setText("997253205");
+        editTextCelular.setText("997253205");
 
         sentPI = PendingIntent.getBroadcast(getActivity(), 0,new Intent(SENT), 0);
         deliveredPI = PendingIntent.getBroadcast(getActivity(), 0,new Intent(DELIVERED), 0);
@@ -533,8 +533,8 @@ public class DispositivoEditarCrearFragment extends Fragment
     {
         Intent intent = new Intent(getActivity(), DispositivoServicioLocal.class);
         intent.setAction(DispositivoServicioLocal.ACCION_ACTUALIZAR_DISPOSITIVO_ISERVICE);
-        Dispositivo empleado=generarEntidadDispositivo();
-        intent.putExtra(DispositivoServicioLocal.EXTRA_MI_DISPOSITIVO, empleado);
+        Dispositivo dispositivo=generarEntidadDispositivo();
+        intent.putExtra(DispositivoServicioLocal.EXTRA_MI_DISPOSITIVO, dispositivo);
         getActivity().startService(intent);
     }
 
@@ -611,4 +611,5 @@ public class DispositivoEditarCrearFragment extends Fragment
             }
         }
     }
+
 }

@@ -174,11 +174,12 @@ public class ContratoCotizacion
         String REGISTRADO_REMOTAMENTE= "registrado.remotamente";
 
         String ACTUALIZADO_LOCALMENTE= "actualizado.localmente";
-        //String ACTUALIZANDO_REMOTAMENTE= "actualizando.remotamente";
+        String ACTUALIZANDO_REMOTAMENTE= "actualizando.remotamente";
         String ACTUALIZADO_REMOTAMENTE= "actualizado.remotamente";
 
-        String INSERTADO_LOCALMENTE= "insertado.localmente";
-        String INSERTADO_REMOTAMENTE= "insertado.remotamente";
+        String ELIMINADO_LOCALMENTE= "eliminado.localmente";
+        String ELIMINANDO_REMOTAMENTE= "eliminando.remotamente";
+        String ELIMINADO_REMOTAMENTE= "eliminado.remotamente";
 
         String ESTADO_OK= "estado.ok";
         String ESTADO_SINCRONIZANDO= "estado.sincronizando";
@@ -239,6 +240,8 @@ public class ContratoCotizacion
     {
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_DISPOSITIVOS).build();
 
+        public static final String PARAMETRO_ESTADO_REGISTRO = "estado_registro";
+
         public static String obtenerIdDispostivo(Uri uri)
         {
             return uri.getPathSegments().get(1);
@@ -248,6 +251,15 @@ public class ContratoCotizacion
         {
 
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+
+        public static Uri crearUriDispositivoConEstado(String idDispositivo,String estadoDispositivo)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(idDispositivo).appendQueryParameter(PARAMETRO_ESTADO_REGISTRO,estadoDispositivo).build();
+        }
+
+        public static boolean tieneEstadoRegistro(Uri uri) {
+            return uri != null && uri.getQueryParameter(PARAMETRO_ESTADO_REGISTRO) != null;
         }
     }
 

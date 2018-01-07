@@ -34,12 +34,14 @@ public class DispositivoServicioLocal extends IntentService
 
     public static final String ACCION_INSERTAR_DISPOSITIVO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_INSERTAR_DISPOSITIVO_ISERVICE";
     public static final String ACCION_ACTUALIZAR_DISPOSITIVO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ACTUALIZAR_DISPOSITIVO_ISERVICE";
+    public static final String ACCION_ACTUALIZAR_ESTADO_DISPOSITIVO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ACTUALIZAR_ESTADO_DISPOSITIVO_ISERVICE";
     public static final String ACCION_INSERTAR_DISPOSITIVO_EMPLEADO_TEMPORAL_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_INSERTAR_DISPOSITIVO_EMPLEADO_TEMPORAL_ISERVICE";
     public static final String ACCION_ELIMINAR_DISPOSITIVO_EMPLEADO_TEMPORAL_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ELIMINAR_DISPOSITIVO_EMPLEADO_TEMPORAL_ISERVICE";
 
     public static final String EXTRA_MI_DISPOSITIVO = "extra_mi_dispositivo";
     public static final String EXTRA_MI_DISPOSITIVO_EMPLEADO = "extra_mi_dispositivo_empleado";
     public static final String EXTRA_ID_DISPOSITIVO = "extra_id_dispositivo";
+    public static final String EXTRA_ESTADO_DISPOSITIVO = "extra_estado_dispositivo";
 
     public DispositivoServicioLocal() {
         super("DispositivoServicioLocal");
@@ -61,119 +63,19 @@ public class DispositivoServicioLocal extends IntentService
 
             if (DispositivoServicioLocal.ACCION_ACTUALIZAR_DISPOSITIVO_ISERVICE.equals(action))
             {
-
                 Dispositivo dispositivo=(Dispositivo)intent.getSerializableExtra(DispositivoServicioLocal.EXTRA_MI_DISPOSITIVO);
 
                 actualizarDispositivoLocal(dispositivo);
             }
 
-
-            if (DispositivoServicioLocal.ACCION_INSERTAR_DISPOSITIVO_EMPLEADO_TEMPORAL_ISERVICE.equals(action))
+            if (DispositivoServicioLocal.ACCION_ACTUALIZAR_ESTADO_DISPOSITIVO_ISERVICE.equals(action))
             {
+                String idDispositivo = intent.getStringExtra(DispositivoServicioLocal.EXTRA_ID_DISPOSITIVO);
+                String estadoRegistro = intent.getStringExtra(DispositivoServicioLocal.EXTRA_ESTADO_DISPOSITIVO);
 
-                DispositivoEmpleado dispositivoEmpleado=(DispositivoEmpleado)intent.getSerializableExtra(DispositivoServicioLocal.EXTRA_MI_DISPOSITIVO_EMPLEADO);
-
-                insertarDispositivoEmpleadoTemporalLocal(dispositivoEmpleado);
+                actualizarEstadoEmpleadoLocal(idDispositivo,estadoRegistro);
             }
 
-            if (DispositivoServicioLocal.ACCION_ELIMINAR_DISPOSITIVO_EMPLEADO_TEMPORAL_ISERVICE.equals(action))
-            {
-
-                String imei=intent.getStringExtra(DispositivoServicioLocal.EXTRA_ID_DISPOSITIVO);
-
-                eliminarDispositoEmpleadoTemporalLocal(imei);
-            }
-        }
-    }
-
-    private void insertarDispositivoEmpleadoTemporalLocal(DispositivoEmpleado dispositivoEmpleado){
-        try {
-            // Se construye la notificación
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(android.R.drawable.stat_sys_download_done)
-                    .setContentTitle("Servicio Local en segundo plano")
-                    .setContentText("Procesando inserción de empleados asignados a un dispositivo...");
-
-            builder.setProgress( 2, 1, false);
-            startForeground(1, builder.build());
-
-            ContentResolver r = getContentResolver();
-
-            // Lista de operaciones
-            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
-
-            // [INSERCIONES]
-            //Date miFecha = new Date();
-            Date miFecha = Calendar.getInstance().getTime();
-
-            String miFechaCadena=new SimpleDateFormat("dd/MM/yyyy").format(miFecha);
-
-
-            String imei;
-            imei=dispositivoEmpleado.getImei();
-            ops.add(ContentProviderOperation.newDelete(ContratoCotizacion.DispositivosEmpleadosTemporal.crearUriDispositivoEmpleadoTemporal(imei))
-                    .build());
-            ops.add(ContentProviderOperation.newDelete(ContratoCotizacion.DispositivosEmpleados.crearUriDispositivoEmpleado(imei))
-                    .build());
-
-            for ( Empleado empleado : dispositivoEmpleado.getEmpleados() ) {
-
-                String idEmpleado;
-                imei=dispositivoEmpleado.getImei();
-                idEmpleado=empleado.getIdEmpleado();
-
-                ops.add(ContentProviderOperation.newInsert(DispositivosEmpleados.crearUriDispositivoEmpleado(imei,idEmpleado))
-                        .withValue(DispositivosEmpleados.IMEI, imei)
-                        .withValue(DispositivosEmpleados.ID_EMPLEADO, idEmpleado)
-                        .build());
-
-            }
-
-            r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
-
-            // Quitar de primer plano
-            builder.setProgress( 2, 2, false);
-            stopForeground(true);
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (OperationApplicationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void eliminarDispositoEmpleadoTemporalLocal(String imei){
-        try {
-            // Se construye la notificación
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(android.R.drawable.stat_sys_download_done)
-                    .setContentTitle("Servicio Local en segundo plano")
-                    .setContentText("Procesando eliminación de empleados asignados al dispositivo...");
-
-            builder.setProgress( 2, 1, false);
-            startForeground(1, builder.build());
-
-            ContentResolver r = getContentResolver();
-
-            // Lista de operaciones
-            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
-
-            // [ACTUALIZACIONES]
-            ops.add(ContentProviderOperation.newDelete(ContratoCotizacion.DispositivosEmpleadosTemporal.crearUriDispositivoEmpleadoTemporal(imei))
-                    .build());
-            ops.add(ContentProviderOperation.newDelete(ContratoCotizacion.DispositivosEmpleados.crearUriDispositivoEmpleado(imei))
-                    .build());
-
-            r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
-
-            // Quitar de primer plano
-            builder.setProgress( 2, 2, false);
-            stopForeground(true);
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (OperationApplicationException e) {
-            e.printStackTrace();
         }
     }
 
@@ -268,6 +170,45 @@ public class DispositivoServicioLocal extends IntentService
             e.printStackTrace();
         }
     }
+
+    private void actualizarEstadoEmpleadoLocal(String idDispositivo,String estadoRegistro)
+    {
+        try
+        {
+            // Se construye la notificación
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                    .setContentTitle("Servicio Local en segundo plano")
+                    .setContentText("Procesando actualizacion estado de dispositivo...");
+
+            builder.setProgress( 2, 1, false);
+            startForeground(1, builder.build());
+
+            ContentResolver r = getContentResolver();
+
+            // Lista de operaciones
+            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+
+            // [ACTUALIZACIONES]
+            ops.add(ContentProviderOperation.newUpdate(Dispositivos.crearUriDispositivoConEstado(idDispositivo, estadoRegistro))
+                    .withValue(Dispositivos.ESTADO_SINCRONIZACION, estadoRegistro)
+                    .build());
+
+            r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
+
+            // Quitar de primer plano
+            builder.setProgress( 2, 2, false);
+            stopForeground(true);
+
+        } catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } catch (OperationApplicationException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onDestroy()

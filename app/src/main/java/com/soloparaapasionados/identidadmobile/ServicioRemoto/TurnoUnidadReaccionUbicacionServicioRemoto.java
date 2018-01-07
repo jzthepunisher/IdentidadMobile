@@ -316,7 +316,7 @@ public class TurnoUnidadReaccionUbicacionServicioRemoto extends IntentService {
                     .withValue(Turnos_UnidadesReaccionUbicacion.LATITUD, turno_UnidadReaccionUbicacionRemoto.getLatitud())
                     .withValue(Turnos_UnidadesReaccionUbicacion.LONGITUD, turno_UnidadReaccionUbicacionRemoto.getLongitud())
                     .withValue(Turnos_UnidadesReaccionUbicacion.DIRECCION, turno_UnidadReaccionUbicacionRemoto.getDireccion())
-                    .withValue(Turnos_UnidadesReaccionUbicacion.PENDIENTE_PETICION, EstadoRegistro.INSERTADO_REMOTAMENTE)
+                    .withValue(Turnos_UnidadesReaccionUbicacion.PENDIENTE_PETICION, EstadoRegistro.REGISTRADO_REMOTAMENTE)
                     .withValue(Turnos_UnidadesReaccionUbicacion.ESTADO_SINCRONIZACION, EstadoRegistro.ESTADO_OK)
                     .build());
             syncResult.stats.numInserts++;

@@ -2,12 +2,14 @@ package com.soloparaapasionados.identidadmobile.sqlite;
 
 import com.soloparaapasionados.identidadmobile.ServicioLocal.EmpleadoServicioLocal;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.ClienteServicioRemoto;
+import com.soloparaapasionados.identidadmobile.ServicioRemoto.DispositivoServicioRemoto;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.EmpleadoServicioRemoto;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.TipoUnidadReaccionServicioRemoto;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.TurnoServicioRemoto;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.TurnoUnidadReaccionUbicacionServicioRemoto;
 import com.soloparaapasionados.identidadmobile.ServicioRemoto.UnidadReaccionServicioRemoto;
 import com.soloparaapasionados.identidadmobile.modelo.Cliente;
+import com.soloparaapasionados.identidadmobile.modelo.Dispositivo;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicacion;
@@ -134,12 +136,13 @@ public class ProviderCotizacion extends ContentProvider {
     // [CAMPOS_AUXILIARES DE PROYECCCIONES]
     private final String[] proyDispositivo = new String[]{
            Tablas.DISPOSITIVO + "." + ContratoCotizacion.Dispositivos.IMEI,
-            ContratoCotizacion.Dispositivos.ID_SIM_CARD,
-            ContratoCotizacion.Dispositivos.DESCRIPCION,
-            ContratoCotizacion.Dispositivos.NUMERO_CELULAR,
-            ContratoCotizacion.Dispositivos.ENVIADO,
-            ContratoCotizacion.Dispositivos.RECIBIDO,
-            ContratoCotizacion.Dispositivos.VALIDADO};
+            Dispositivos.ID_SIM_CARD,
+            Dispositivos.DESCRIPCION,
+            Dispositivos.NUMERO_CELULAR,
+            Dispositivos.ENVIADO,
+            Dispositivos.RECIBIDO,
+            Dispositivos.VALIDADO,
+            Dispositivos.ESTADO_SINCRONIZACION};
 
     private final String[] proyCargo = new String[]{
             BaseColumns._ID,
@@ -404,6 +407,10 @@ public class ProviderCotizacion extends ContentProvider {
 
                 bd.insertOrThrow(Tablas.DISPOSITIVO, null, values);
                 notificarCambio(uri);
+
+                actualizaIntentoInsercionDispositivoRemotamente(bd,id);
+
+                insertarDispositivoRemotamente(values);
 
                 return Dispositivos.crearUriDispositivo(id);
 
@@ -810,13 +817,34 @@ public class ProviderCotizacion extends ContentProvider {
         {
             case DISPOSITIVOS_ID:
 
+                int cantidad=values.size();
+
                 id = Dispositivos.obtenerIdDispostivo(uri);
                 String seleccion = String.format("%s=? ", Dispositivos.IMEI);
                 String[] argumentos={id};
 
-                afectados = bd.update(Tablas.DISPOSITIVO, values, seleccion, argumentos);
+                if (Dispositivos.tieneEstadoRegistro(uri))
+                {
+                    String estado =Dispositivos.tieneEstadoRegistro(uri)? uri.getQueryParameter(ContratoCotizacion.Dispositivos.PARAMETRO_ESTADO_REGISTRO) : "";
+                    values=new ContentValues();
+                    values.put(Dispositivos.ESTADO_SINCRONIZACION,estado);
+                    afectados = bd.update(Tablas.DISPOSITIVO, values, seleccion, argumentos);
+                }
+                else
+                {
+                    afectados = bd.update(Tablas.DISPOSITIVO, values, seleccion, argumentos);
+
+                    if(values.size()>1)
+                    {
+                        actualizaIntentoActualizacionDispositivoRemotamente(bd,id);
+                        actualizarDispositivoRemotamente(values);
+                    }
+                }
+
+
                 notificarCambio(uri);
                 break;
+
             case EMPLEADOS_ID:
                 id = Empleados.obtenerIdEmpleado(uri);
                 seleccion = String.format("%s=? ", Empleados.ID_EMPLEADO);
@@ -834,8 +862,10 @@ public class ProviderCotizacion extends ContentProvider {
                 {
                     afectados = bd.update(Tablas.EMPLEADO, values, seleccion, argumentosDos);
                 }
+
                 notificarCambio(uri);
                 break;
+
             case TURNOS_ID_UNIDADES_REACCION_ID_UBICACION:
                 String idTurno = Turnos.obtenerIdTurno(uri);
                 String idUnidadReaccion = Turnos.obtenerIdUnidadReaccion(uri);
@@ -915,6 +945,24 @@ public class ProviderCotizacion extends ContentProvider {
         getContext().startService(intent);
     }
 
+    private void insertarDispositivoRemotamente(ContentValues values)
+    {
+        Intent intent = new Intent(getContext(), DispositivoServicioRemoto.class);
+        intent.setAction(DispositivoServicioRemoto.ACCION_INSERTAR_DISPOSITIVO_ISERVICE);
+        Dispositivo dispositivo=new Dispositivo(values);
+        intent.putExtra(DispositivoServicioRemoto.EXTRA_MI_DISPOSITIVO, dispositivo);
+        getContext().startService(intent);
+    }
+
+    private void actualizarDispositivoRemotamente(ContentValues values)
+    {
+        Intent intent = new Intent(getContext(), DispositivoServicioRemoto.class);
+        intent.setAction(DispositivoServicioRemoto.ACCION_ACTUALIZAR_DISPOSITIVO_ISERVICE);
+        Dispositivo dispositivo = new Dispositivo(values);
+        intent.putExtra(DispositivoServicioRemoto.EXTRA_MI_DISPOSITIVO, dispositivo);
+        getContext().startService(intent);
+    }
+
     private void actualizaIntentoInsercionEmpleadoRemotamente(SQLiteDatabase bd,String idEmpleado)
     {
         String seleccion = String.format("%s=? ", Empleados.ID_EMPLEADO);
@@ -925,6 +973,32 @@ public class ProviderCotizacion extends ContentProvider {
 
         int afectados=0;
         afectados = bd.update(Tablas.EMPLEADO, values, seleccion, argumentos);
+
+    }
+
+    private void actualizaIntentoInsercionDispositivoRemotamente(SQLiteDatabase bd,String idEmpleado)
+    {
+        String seleccion = String.format("%s=? ", Empleados.ID_EMPLEADO);
+        String[] argumentos={idEmpleado};
+
+        ContentValues values=new ContentValues();
+        values.put(Empleados.ESTADO, EstadoRegistro.REGISTRANDO_REMOTAMENTE);
+
+        int afectados=0;
+        afectados = bd.update(Tablas.EMPLEADO, values, seleccion, argumentos);
+
+    }
+
+    private void actualizaIntentoActualizacionDispositivoRemotamente(SQLiteDatabase bd,String imei)
+    {
+        String seleccion = String.format("%s=? ", Dispositivos.IMEI);
+        String[] argumentos={imei};
+
+        ContentValues values=new ContentValues();
+        values.put(Dispositivos.ESTADO_SINCRONIZACION, EstadoRegistro.ACTUALIZANDO_REMOTAMENTE);
+
+        int afectados=0;
+        afectados = bd.update(Tablas.DISPOSITIVO, values, seleccion, argumentos);
     }
 
     private void leerTurnosRemotamente()

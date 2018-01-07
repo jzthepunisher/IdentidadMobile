@@ -43,7 +43,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 72;
+    private static final int VERSION_ACTUAL = 99;
 
     private final Context contexto;
 
@@ -66,7 +66,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         String ORDEN_INSTALACION_EJECUCION_ACTIVIDAD = "orden_instalacion_ejecucion_actividad";
     }
 
-    interface Referencias {
+    interface Referencias
+    {
         String ID_CARGO                  = String.format("REFERENCES %s(%s) ", Tablas.CARGO                  , Cargos.ID_CARGO);
         String IMEI                      = String.format("REFERENCES %s(%s) ", Tablas.DISPOSITIVO            , DispositivosEmpleados.IMEI);
         String ID_EMPLEADO               = String.format("REFERENCES %s(%s) ", Tablas.EMPLEADO               , Empleados.ID_EMPLEADO);

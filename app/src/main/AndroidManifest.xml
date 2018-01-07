@@ -59,6 +59,10 @@
         <service
             android:name=".ServicioRemoto.EmpleadoServicioRemoto"
             android:exported="false" />
+
+        <service
+            android:name=".ServicioRemoto.DispositivoServicioRemoto"
+            android:exported="false" />
         <service
             android:name=".ServicioRemoto.TurnoServicioRemoto"
             android:exported="false" />

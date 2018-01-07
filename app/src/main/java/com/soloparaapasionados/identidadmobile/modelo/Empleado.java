@@ -12,7 +12,8 @@ import java.io.Serializable;
  * Created by USUARIO on 13/05/2017.
  */
 
-public class Empleado implements Serializable {
+public class Empleado implements Serializable
+{
     private static final long serialVersionUID=1L;
     private String IdEmpleado;
     private String Nombres;
