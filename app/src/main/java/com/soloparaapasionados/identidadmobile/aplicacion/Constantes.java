@@ -46,6 +46,9 @@ public class Constantes {
 
     public static final String DISPOSITIVOS_POST = "http://" + IP + PUERTO_HOST + "/api/dispositivos";
     public static final String DISPOSITIVOS_PUT = "http://" + IP + PUERTO_HOST + "/api/dispositivos";
+    public static final String DISPOSITIVOS_PUT_ENVIADO = "http://" + IP + PUERTO_HOST + "/api/dispositivos/dispositivoEnviado?imei=%s";
+    public static final String DISPOSITIVOS_PUT_RECIBIDO = "http://" + IP + PUERTO_HOST + "/api/dispositivos/dispositivoRecibido?imeiRecibido=%s";
+    public static final String DISPOSITIVOS_PUT_VALIDADO = "http://" + IP + PUERTO_HOST + "/api/dispositivos/dispositivoValidado?imeiValidado=%s";
 
     public static final String GET_TURNOS = "http://" + IP + PUERTO_HOST + "/api/turnos";
     public static final String GET_TIPOS_UNIDAD_REACCION = "http://" + IP + PUERTO_HOST + "/api/tiposunidadreaccion";

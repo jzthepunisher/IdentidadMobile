@@ -36,8 +36,15 @@ public class DispositivoServicioRemoto  extends IntentService
 
     public static final String ACCION_INSERTAR_DISPOSITIVO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioRemoto.action.ACCION_INSERTAR_DISPOSITIVO_ISERVICE";
     public static final String ACCION_ACTUALIZAR_DISPOSITIVO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioRemoto.action.ACCION_ACTUALIZAR_DISPOSITIVO_ISERVICE";
+    public static final String ACCION_ACTUALIZAR_ENVIADO_DISPOSITIVO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioRemoto.action.ACCION_ACTUALIZAR_ENVIADO_DISPOSITIVO_ISERVICE";
+    public static final String ACCION_ACTUALIZAR_RECIBIDO_DISPOSITIVO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioRemoto.action.ACCION_ACTUALIZAR_RECIBIDO_DISPOSITIVO_ISERVICE";
+    public static final String ACCION_ACTUALIZAR_VALIDADO_DISPOSITIVO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioRemoto.action.ACCION_ACTUALIZAR_VALIDADO_DISPOSITIVO_ISERVICE";
 
     public static final String EXTRA_MI_DISPOSITIVO = "extra_mi_dispositivo";
+    public static final String EXTRA_IMEI_DISPOSITIVO= "extra_imei_dispositivo";
+    public static final String EXTRA_ENVIADO_DISPOSITIVO= "extra_enviado_dispositivo";
+    public static final String EXTRA_RECIBIDO_DISPOSITIVO= "extra_recibido_dispositivo";
+    public static final String EXTRA_VALIDADO_DISPOSITIVO= "extra_validado_dispositivo";
 
     public DispositivoServicioRemoto()
     {
@@ -64,6 +71,30 @@ public class DispositivoServicioRemoto  extends IntentService
                 Dispositivo dispositivo = (Dispositivo) intent.getSerializableExtra(DispositivoServicioRemoto.EXTRA_MI_DISPOSITIVO);
 
                 actualizarDispositivoRemoto(dispositivo);
+            }
+
+            if (DispositivoServicioRemoto.ACCION_ACTUALIZAR_ENVIADO_DISPOSITIVO_ISERVICE.equals(action))
+            {
+                String imei = intent.getStringExtra(DispositivoServicioRemoto.EXTRA_IMEI_DISPOSITIVO);
+                String enviado = intent.getStringExtra(DispositivoServicioRemoto.EXTRA_ENVIADO_DISPOSITIVO);
+
+                actualizarEnviadoDispositivoRemoto(imei,enviado);
+            }
+
+            if (DispositivoServicioRemoto.ACCION_ACTUALIZAR_RECIBIDO_DISPOSITIVO_ISERVICE.equals(action))
+            {
+                String imei = intent.getStringExtra(DispositivoServicioRemoto.EXTRA_IMEI_DISPOSITIVO);
+                String recibido = intent.getStringExtra(DispositivoServicioRemoto.EXTRA_RECIBIDO_DISPOSITIVO);
+
+                actualizarRecibidoDispositivoRemoto(imei,recibido);
+            }
+
+            if (DispositivoServicioRemoto.ACCION_ACTUALIZAR_VALIDADO_DISPOSITIVO_ISERVICE.equals(action))
+            {
+                String imei = intent.getStringExtra(DispositivoServicioRemoto.EXTRA_IMEI_DISPOSITIVO);
+                String recibido = intent.getStringExtra(DispositivoServicioRemoto.EXTRA_VALIDADO_DISPOSITIVO);
+
+                actualizarValidadoDispositivoRemoto(imei,recibido);
             }
 
         }
@@ -97,6 +128,57 @@ public class DispositivoServicioRemoto  extends IntentService
         startForeground( 1, builder.build());
 
         solicitudDispositivosPut(dispositivo);
+
+        // Quitar de primer plano
+        builder.setProgress( 2, 2, false);
+        stopForeground(true);
+    }
+
+    private void actualizarEnviadoDispositivoRemoto(String imei,String enviado)
+    {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setContentTitle("Servicio Remoto en segundo plano")
+                .setContentText("Procesando actualización envaido de dispositivo ...");
+
+        builder.setProgress( 2, 1, false);
+        startForeground( 1, builder.build());
+
+        solicitudEnviadoDispositivosPut(imei,enviado);
+
+        // Quitar de primer plano
+        builder.setProgress( 2, 2, false);
+        stopForeground(true);
+    }
+
+    private void actualizarRecibidoDispositivoRemoto(String imei,String recibido)
+    {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setContentTitle("Servicio Remoto en segundo plano")
+                .setContentText("Procesando actualización recibido de dispositivo ...");
+
+        builder.setProgress( 2, 1, false);
+        startForeground( 1, builder.build());
+
+        solicitudRecibidoDispositivosPut(imei,recibido);
+
+        // Quitar de primer plano
+        builder.setProgress( 2, 2, false);
+        stopForeground(true);
+    }
+
+    private void actualizarValidadoDispositivoRemoto(String imei,String validado)
+    {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setContentTitle("Servicio Remoto en segundo plano")
+                .setContentText("Procesando actualización validado de dispositivo ...");
+
+        builder.setProgress( 2, 1, false);
+        startForeground( 1, builder.build());
+
+        solicitudValidadoDispositivosPut(imei,validado);
 
         // Quitar de primer plano
         builder.setProgress( 2, 2, false);
@@ -208,6 +290,204 @@ public class DispositivoServicioRemoto  extends IntentService
                     {
                         // Procesar la respuesta del servidor
                         procesarRespuestaDispositivoPut(response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        Log.d(TAG, "Error Volley: " + error.getMessage());
+                    }
+                }
+        )
+        {
+            @Override
+            public Map<String, String> getHeaders()
+            {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Accept", "application/json");
+                return headers;
+            }
+            @Override
+            public String getBodyContentType()
+            {
+                return "application/json; charset=utf-8" ;
+            }
+        };
+
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy()
+        {
+            @Override
+            public int getCurrentTimeout()
+            {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount()
+            {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError
+            {
+
+            }
+        });
+
+        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(jsonObjectRequest);
+    }
+
+    public void solicitudEnviadoDispositivosPut(String imei,String enviado)
+    {
+        String url=  String.format(Constantes.DISPOSITIVOS_PUT_ENVIADO, imei);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        // Procesar la respuesta del servidor
+                        procesarRespuestaDispositivoPost(response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        Log.d(TAG, "Error Volley: " + error.getMessage());
+                    }
+                }
+        )
+        {
+            @Override
+            public Map<String, String> getHeaders()
+            {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Accept", "application/json");
+                return headers;
+            }
+            @Override
+            public String getBodyContentType()
+            {
+                return "application/json; charset=utf-8" ;
+            }
+        };
+
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy()
+        {
+            @Override
+            public int getCurrentTimeout()
+            {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount()
+            {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError
+            {
+
+            }
+        });
+
+        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(jsonObjectRequest);
+    }
+
+    public void solicitudRecibidoDispositivosPut(String imei,String recibido)
+    {
+        String url=  String.format(Constantes.DISPOSITIVOS_PUT_RECIBIDO, imei);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        // Procesar la respuesta del servidor
+                        procesarRespuestaDispositivoPost(response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        Log.d(TAG, "Error Volley: " + error.getMessage());
+                    }
+                }
+        )
+        {
+            @Override
+            public Map<String, String> getHeaders()
+            {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Accept", "application/json");
+                return headers;
+            }
+            @Override
+            public String getBodyContentType()
+            {
+                return "application/json; charset=utf-8" ;
+            }
+        };
+
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy()
+        {
+            @Override
+            public int getCurrentTimeout()
+            {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount()
+            {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError
+            {
+
+            }
+        });
+
+        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(jsonObjectRequest);
+    }
+
+    public void solicitudValidadoDispositivosPut(String imei,String validado)
+    {
+        String url=  String.format(Constantes.DISPOSITIVOS_PUT_VALIDADO, imei);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        // Procesar la respuesta del servidor
+                        procesarRespuestaDispositivoPost(response);
                     }
                 },
                 new Response.ErrorListener()

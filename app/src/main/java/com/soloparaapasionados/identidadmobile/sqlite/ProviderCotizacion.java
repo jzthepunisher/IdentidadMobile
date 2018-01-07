@@ -829,18 +829,68 @@ public class ProviderCotizacion extends ContentProvider {
                     values=new ContentValues();
                     values.put(Dispositivos.ESTADO_SINCRONIZACION,estado);
                     afectados = bd.update(Tablas.DISPOSITIVO, values, seleccion, argumentos);
+
+                    actualizaIntentoActualizacionDispositivoRemotamente(bd,id);
+
+                    notificarCambio(uri);
+                    break;
                 }
-                else
+
+                if (Dispositivos.tieneEnviadoRegistro(uri))
                 {
+                    String enviado =Dispositivos.tieneEnviadoRegistro(uri)? uri.getQueryParameter(Dispositivos.PARAMETRO_ENVIADO_REGISTRO) : "";
+                    values=new ContentValues();
+                    values.put(Dispositivos.ENVIADO,enviado);
+                    afectados = bd.update(Tablas.DISPOSITIVO, values, seleccion, argumentos);
+                    values.put(Dispositivos.ESTADO_SINCRONIZACION,EstadoRegistro.ACTUALIZADO_LOCALMENTE);
+
+                    actualizaIntentoActualizacionDispositivoRemotamente(bd,id);
+                    actualizarEnviadoDispositivoRemotamente(id,enviado);
+
+                    notificarCambio(uri);
+                    break;
+                }
+
+                if (Dispositivos.tieneRecibidoRegistro(uri))
+                {
+                    String recibido =Dispositivos.tieneRecibidoRegistro(uri)? uri.getQueryParameter(Dispositivos.PARAMETRO_RECIBIDO_REGISTRO) : "";
+                    values=new ContentValues();
+                    values.put(Dispositivos.RECIBIDO,recibido);
+                    values.put(Dispositivos.ESTADO_SINCRONIZACION,EstadoRegistro.ACTUALIZADO_LOCALMENTE);
+
                     afectados = bd.update(Tablas.DISPOSITIVO, values, seleccion, argumentos);
 
-                    if(values.size()>1)
-                    {
-                        actualizaIntentoActualizacionDispositivoRemotamente(bd,id);
-                        actualizarDispositivoRemotamente(values);
-                    }
+                    actualizaIntentoActualizacionDispositivoRemotamente(bd,id);
+                    actualizarRecibidoDispositivoRemotamente(id,recibido);
+
+                    notificarCambio(uri);
+                    break;
                 }
 
+                if (Dispositivos.tieneValidadoRegistro(uri))
+                {
+                    String validado =Dispositivos.tieneValidadoRegistro(uri)? uri.getQueryParameter(Dispositivos.PARAMETRO_VALIDADO_REGISTRO) : "";
+                    values=new ContentValues();
+                    values.put(Dispositivos.VALIDADO,validado);
+                    values.put(Dispositivos.ESTADO_SINCRONIZACION,EstadoRegistro.ACTUALIZADO_LOCALMENTE);
+
+                    afectados = bd.update(Tablas.DISPOSITIVO, values, seleccion, argumentos);
+
+                    actualizaIntentoActualizacionDispositivoRemotamente(bd,id);
+                    actualizarValidadoDispositivoRemotamente(id,validado);
+
+                    notificarCambio(uri);
+                    break;
+                }
+
+
+                afectados = bd.update(Tablas.DISPOSITIVO, values, seleccion, argumentos);
+
+                if(values.size()>2)
+                {
+                    actualizaIntentoActualizacionDispositivoRemotamente(bd,id);
+                    actualizarDispositivoRemotamente(values);
+                }
 
                 notificarCambio(uri);
                 break;
@@ -960,6 +1010,33 @@ public class ProviderCotizacion extends ContentProvider {
         intent.setAction(DispositivoServicioRemoto.ACCION_ACTUALIZAR_DISPOSITIVO_ISERVICE);
         Dispositivo dispositivo = new Dispositivo(values);
         intent.putExtra(DispositivoServicioRemoto.EXTRA_MI_DISPOSITIVO, dispositivo);
+        getContext().startService(intent);
+    }
+
+    private void actualizarEnviadoDispositivoRemotamente(String imei,String enviado)
+    {
+        Intent intent = new Intent(getContext(), DispositivoServicioRemoto.class);
+        intent.setAction(DispositivoServicioRemoto.ACCION_ACTUALIZAR_ENVIADO_DISPOSITIVO_ISERVICE);
+        intent.putExtra(DispositivoServicioRemoto.EXTRA_IMEI_DISPOSITIVO, imei);
+        intent.putExtra(DispositivoServicioRemoto.EXTRA_ENVIADO_DISPOSITIVO, enviado);
+        getContext().startService(intent);
+    }
+
+    private void actualizarRecibidoDispositivoRemotamente(String imei,String recibido)
+    {
+        Intent intent = new Intent(getContext(), DispositivoServicioRemoto.class);
+        intent.setAction(DispositivoServicioRemoto.ACCION_ACTUALIZAR_RECIBIDO_DISPOSITIVO_ISERVICE);
+        intent.putExtra(DispositivoServicioRemoto.EXTRA_IMEI_DISPOSITIVO, imei);
+        intent.putExtra(DispositivoServicioRemoto.EXTRA_RECIBIDO_DISPOSITIVO, recibido);
+        getContext().startService(intent);
+    }
+
+    private void actualizarValidadoDispositivoRemotamente(String imei,String validado)
+    {
+        Intent intent = new Intent(getContext(), DispositivoServicioRemoto.class);
+        intent.setAction(DispositivoServicioRemoto.ACCION_ACTUALIZAR_VALIDADO_DISPOSITIVO_ISERVICE);
+        intent.putExtra(DispositivoServicioRemoto.EXTRA_IMEI_DISPOSITIVO, imei);
+        intent.putExtra(DispositivoServicioRemoto.EXTRA_VALIDADO_DISPOSITIVO, validado);
         getContext().startService(intent);
     }
 

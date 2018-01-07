@@ -248,7 +248,8 @@ public class DispositivoEditarCrearFragment extends Fragment
         smsDeliveredReceiver = new BroadcastReceiver()
         {
             @Override
-            public void onReceive(Context arg0, Intent arg1) {
+            public void onReceive(Context arg0, Intent arg1)
+            {
                 switch (getResultCode())
                 {
                     case Activity.RESULT_OK:
@@ -266,7 +267,8 @@ public class DispositivoEditarCrearFragment extends Fragment
         //---crea el BroadcasReceier cuando el mensaje de texto entra---
         smsEntrandoReceiver = new BroadcastReceiver(){
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, Intent intent)
+            {
                 //---get the SMS message passed in---
                 Bundle bundle = intent.getExtras();
                 SmsMessage[] msgs = null;
@@ -325,7 +327,7 @@ public class DispositivoEditarCrearFragment extends Fragment
 
         if (cursorDispositivo.getCount()==1)
         {
-            ops.add(ContentProviderOperation.newUpdate(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()))
+            ops.add(ContentProviderOperation.newUpdate(Dispositivos.crearUriDispositivoEnviadoConEstado(this.editTextIMEI.getText().toString(),"1".toString()))
                     .withValue(Dispositivos.ENVIADO, 1)
                     .build());
         }
@@ -361,7 +363,7 @@ public class DispositivoEditarCrearFragment extends Fragment
         Cursor cursorDispositivo=r.query(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()), null, null, null, null);
 
         if (cursorDispositivo.getCount()==1)   {
-            ops.add(ContentProviderOperation.newUpdate(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()))
+            ops.add(ContentProviderOperation.newUpdate(Dispositivos.crearUriDispositivoRecibidoConEstado(this.editTextIMEI.getText().toString(),"1".toString()))
                     .withValue(Dispositivos.RECIBIDO, 1)
                     .build());
         }
@@ -378,7 +380,8 @@ public class DispositivoEditarCrearFragment extends Fragment
         }
     }
 
-    public void ActualizarMensajeValidado(String IMEI_Entrante,String numeroCelularEntrante) {
+    public void ActualizarMensajeValidado(String IMEI_Entrante,String numeroCelularEntrante)
+    {
         ContentResolver r = getActivity().getContentResolver();
         String numeroCelularGrabado=null;
         // Lista de operaciones
@@ -393,24 +396,32 @@ public class DispositivoEditarCrearFragment extends Fragment
         if (!cursorDispositivo.moveToFirst())
             return;
 
-        if (cursorDispositivo.getCount()==1)   {
+        if (cursorDispositivo.getCount()==1)
+        {
             numeroCelularGrabado=cursorDispositivo.getString(cursorDispositivo.getColumnIndexOrThrow(Dispositivos.NUMERO_CELULAR));
 
-            if (numeroCelularGrabado.equals(numeroCelularEntrante)){
+            if (numeroCelularGrabado.equals(numeroCelularEntrante))
+            {
                 ops.add(ContentProviderOperation.newUpdate(Dispositivos.crearUriDispositivo(this.editTextIMEI.getText().toString()))
-                        .withValue(Dispositivos.VALIDADO, 1)
-                        .build());
+                    .withValue(Dispositivos.VALIDADO, 1)
+                    .build());
             }
         }
 
-        try {
-            if (cursorDispositivo.getCount()==1 && numeroCelularGrabado.equals(numeroCelularEntrante))   {
+        try
+        {
+            if (cursorDispositivo.getCount()==1 && numeroCelularGrabado.equals(numeroCelularEntrante))
+            {
                 r.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
                 switchCompatMensajeValidado.setChecked(true);
             }
-        } catch (RemoteException e) {
+        }
+        catch (RemoteException e)
+        {
             e.printStackTrace();
-        } catch (OperationApplicationException e) {
+        }
+        catch (OperationApplicationException e)
+        {
             e.printStackTrace();
         }
     }

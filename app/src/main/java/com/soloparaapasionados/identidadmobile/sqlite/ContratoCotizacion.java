@@ -241,6 +241,9 @@ public class ContratoCotizacion
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_DISPOSITIVOS).build();
 
         public static final String PARAMETRO_ESTADO_REGISTRO = "estado_registro";
+        public static final String PARAMETRO_ENVIADO_REGISTRO = "enviado_registro";
+        public static final String PARAMETRO_RECIBIDO_REGISTRO = "recibido_registro";
+        public static final String PARAMETRO_VALIDADO_REGISTRO = "recibido_registro";
 
         public static String obtenerIdDispostivo(Uri uri)
         {
@@ -249,7 +252,6 @@ public class ContratoCotizacion
 
         public static Uri crearUriDispositivo(String id)
         {
-
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
 
@@ -260,6 +262,33 @@ public class ContratoCotizacion
 
         public static boolean tieneEstadoRegistro(Uri uri) {
             return uri != null && uri.getQueryParameter(PARAMETRO_ESTADO_REGISTRO) != null;
+        }
+
+        public static Uri crearUriDispositivoEnviadoConEstado(String idDispositivo,String enviado)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(idDispositivo).appendQueryParameter(PARAMETRO_ENVIADO_REGISTRO,enviado).build();
+        }
+
+        public static boolean tieneEnviadoRegistro(Uri uri) {
+            return uri != null && uri.getQueryParameter(PARAMETRO_ENVIADO_REGISTRO) != null;
+        }
+
+        public static Uri crearUriDispositivoRecibidoConEstado(String idDispositivo,String recibido)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(idDispositivo).appendQueryParameter(PARAMETRO_RECIBIDO_REGISTRO,recibido).build();
+        }
+
+        public static boolean tieneRecibidoRegistro(Uri uri) {
+            return uri != null && uri.getQueryParameter(PARAMETRO_RECIBIDO_REGISTRO) != null;
+        }
+
+        public static Uri crearUriDispositivoValidadoConEstado(String idDispositivo,String validado)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(idDispositivo).appendQueryParameter(PARAMETRO_VALIDADO_REGISTRO,validado).build();
+        }
+
+        public static boolean tieneValidadoRegistro(Uri uri) {
+            return uri != null && uri.getQueryParameter(PARAMETRO_VALIDADO_REGISTRO) != null;
         }
     }
 
