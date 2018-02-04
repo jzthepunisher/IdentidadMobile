@@ -74,6 +74,7 @@ public class DispostivoAdicionarEditarActivity extends AppCompatActivity
                     .commit();
         }
     }
+
     private void setupWindowAnimations() {
         getWindow().setReenterTransition(new Explode());
         getWindow().setExitTransition(new Explode().setDuration(500));

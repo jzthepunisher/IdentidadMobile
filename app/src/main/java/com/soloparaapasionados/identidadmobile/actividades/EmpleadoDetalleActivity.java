@@ -22,6 +22,7 @@ import com.soloparaapasionados.identidadmobile.fragmentos.EmpleadoListadoFragmen
 public class EmpleadoDetalleActivity extends AppCompatActivity
 implements SimpleDialog.OnSimpleDialogListener {
     private String idEmpleado;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +52,8 @@ implements SimpleDialog.OnSimpleDialogListener {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         getMenuInflater().inflate(R.menu.menu_empleado_detalle, menu);
         return super.onCreateOptionsMenu(menu);
     }

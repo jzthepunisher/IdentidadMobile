@@ -547,6 +547,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         mockCliente(sqLiteDatabase, new Cliente("11111111115","Sheyla","Sánchez","Condemarin" ,"","","",-12.069483,-77.037914,true));
         mockCliente(sqLiteDatabase, new Cliente("11111111116","Eliana","Trujillo","Baza" ,"","","",-12.074459,-77.027633,true));
         mockCliente(sqLiteDatabase, new Cliente("11111111117","Brenda","Rosas","Licuona" ,"","","",-12.079473,-77.033952,true));
+
         /*mockCliente(sqLiteDatabase, new Cliente("11111111118","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.080648","-77.033180",true));
         mockCliente(sqLiteDatabase, new Cliente("11111111119","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.081446","-77.033781",true));
         mockCliente(sqLiteDatabase, new Cliente("11111111110","Nombre 11111111111","Apellido Paterno 11111111111","Apellido Materno 11111111111" ,"","","","-12.080774","-77.030347",true));
