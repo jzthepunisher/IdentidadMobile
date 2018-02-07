@@ -96,6 +96,7 @@ public class TrackerService extends Service implements LocationListener
         setStatusMessage(R.string.connecting);
 
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
                 .build();
@@ -219,31 +220,13 @@ public class TrackerService extends Service implements LocationListener
             request.setFastestInterval(mFirebaseRemoteConfig.getLong("LOCATION_REQUEST_INTERVAL_FASTEST"));
             request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-
-            /*private void checkLocationPermission()
-            {
-                int locationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-                int storagePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-                if (locationPermission != PackageManager.PERMISSION_GRANTED || storagePermission != PackageManager.PERMISSION_GRANTED)
-                {
-                    ActivityCompat.requestPermissions(this, PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST);
-                }
-                else
-                {
-                    checkGpsEnabled();
-                }
-            }*/
-
             //&& ActivityCompat.checkSelfPermission(TrackerService.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
             if ( ContextCompat.checkSelfPermission(TrackerService.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             {
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
-                        request, TrackerService.this);
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, TrackerService.this);
                 setStatusMessage(R.string.tracking);
                 return;
             }
-
 
             // Hold a partial wake lock to keep CPU awake when the we're tracking location.
             PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
@@ -320,8 +303,10 @@ public class TrackerService extends Service implements LocationListener
         }
     }
 
-    private void shutdownAndScheduleStartup(int when) {
+    private void shutdownAndScheduleStartup(int when)
+    {
         Log.i(TAG, "overnight shutdown, seconds to startup: " + when);
+
         com.google.android.gms.gcm.Task task = new OneoffTask.Builder()
                 .setService(TrackerTaskService.class)
                 .setExecutionWindow(when, when + 60)
@@ -330,7 +315,9 @@ public class TrackerService extends Service implements LocationListener
                 .setRequiredNetwork(com.google.android.gms.gcm.Task.NETWORK_STATE_ANY)
                 .setRequiresCharging(false)
                 .build();
+
         GcmNetworkManager.getInstance(this).schedule(task);
+
         stopSelf();
     }
 
@@ -340,7 +327,6 @@ public class TrackerService extends Service implements LocationListener
     @Override
     public void onLocationChanged(Location location)
     {
-
         fetchRemoteConfig();
 
         long hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
@@ -392,14 +378,14 @@ public class TrackerService extends Service implements LocationListener
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, TrackerActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+            new Intent(this, TrackerActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         mNotificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.bus_white)
-                .setColor(getColor(R.color.colorPrimary))
-                .setContentTitle(getString(R.string.app_name))
-                .setOngoing(true)
-                .setContentIntent(resultPendingIntent);
+            .setSmallIcon(R.drawable.bus_white)
+            .setColor(getColor(R.color.colorPrimary))
+            .setContentTitle(getString(R.string.app_name))
+            .setOngoing(true)
+            .setContentIntent(resultPendingIntent);
 
         startForeground(FOREGROUND_SERVICE_ID, mNotificationBuilder.build());
     }
