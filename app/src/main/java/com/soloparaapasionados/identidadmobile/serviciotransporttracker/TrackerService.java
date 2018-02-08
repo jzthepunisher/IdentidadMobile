@@ -93,13 +93,14 @@ public class TrackerService extends Service implements LocationListener
         super.onCreate();
 
         buildNotification();
+
         setStatusMessage(R.string.connecting);
 
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build();
+            .setDeveloperModeEnabled(BuildConfig.DEBUG)
+            .build();
 
         mFirebaseRemoteConfig.setConfigSettings(configSettings);
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
@@ -119,14 +120,16 @@ public class TrackerService extends Service implements LocationListener
         // Stop the persistent notification.
         mNotificationManager.cancel(NOTIFICATION_ID);
         // Stop receiving location updates.
-        if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient,
-                    TrackerService.this);
+        if (mGoogleApiClient != null)
+        {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient,TrackerService.this);
         }
         // Release the wakelock
-        if (mWakelock != null) {
+        if (mWakelock != null)
+        {
             mWakelock.release();
         }
+
         super.onDestroy();
     }
 
@@ -184,6 +187,7 @@ public class TrackerService extends Service implements LocationListener
         String transportId = mPrefs.getString(getString(R.string.transport_id), "");
         FirebaseAnalytics.getInstance(this).setUserProperty("transportID", transportId);
         String path = getString(R.string.firebase_path) + transportId;
+
         mFirebaseTransportRef = FirebaseDatabase.getInstance().getReference(path);
         mFirebaseTransportRef.addListenerForSingleValueEvent(new ValueEventListener()
         {
@@ -194,8 +198,7 @@ public class TrackerService extends Service implements LocationListener
                 {
                     for (DataSnapshot transportStatus : snapshot.getChildren())
                     {
-                        mTransportStatuses.add(Integer.parseInt(transportStatus.getKey()),
-                                (Map<String, Object>) transportStatus.getValue());
+                        mTransportStatuses.add(Integer.parseInt(transportStatus.getKey()), (Map<String, Object>) transportStatus.getValue());
                     }
                 }
 
@@ -225,7 +228,6 @@ public class TrackerService extends Service implements LocationListener
             {
                 LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, TrackerService.this);
                 setStatusMessage(R.string.tracking);
-                return;
             }
 
             // Hold a partial wake lock to keep CPU awake when the we're tracking location.
@@ -251,6 +253,7 @@ public class TrackerService extends Service implements LocationListener
             .addConnectionCallbacks(mLocationRequestCallback)
             .addApi(LocationServices.API)
             .build();
+
         mGoogleApiClient.connect();
     }
 
@@ -259,10 +262,13 @@ public class TrackerService extends Service implements LocationListener
      * for a particular status. Used to check if we'll add a new status, or
      * update the most recent status of we're stationary.
      */
-    private boolean locationIsAtStatus(Location location, int statusIndex) {
-        if (mTransportStatuses.size() <= statusIndex) {
+    private boolean locationIsAtStatus(Location location, int statusIndex)
+    {
+        if (mTransportStatuses.size() <= statusIndex)
+        {
             return false;
         }
+
         Map<String, Object> status = mTransportStatuses.get(statusIndex);
         Location locationForStatus = new Location("");
         locationForStatus.setLatitude((double) status.get("lat"));
@@ -308,13 +314,13 @@ public class TrackerService extends Service implements LocationListener
         Log.i(TAG, "overnight shutdown, seconds to startup: " + when);
 
         com.google.android.gms.gcm.Task task = new OneoffTask.Builder()
-                .setService(TrackerTaskService.class)
-                .setExecutionWindow(when, when + 60)
-                .setUpdateCurrent(true)
-                .setTag(TrackerTaskService.TAG)
-                .setRequiredNetwork(com.google.android.gms.gcm.Task.NETWORK_STATE_ANY)
-                .setRequiresCharging(false)
-                .build();
+            .setService(TrackerTaskService.class)
+            .setExecutionWindow(when, when + 60)
+            .setUpdateCurrent(true)
+            .setTag(TrackerTaskService.TAG)
+            .setRequiredNetwork(com.google.android.gms.gcm.Task.NETWORK_STATE_ANY)
+            .setRequiresCharging(false)
+            .build();
 
         GcmNetworkManager.getInstance(this).schedule(task);
 
@@ -331,7 +337,9 @@ public class TrackerService extends Service implements LocationListener
 
         long hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         int startupSeconds = (int) (mFirebaseRemoteConfig.getDouble("SLEEP_HOURS_DURATION") * 3600);
-        if (hour == mFirebaseRemoteConfig.getLong("SLEEP_HOUR_OF_DAY")) {
+
+        if (hour == mFirebaseRemoteConfig.getLong("SLEEP_HOUR_OF_DAY"))
+        {
             shutdownAndScheduleStartup(startupSeconds);
             return;
         }
@@ -342,7 +350,8 @@ public class TrackerService extends Service implements LocationListener
         transportStatus.put("time", new Date().getTime());
         transportStatus.put("power", getBatteryLevel());
 
-        if (locationIsAtStatus(location, 1) && locationIsAtStatus(location, 0)) {
+        if (locationIsAtStatus(location, 1) && locationIsAtStatus(location, 0))
+        {
             // If the most recent two statuses are approximately at the same
             // location as the new current location, rather than adding the new
             // location, we update the latest status with the current. Two statuses
@@ -352,9 +361,12 @@ public class TrackerService extends Service implements LocationListener
             mTransportStatuses.set(0, transportStatus);
             // Only need to update 0th status, so we can save bandwidth.
             mFirebaseTransportRef.child("0").setValue(transportStatus);
-        } else {
+        }
+        else
+        {
             // Maintain a fixed number of previous statuses.
-            while (mTransportStatuses.size() >= mFirebaseRemoteConfig.getLong("MAX_STATUSES")) {
+            while (mTransportStatuses.size() >= mFirebaseRemoteConfig.getLong("MAX_STATUSES"))
+            {
                 mTransportStatuses.removeLast();
             }
             mTransportStatuses.addFirst(transportStatus);
@@ -363,12 +375,13 @@ public class TrackerService extends Service implements LocationListener
             mFirebaseTransportRef.setValue(mTransportStatuses);
         }
 
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG)
+        {
             logStatusToStorage(transportStatus);
         }
 
-        NetworkInfo info = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))
-                .getActiveNetworkInfo();
+        NetworkInfo info = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+
         boolean connected = info != null && info.isConnectedOrConnecting();
         setStatusMessage(connected ? R.string.tracking : R.string.not_tracking);
     }
