@@ -95,8 +95,8 @@ public class DispositivoAdicionarEditarFragment extends Fragment
     private int offSetInicial=0;
     public static final int REQUEST_SELECCION_EMPLEADO = 3;
 
-    public DispositivoAdicionarEditarFragment() {
-
+    public DispositivoAdicionarEditarFragment()
+    {
     }
 
     public static DispositivoAdicionarEditarFragment newInstance(String imei) {

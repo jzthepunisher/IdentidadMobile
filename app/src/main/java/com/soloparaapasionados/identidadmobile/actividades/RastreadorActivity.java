@@ -1,8 +1,5 @@
-package com.soloparaapasionados.identidadmobile.serviciotransporttracker;
+package com.soloparaapasionados.identidadmobile.actividades;
 
-/**
- * Created by USUARIO on 03/02/2018.
- */
 import android.Manifest;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
@@ -26,25 +23,30 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.text.method.PasswordTransformationMethod;
 import android.view.Menu;
 import android.view.MenuItem;
-import android .view.View;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.fragmentos.RastreadorFragment;
+import com.soloparaapasionados.identidadmobile.serviciotransporttracker.TrackerService;
 
-public class TrackerActivity extends AppCompatActivity
+/**
+ * Created by USUARIO on 10/02/2018.
+ */
+
+public class RastreadorActivity extends AppCompatActivity
 {
     private static final int PERMISSIONS_REQUEST = 1;
     private static String[] PERMISSIONS_REQUIRED = new String[]
-                {
+            {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
-                };
+            };
 
     private SharedPreferences mPrefs;
 
@@ -63,13 +65,33 @@ public class TrackerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_main);
+        setContentView(R.layout.activity_rastreador);
 
+        //Establece el toolbar de la actividad.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mStartButton = (Button) findViewById(R.id.button_start);
+        String imei = getIntent().getStringExtra(DispostivoAdicionarEditarActivity.EXTRA_IMEI);
+
+        RastreadorFragment rastreadorFragment = (RastreadorFragment)
+                getSupportFragmentManager().findFragmentById(R.id.rastreador_container);
+
+        if (rastreadorFragment == null)
+        {
+            rastreadorFragment = RastreadorFragment.newInstance(imei);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.rastreador_container, rastreadorFragment)
+                    .commit();
+        }
+
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
+
+       /* mStartButton = (Button) findViewById(R.id.button_start);
         mStartButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
@@ -105,7 +127,7 @@ public class TrackerActivity extends AppCompatActivity
             mTransportIdEditText.setText(getString(R.string.build_transport_id));
             mEmailEditText.setText(getString(R.string.build_email));
             mPasswordEditText.setText(getString(R.string.build_password));
-        }
+        }*/
 
     }
 
@@ -143,26 +165,26 @@ public class TrackerActivity extends AppCompatActivity
     /**
      * Receives status messages from the tracking service.
      */
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver()
-    {
-        @Override
-        public void onReceive(Context context, Intent intent)
-        {
-            setTrackingStatus(intent.getIntExtra(getString(R.string.status), 0));
-        }
-    };
+    //////private BroadcastReceiver mMessageReceiver = new BroadcastReceiver()
+    //////{
+    //////    @Override
+    //////   public void onReceive(Context context, Intent intent)
+    //////    {
+    //////       setTrackingStatus(intent.getIntExtra(getString(R.string.status), 0));
+    //////    }
+    //////};
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter(TrackerService.STATUS_INTENT));
+        //////LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter(TrackerService.STATUS_INTENT));
     }
 
     @Override
     protected void onPause()
     {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        ///////LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onPause();
     }
 
@@ -174,7 +196,7 @@ public class TrackerActivity extends AppCompatActivity
     {
         if (mTransportIdEditText.length() == 0 || mEmailEditText.length() == 0 || mPasswordEditText.length() == 0)
         {
-            Toast.makeText(TrackerActivity.this, R.string.missing_inputs, Toast.LENGTH_SHORT).show();
+            Toast.makeText(RastreadorActivity.this, R.string.missing_inputs, Toast.LENGTH_SHORT).show();
         }
         else
         {
@@ -280,12 +302,13 @@ public class TrackerActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_activity, menu);
+        getMenuInflater().inflate(R.menu.menu_rastreador, menu);
 
         // Get the action view used in your toggleservice item
         final MenuItem toggle = menu.findItem(R.id.menu_switch);
         mSwitch = (SwitchCompat) toggle.getActionView().findViewById(R.id.switchInActionBar);
-        mSwitch.setEnabled(mTransportIdEditText.length() > 0 && mEmailEditText.length() > 0 && mPasswordEditText.length() > 0);
+
+        /*mSwitch.setEnabled(mTransportIdEditText.length() > 0 && mEmailEditText.length() > 0 && mPasswordEditText.length() > 0);
         mSwitch.setChecked(mStartButton.getVisibility() != View.VISIBLE);
         mSwitch.setOnClickListener(new View.OnClickListener()
         {
@@ -301,7 +324,7 @@ public class TrackerActivity extends AppCompatActivity
                     confirmStop();
                 }
             }
-        });
+        });*/
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -311,23 +334,23 @@ public class TrackerActivity extends AppCompatActivity
         mSwitch.setChecked(true);
 
         new AlertDialog.Builder(this)
-            .setMessage(getString(R.string.confirm_stop))
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
-            {
-                public void onClick(DialogInterface dialog, int whichButton)
+                .setMessage(getString(R.string.confirm_stop))
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
                 {
-                    mSwitch.setChecked(false);
+                    public void onClick(DialogInterface dialog, int whichButton)
+                    {
+                        mSwitch.setChecked(false);
 
-                    mTransportIdEditText.setEnabled(true);
-                    mEmailEditText.setEnabled(true);
-                    mPasswordEditText.setEnabled(true);
-                    mStartButton.setVisibility(View.VISIBLE);
+                        mTransportIdEditText.setEnabled(true);
+                        mEmailEditText.setEnabled(true);
+                        mPasswordEditText.setEnabled(true);
+                        mStartButton.setVisibility(View.VISIBLE);
 
-                    stopLocationService();
-                }
-            })
-            .setNegativeButton(android.R.string.no, null).show();
+                        stopLocationService();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).show();
     }
 
     private void reportPermissionsError()
@@ -338,17 +361,17 @@ public class TrackerActivity extends AppCompatActivity
         }
 
         Snackbar snackbar = Snackbar
-            .make(findViewById(R.id.rootView), getString(R.string.location_permission_required), Snackbar.LENGTH_INDEFINITE)
-            .setAction(R.string.enable, new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
+                .make(findViewById(R.id.rootView), getString(R.string.location_permission_required), Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.enable, new View.OnClickListener()
                 {
-                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    intent.setData(Uri.parse("package:" + getPackageName()));
-                    startActivity(intent);
-                }
-            });
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:" + getPackageName()));
+                        startActivity(intent);
+                    }
+                });
 
         // Changing message text color
         snackbar.setActionTextColor(Color.RED);
@@ -377,15 +400,15 @@ public class TrackerActivity extends AppCompatActivity
         }
 
         Snackbar snackbar = Snackbar
-            .make(findViewById(R.id.rootView), getString(R.string.gps_required), Snackbar.LENGTH_INDEFINITE)
-            .setAction(R.string.enable, new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
+                .make(findViewById(R.id.rootView), getString(R.string.gps_required), Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.enable, new View.OnClickListener()
                 {
-                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                }
-            });
+                    @Override
+                    public void onClick(View view)
+                    {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
 
         // Changing message action button text color
         snackbar.setActionTextColor(Color.RED);

@@ -64,6 +64,7 @@ dependencies {
     compile "com.google.firebase:firebase-config:$playServices"
     compile "com.google.firebase:firebase-crash:$playServices"
     compile "com.google.firebase:firebase-database:$playServices"
+    compile "com.google.firebase:firebase-messaging:$playServices"
 
     testCompile 'junit:junit:4.12'
 }
