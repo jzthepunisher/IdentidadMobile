@@ -3,6 +3,7 @@ package com.soloparaapasionados.identidadmobile.sqlite;
 import com.soloparaapasionados.identidadmobile.modelo.Actividad;
 import com.soloparaapasionados.identidadmobile.modelo.Cargo;
 import com.soloparaapasionados.identidadmobile.modelo.Cliente;
+import com.soloparaapasionados.identidadmobile.modelo.CorrelativoTabla;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 
@@ -13,6 +14,7 @@ import com.soloparaapasionados.identidadmobile.modelo.TipoOrdenInstalacion;
 import com.soloparaapasionados.identidadmobile.modelo.TipoUnidadReaccion;
 import com.soloparaapasionados.identidadmobile.modelo.Turno;
 import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicacion;
+import com.soloparaapasionados.identidadmobile.modelo.UbicacionDispositivoGps;
 import com.soloparaapasionados.identidadmobile.modelo.UnidadReaccion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Dispositivos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
@@ -28,6 +30,8 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.TiposOr
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Actividades;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacionEjecucionInicioTerminoActividad;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacionEjecucionActividad;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.UbicacionesDispositvoGps;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.CorrelativosTabla;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -43,27 +47,30 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 101;
+    private static final int VERSION_ACTUAL = 106;
 
     private final Context contexto;
 
     public static interface Tablas
     {
-        String DISPOSITIVO                     = "dispositivo";
-        String EMPLEADO                        = "empleado";
-        String CARGO                           = "cargo";
-        String DISPOSITIVO_EMPLEADO            = "dispositivo_empleado";
-        String DISPOSITIVO_EMPLEADO_TEMPORAL   = "dispositivo_empleado_temporal";
-        String TURNO                           = "turno";
-        String TIPO_UNIDAD_REACCION            = "tipo_unidad_reaccion";
-        String UNIDAD_REACCION                 = "unidad_reaccion";
-        String TURNO_UNIDAD_REACCION_UBICACION = "turno_unidad_reaccion_ubicacion";
-        String CLIENTE                         = "cliente";
-        String ORDEN_INSTALACION               = "orden_instalacion";
-        String TIPO_ORDEN_INSTALACION          = "tipo_orden_instalacion";
-        String ACTIVIDAD                       = "actividad";
+        String DISPOSITIVO                      = "dispositivo";
+        String EMPLEADO                         = "empleado";
+        String CARGO                            = "cargo";
+        String DISPOSITIVO_EMPLEADO             = "dispositivo_empleado";
+        String DISPOSITIVO_EMPLEADO_TEMPORAL    = "dispositivo_empleado_temporal";
+        String TURNO                            = "turno";
+        String TIPO_UNIDAD_REACCION             = "tipo_unidad_reaccion";
+        String UNIDAD_REACCION                  = "unidad_reaccion";
+        String TURNO_UNIDAD_REACCION_UBICACION  = "turno_unidad_reaccion_ubicacion";
+        String CLIENTE                          = "cliente";
+        String ORDEN_INSTALACION                = "orden_instalacion";
+        String TIPO_ORDEN_INSTALACION           = "tipo_orden_instalacion";
+        String ACTIVIDAD                        = "actividad";
         String ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD = "orden_instalacion_ejecucion_inicio_termino_actividad";
         String ORDEN_INSTALACION_EJECUCION_ACTIVIDAD = "orden_instalacion_ejecucion_actividad";
+        String UBICACION                        = "ubicacion";
+        String UBICACION_DISPOSITIVO_GPS        = "ubicacion_dispositivo_gps";
+        String CORRELATIVO_TABLA                = "correlativo_tabla";
     }
 
     interface Referencias
@@ -80,7 +87,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         String ID_ACTIVIDAD              = String.format("REFERENCES %s(%s) ", Tablas.ACTIVIDAD              , Actividades.ID_ACTIVIDAD);
     }
 
-    public BaseDatosCotizaciones(Context contexto) {
+    public BaseDatosCotizaciones(Context contexto)
+    {
         super(contexto, NOMBRE_BASE_DATOS, null, VERSION_ACTUAL);
         this.contexto = contexto;
     }
@@ -231,6 +239,22 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 OrdenesInstalacionEjecucionActividad.PENDIENTE_PETICION,OrdenesInstalacionEjecucionActividad.ESTADO_SINCRONIZACION,
                 OrdenesInstalacionEjecucionActividad.ID_ORDEN_INSTALACION,OrdenesInstalacionEjecucionActividad.ID_ACTIVIDAD));
 
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s INT UNIQUE NOT NULL, %s TEXT NOT NULL," +
+                        "%s TEXT NULL, %s TEXT NULL," +
+                        "%s DATETIME NULL, %s DATETIME NULL," +
+                        "%s INT NULL , %s TEXT NULL)",
+                Tablas.UBICACION_DISPOSITIVO_GPS, BaseColumns._ID,
+                UbicacionesDispositvoGps.ID_UBICACION,UbicacionesDispositvoGps.DIRECCION_UBICACION,
+                UbicacionesDispositvoGps.LATITUD,UbicacionesDispositvoGps.LONGITUD,
+                UbicacionesDispositvoGps.FECHA_HORA_UBICACION,UbicacionesDispositvoGps.FECHA_HORA_CREACION,
+                UbicacionesDispositvoGps.BATERIA,UbicacionesDispositvoGps.ESTADO_SINCRONIZACION));
+
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT UNIQUE NOT NULL,%s INT NOT NULL)",
+                Tablas.CORRELATIVO_TABLA, BaseColumns._ID,
+                CorrelativosTabla.TABLA,CorrelativosTabla.CORRELATIVO));
+
         mockData(db);
         //mockDataTurnos(db);
         //mockDataTiposUnidadReaccion(db);
@@ -245,15 +269,23 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         mockDataActividades(db);
         mockOrdenesInstalacionEjecucionInicioTerminoActividad(db);
         mockOrdenesInstalacionEjecucionActividad(db);
+
+        mockDataUbicacionesDispositivoGps(db);
+        mockDataCorrelativosTabla(db);
     }
 
     @Override
-    public void onOpen(SQLiteDatabase db) {
+    public void onOpen(SQLiteDatabase db)
+    {
         super.onOpen(db);
-        if (!db.isReadOnly()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (!db.isReadOnly())
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+            {
                 db.setForeignKeyConstraintsEnabled(true);
-            } else {
+            }
+            else
+            {
                 db.execSQL("PRAGMA foreign_keys=ON");
             }
         }
@@ -277,6 +309,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.ACTIVIDAD);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.UBICACION_DISPOSITIVO_GPS);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.CORRELATIVO_TABLA);
 
         onCreate(db);
     }
@@ -688,6 +722,17 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         mockOrdenInstalacionEjecucionActividad(sqLiteDatabase, new OrdenInstalacionEjecucionActividad("000012","02", false,"", 0.0,0.0, "", false, "", 0.0,0.0,""));
 
     }
+
+    private void mockDataUbicacionesDispositivoGps(SQLiteDatabase sqLiteDatabase)
+    {
+        //////mockUbicacionDispositivoGps(sqLiteDatabase, new UbicacionDispositivoGps("00", "Inicio y Termino de Actividades del día"));
+    }
+
+    private void mockDataCorrelativosTabla(SQLiteDatabase sqLiteDatabase)
+    {
+        mockCorrelativoTabla(sqLiteDatabase, new CorrelativoTabla(Tablas.UBICACION_DISPOSITIVO_GPS, 0));
+    }
+
 /////////////////////////////////////////////////////////////////////////////////////////////
     public long mockLawyer(SQLiteDatabase db, Cargo cargo) {
         return db.insert(
@@ -803,6 +848,22 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD,
                 null,
                 ordenInstalacionEjecucionActividad.toContentValues());
+    }
+
+    public long mockUbicacionDispositivoGps(SQLiteDatabase db, UbicacionDispositivoGps ubicacionDispositivoGps)
+    {
+        return db.insert(
+                Tablas.UBICACION_DISPOSITIVO_GPS,
+                null,
+                ubicacionDispositivoGps.toContentValues());
+    }
+
+    public long mockCorrelativoTabla(SQLiteDatabase db, CorrelativoTabla correlativoTabla)
+    {
+        return db.insert(
+            Tablas.CORRELATIVO_TABLA,
+            null,
+            correlativoTabla.toContentValues());
     }
 
 }

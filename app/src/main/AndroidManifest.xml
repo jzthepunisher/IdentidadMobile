@@ -53,6 +53,7 @@
             android:name=".actividades.EmpleadoActivity"
             android:label="@string/actividad_titulo_registrar_empleado"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".actividades.EmpleadoAdicionarEditarActivity"
             android:label="@string/title_activity_empleado_adicionar_editar"
@@ -113,6 +114,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".actividades.DispostivoAdicionarEditarActivity" />
         </activity>
+
         <activity
             android:name=".actividades.EmpleadoDetalleActivity"
             android:label="@string/title_activity_empleado_detalle"
@@ -121,7 +123,9 @@
             android:name=".actividades.GeoCercaAdicionarEditarDetalleActivity"
             android:label="@string/title_activity_geo_cerca_adicionar_editar_detalle"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".actividades.MapaTermicoAgrupacionActivity" />
+
         <activity
             android:name=".actividades.UnidadReaccionAsignacionActivity"
             android:label="@string/title_activity_unidad_reaccion_asignacion"
@@ -204,6 +208,15 @@
             android:exported="true">
         </service>
 
+        <service
+            android:name="com.soloparaapasionados.identidadmobile.ServicioLocal.RastreadorServicio"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+
+        <service
+            android:name=".ServicioLocal.UbicacionDispositivoGpsServicioLocal"
+            android:exported="false" />
 
        <service
            android:name="com.soloparaapasionados.identidadmobile.serviciotransporttracker.TrackerService"

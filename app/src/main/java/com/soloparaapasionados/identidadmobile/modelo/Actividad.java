@@ -30,5 +30,4 @@ public class Actividad {
         values.put(Actividades.DESCRIPCION, Descripcion);
         return values;
     }
-
 }

@@ -13,6 +13,7 @@ import com.soloparaapasionados.identidadmobile.modelo.Dispositivo;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicacion;
+import com.soloparaapasionados.identidadmobile.modelo.UbicacionDispositivoGps;
 import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones.Tablas;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Dispositivos;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Empleados;
@@ -30,6 +31,9 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Ordenes
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Actividades;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacionEjecucionInicioTerminoActividad;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacionEjecucionActividad;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.UbicacionesDispositvoGps;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.CorrelativosTabla;
+
 
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
@@ -50,7 +54,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-public class ProviderCotizacion extends ContentProvider {
+public class ProviderCotizacion extends ContentProvider
+{
 
     public static final String TAG = "ProviderCotizacion";
     public static final String URI_NO_SOPORTADA = "Uri no soportada";
@@ -95,6 +100,10 @@ public class ProviderCotizacion extends ContentProvider {
     public static final int ORDENES_INSTALACION_ID_ACTIVIDADES_ID = 1202;
     public static final int ORDENES_INSTALACION_EJECUCION_INICIO_TERMINO_ACTIVIDAD_ACTIVIDADES= 1300;
     public static final int ORDENES_INSTALACION_EJECUCION_ACTIVIDAD_ACTIVIDADES= 1400;
+    public static final int UBICACIONES_DISPOSITIVO_GPS = 1501;
+    public static final int UBICACIONES_DISPOSITIVO_GPS_ID  = 1502;
+    public static final int CORRELATIVOS_TABLA = 1601;
+    public static final int CORRELATIVOS_TABLA_ID  = 1602;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
@@ -130,6 +139,10 @@ public class ProviderCotizacion extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion/*/actividadesit/*"  , ORDENES_INSTALACION_ID_ACTIVIDADES_ID);
         uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion_ejecucion_inicio_termino_actividad/*/actividades", ORDENES_INSTALACION_EJECUCION_INICIO_TERMINO_ACTIVIDAD_ACTIVIDADES);
         uriMatcher.addURI(AUTORIDAD, "ordenes_instalacion_ejecucion_actividad/*/actividades", ORDENES_INSTALACION_EJECUCION_ACTIVIDAD_ACTIVIDADES);
+        uriMatcher.addURI(AUTORIDAD, "ubicaciones_dispositivo_gps"                  , UBICACIONES_DISPOSITIVO_GPS);
+        uriMatcher.addURI(AUTORIDAD, "ubicaciones_dispositivo_gps/*"                , UBICACIONES_DISPOSITIVO_GPS_ID);
+        uriMatcher.addURI(AUTORIDAD, "correlativos_tabla"                  , CORRELATIVOS_TABLA);
+        uriMatcher.addURI(AUTORIDAD, "correlativos_tabla/*"                , CORRELATIVOS_TABLA_ID);
     }
     // [/URI_MATCHER]
 
@@ -475,7 +488,12 @@ public class ProviderCotizacion extends ContentProvider {
                 notificarCambio(uri);
 
                 return Clientes.crearUriCliente(id);
+            case UBICACIONES_DISPOSITIVO_GPS_ID:
+                id = values.getAsString(UbicacionesDispositvoGps.ID_UBICACION);
+                bd.insertOrThrow(Tablas.UBICACION_DISPOSITIVO_GPS,null,values);
+                notificarCambio(uri);
 
+                return UbicacionesDispositvoGps.crearUriUbicacionDispositivoGps(id);
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }
@@ -947,6 +965,17 @@ public class ProviderCotizacion extends ContentProvider {
                 afectados = bd.update(Tablas.ORDEN_INSTALACION_EJECUCION_INICION_TERMINO_ACTIVIDAD, values, seleccion, argumentos4);
                 notificarCambio(OrdenesInstalacionEjecucionInicioTerminoActividad.crearUriOrdenesInstalacion_InicioTerminoActividadesListado(idOrdenInstalacion, "desactivado"));
                 break;
+
+            case CORRELATIVOS_TABLA_ID:
+                id = CorrelativosTabla.obtenerIdTabla(uri);
+                seleccion = String.format("%s=? ", CorrelativosTabla.TABLA);
+                String[] argumentosTres={id};
+
+                afectados = bd.update(Tablas.CORRELATIVO_TABLA, values, seleccion, argumentosTres);
+
+                notificarCambio(UbicacionesDispositvoGps.crearUriUbicacionDispositivoGps(id));
+
+                break;
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }
@@ -1117,4 +1146,5 @@ public class ProviderCotizacion extends ContentProvider {
         //intent.putExtra(EmpleadoServicioRemoto.EXTRA_MI_EMPLEADO, empleado);
         getContext().startService(intent);
     }
+
 }

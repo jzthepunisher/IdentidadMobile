@@ -55,7 +55,8 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
 
    // private LawyersDbHelper mLawyersDbHelper;
 
-    public EmpleadoDetalleFragment() {
+    public EmpleadoDetalleFragment()
+    {
         // Required empty public constructor
     }
 
@@ -125,7 +126,8 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
 
     //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args)
+    {
 
         switch (id){
             case 1:
@@ -135,11 +137,13 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        switch (loader.getId()){
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data)
+    {
+        switch (loader.getId())
+        {
             case 1:
-                if (data != null && data.moveToLast()) {
+                if (data != null && data.moveToLast())
+                {
                     muestraEmpleado(data);
                 } else {
                     muestraErrorCarga();

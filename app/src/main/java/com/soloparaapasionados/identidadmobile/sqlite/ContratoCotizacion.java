@@ -167,6 +167,25 @@ public class ContratoCotizacion
         String ESTADO_SINCRONIZACION = "estado_sincronizacion";
     }
 
+    interface ColumnasUbicacionDispositivoGps
+    {
+        String ID_UBICACION             = "id_ubicacion";
+        String DIRECCION_UBICACION      = "direccion_ubicacion";
+        String LATITUD                  = "latitud";
+        String LONGITUD                 = "longitud";
+        String FECHA_HORA_UBICACION     = "fecha_hora_ubicacion";
+        String BATERIA                  = "bateria";
+        String FECHA_HORA_CREACION      = "fecha_hora_creacion";
+        String ESTADO_SINCRONIZACION    = "estado_sincronizacion";
+    }
+
+    interface ColumnasCorrelativoTabla
+    {
+        String TABLA        = "tabla";
+        String CORRELATIVO  = "correlativo";
+    }
+
+
     public interface EstadoRegistro
     {
         String REGISTRADO_LOCALMENTE= "registrado.localmente";
@@ -204,7 +223,8 @@ public class ContratoCotizacion
     private static final String RUTA_ORDENES_INSTALACION_EJECUCION_INICIO_TERMINO_ACTIVIDAD="ordenes_instalacion_ejecucion_inicio_termino_actividad";
     private static final String RUTA_ACTIVIDADES="actividades";
     private static final String RUTA_ORDENES_INSTALACION_EJECUCION_ACTIVIDAD="ordenes_instalacion_ejecucion_actividad";
-
+    private static final String RUTA_UBICACIONES_DISPOSITIVO_GPS="ubicaciones_dispositivo_gps";
+    private static final String RUTA_CORRELATIVOS_TABLA="correlativos_tabla";
     // [/URIS]
 
     // [TIPOS_MIME]
@@ -633,4 +653,45 @@ public class ContratoCotizacion
         }
     }
 
+    //Clase contrato de Ubicacion Dispositivo Gps
+    public static class UbicacionesDispositvoGps implements ColumnasUbicacionDispositivoGps
+    {
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_UBICACIONES_DISPOSITIVO_GPS).build();
+
+        public static String obtenerIdUbicacion(Uri uri)
+        {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri crearUriUbicacionDispositivoGps(String id)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+
+        public static Uri crearUriUbicacionDispositivoGpsLista()
+        {
+            return URI_CONTENIDO;
+        }
+    }
+
+    //Clase contrato de Correlativo Tabla
+    public static class CorrelativosTabla implements ColumnasCorrelativoTabla
+    {
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_CORRELATIVOS_TABLA).build();
+
+        public static String obtenerIdTabla(Uri uri)
+        {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri crearUriCorrelativoTabla(String id)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+
+        public static Uri crearUriCorrelativoTablaLista()
+        {
+            return URI_CONTENIDO;
+        }
+    }
 }

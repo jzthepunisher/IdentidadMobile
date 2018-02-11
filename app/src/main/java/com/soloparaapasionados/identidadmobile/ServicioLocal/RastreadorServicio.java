@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -45,10 +46,17 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.actividades.RastreadorActivity;
+import com.soloparaapasionados.identidadmobile.modelo.CorrelativoTabla;
+import com.soloparaapasionados.identidadmobile.modelo.UbicacionDispositivoGps;
 import com.soloparaapasionados.identidadmobile.serviciotransporttracker.TrackerTaskService;
+import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones;
+import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones.Tablas;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.CorrelativosTabla;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -275,7 +283,7 @@ public class RastreadorServicio extends Service implements LocationListener
 
         locationForStatus.setLatitude((double) status.get("lat"));
         locationForStatus.setLongitude((double) status.get("lng"));
-        
+
         float distance = location.distanceTo(locationForStatus);
         Log.d(TAG, String.format("Distance from status %s is %sm", statusIndex, distance));
         return distance < mFirebaseRemoteConfig.getLong("LOCATION_MIN_DISTANCE_CHANGED");
@@ -353,6 +361,15 @@ public class RastreadorServicio extends Service implements LocationListener
         transportStatus.put("time", new Date().getTime());
         transportStatus.put("power", getBatteryLevel());
 
+        long time=new Date().getTime();
+        String fechaHoraUbicacionGps=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(time);
+
+        Date miFecha = Calendar.getInstance().getTime();
+        String fechaUbicacionGps=new SimpleDateFormat("dd/MM/yyyy").format(miFecha);
+        float batteryLevel=getBatteryLevel();
+
+        insertarUbicacionDispositivoGpsLocalmente(location,fechaHoraUbicacionGps,batteryLevel);
+
         if (locationIsAtStatus(location, 1) && locationIsAtStatus(location, 0))
         {
             // If the most recent two statuses are approximately at the same
@@ -419,5 +436,30 @@ public class RastreadorServicio extends Service implements LocationListener
         intent.putExtra(getString(R.string.status), stringId);
 
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void insertarUbicacionDispositivoGpsLocalmente(Location location,String fechaHoraUbicacionGps,float batteryLevel)
+    {
+        Intent intent = new Intent(this, UbicacionDispositivoGpsServicioLocal.class);
+        intent.setAction(UbicacionDispositivoGpsServicioLocal.ACCION_INSERTAR_UBICACION_DISPOSITIVO_GPS_ISERVICE);
+        UbicacionDispositivoGps ubicacionDispositivoGps = generarEntidadUbicacionDispositivoGps(location,fechaHoraUbicacionGps,batteryLevel);
+        intent.putExtra(UbicacionDispositivoGpsServicioLocal.EXTRA_MI_UBICACION_DISPOSITIVO_GPS, ubicacionDispositivoGps);
+        startService(intent);
+    }
+
+    //Generar entidad Ubicacion Dispositivo Gps
+    private UbicacionDispositivoGps generarEntidadUbicacionDispositivoGps(Location location,String fechaHoraUbicacionGps
+            ,float batteryLevel)
+    {
+        UbicacionDispositivoGps ubicacionDispositivoGps =new UbicacionDispositivoGps();
+
+        ubicacionDispositivoGps.setIdUbicacion(0);
+        ubicacionDispositivoGps.setDireccionUbicacion("");
+        ubicacionDispositivoGps.setLatitud(location.getLatitude());
+        ubicacionDispositivoGps.setLongitud(location.getLongitude());
+        ubicacionDispositivoGps.setFechaHoraUbicacion(fechaHoraUbicacionGps);
+        ubicacionDispositivoGps.setBateria(batteryLevel);
+
+        return ubicacionDispositivoGps;
     }
 }
