@@ -212,4 +212,30 @@
     <string name="transport_id" translatable="false">transport_id</string>
     <string name="email" translatable="false">email</string>
     <string name="password" translatable="false">password</string>
+
+    <string name="rastrego_gps" translatable="false">Rastreo GPS</string>
+    <string name="rastrego_gps_resumen" translatable="false">Este dispositivo envía su ubicación a la central</string>
+    <string name="rastrego_gps_estado" translatable="false">Estado rastreo GPS</string>
+    <string name="rastrego_gps_estado_resumen" translatable="false">Actualmente sí está enviando su ubicación el dispositivo</string>
+    <string name="rastrego_gps_tipo" translatable="false">Tipo rastreo GPS</string>
+    <string name="rastrego_gps_tipo_resumen" translatable="false">El tipo de rastreo GPS asignado es : Técnico de Servicio</string>
+    <string name="etiqueta_programacion_envio_ubicacion_lunes" translatable="false">Programación de rastreo del día Lunes</string>
+    <string name="etiqueta_programacion_envio_ubicacion_martes" translatable="false">Programación de rastreo del día Martes</string>
+    <string name="etiqueta_programacion_envio_ubicacion_miercoles" translatable="false">Programación de rastreo del día Miércoles</string>
+    <string name="etiqueta_programacion_envio_ubicacion_jueves" translatable="false">Programación de rastreo del día Jueves</string>
+    <string name="etiqueta_programacion_envio_ubicacion_viernes" translatable="false">Programación de rastreo del día Viernes</string>
+    <string name="etiqueta_programacion_envio_ubicacion_sabado" translatable="false">Programación de rastreo del día Sábado</string>
+    <string name="etiqueta_programacion_envio_ubicacion_domingo" translatable="false">Programación de rastreo del día Domingo</string>
+    <string name="programacion_dia_lunes" translatable="false">Lunes</string>
+    <string name="programacion_dia_martes" translatable="false">Martes</string>
+    <string name="programacion_dia_miercoles" translatable="false">Miércoles</string>
+    <string name="programacion_dia_jueves" translatable="false">Jueves</string>
+    <string name="programacion_dia_viernes" translatable="false">Viernes</string>
+    <string name="programacion_dia_sabado" translatable="false">Sábado</string>
+    <string name="programacion_dia_domingo" translatable="false">Domingo</string>
+    <string name="programacion_dia_resumen" translatable="false">Este día será rastreado el dispostivo</string>
+    <string name="programacion_rango" translatable="false">Rango</string>
+    <string name="programacion_rango_resumen" translatable="false">Desde 8:30 hasta 19:00 el dispositivo será rastreado</string>
+    <string name="programacion_intervalo_lunes" translatable="false">Intervalo</string>
+    <string name="programacion_intervalo_lunes_resumen" translatable="false">Cada 0 hora(s) 3 minuto(s) 15 segundo(s) enviará la ubicación el dispositivo</string>
 </resources>

@@ -1,0 +1,1477 @@
+<!-- Objeto con Scroll -->
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/app_bar"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.soloparaapasionados.identidadmobile.actividades.RastreadorActivity">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/linearLayoutContenedor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:padding="0dp">
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_below="@+id/linearMensajeValidado"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius"
+            card_view:cardElevation="@dimen/cardview_default_elevation"
+            card_view:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Rastreo GPS -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relatievLayourRastreoGps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewRastreoGps"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_track_changes_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionRastreoGps"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/rastrego_gps"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/rastrego_gps" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewRastreoGpsResumen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionRastreoGps"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/rastrego_gps_resumen"
+                        tools:text="@string/rastrego_gps_resumen" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switchCompatRastregoGps"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="0dp"
+                        android:layout_alignParentRight="true"
+                        android:checked="true"
+                        android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+                <!-- Estado Rastreo GPS -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutEstadoRastregoGps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relatievLayourRastreoGps"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                <ImageView
+                    android:id="@+id/imageViewEstadoRastreoGps"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerVertical="true"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/ic_location_on_black_24dp" />
+
+                <TextView
+                    android:id="@+id/textViewDescripcionEstadoRastreoGps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="72dp"
+                    android:layout_marginTop="@dimen/padding_top_item"
+                    android:text="@string/rastrego_gps_estado"
+                    android:textAppearance="?android:attr/textAppearanceListItem"
+                    android:textStyle="bold"
+                    tools:text="@string/rastrego_gps_estado" />
+                <!--android:textAppearance="?textAppearanceListItem"-->
+                <TextView
+                    android:id="@+id/textViewEstadoRastreoGpsResumen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="72dp"
+                    android:layout_marginTop="@dimen/padding_top_item_small"
+                    android:layout_marginBottom="@dimen/padding_top_item"
+                    android:layout_marginRight="50dp"
+                    android:layout_below="@+id/textViewDescripcionEstadoRastreoGps"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/rastrego_gps_estado_resumen"
+                    tools:text="@string/rastrego_gps_estado_resumen" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switchCompatEstadoRastreoGps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="0dp"
+                    android:layout_alignParentRight="true"
+                    android:checked="true"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+                <!-- Tipo Rastreo GPS -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutTipoRastreoGps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutEstadoRastregoGps"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewTipoRastreoGps"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_my_location_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionTipoRastreoGps"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/rastrego_gps"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/rastrego_gps_tipo" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewTipoRastreoGpsResumen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionTipoRastreoGps"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/rastrego_gps_tipo_resumen"
+                        tools:text="@string/rastrego_gps_tipo_resumen" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- Programación del día lunes -->
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_below="@+id/linearMensajeValidado"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius"
+            card_view:cardElevation="@dimen/cardview_default_elevation"
+            card_view:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Etiqueta programación del día lunes -->
+                <TextView
+                    android:id="@+id/textViewEtiquetaProgramacionLunes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin_dos"
+                    android:paddingBottom="@dimen/activity_horizontal_margin_dos"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/etiqueta_programacion_envio_ubicacion_lunes"/>
+                <!-- Activación Programación del día lunes -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutProgramacionLunes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewEtiquetaProgramacionLunes"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewProgramacionLunes"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_today_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionProgramacionLunes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_dia_lunes"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_dia_lunes" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewProgramacionLunesResumen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionProgramacionLunes"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_dia_resumen"
+                        tools:text="@string/programacion_dia_resumen" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switchCompatProgramacionLunes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="0dp"
+                        android:layout_alignParentRight="true"
+                        android:checked="true"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+                <!-- Rango programación del día lunes -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutRango"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutProgramacionLunes"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewRangoLunes"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_timelapse_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionRangoLunes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_rango"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_rango" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewRangoLunesResumen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionRangoLunes"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_rango_resumen"
+                        tools:text="@string/programacion_rango_resumen" />
+
+                </RelativeLayout>
+                <!-- Intervalo programación del día lunes -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutRango"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewIntervaloLunes"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_repeat_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionIntervaloLunes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_intervalo_lunes"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_intervalo_lunes" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewIntervaloLunes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionIntervaloLunes"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_intervalo_lunes_resumen"
+                        tools:text="@string/programacion_intervalo_lunes_resumen" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- Programación del día MARTES -->
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_below="@+id/linearMensajeValidado"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius"
+            card_view:cardElevation="@dimen/cardview_default_elevation"
+            card_view:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Etiqueta programación del día MARTES -->
+                <TextView
+                    android:id="@+id/textViewEtiquetaProgramacionMartes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin_dos"
+                    android:paddingBottom="@dimen/activity_horizontal_margin_dos"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/etiqueta_programacion_envio_ubicacion_martes"/>
+                <!-- Activación Programación del día MARTES -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutProgramacionMartes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewEtiquetaProgramacionMartes"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewProgramacionMartes"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_today_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionProgramacionMartes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_dia_martes"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_dia_martes" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewProgramacionMartesResumen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionProgramacionMartes"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_dia_resumen"
+                        tools:text="@string/programacion_dia_resumen" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switchCompatProgramacionMartes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="0dp"
+                        android:layout_alignParentRight="true"
+                        android:checked="true"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+                <!-- Rango programación del día lunes -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutRangoMartes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutProgramacionMartes"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewRangoMartes"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_timelapse_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionRangoMartes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_rango"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_rango" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewRangoLunesMartes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionRangoMartes"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_rango_resumen"
+                        tools:text="@string/programacion_rango_resumen" />
+
+                </RelativeLayout>
+                <!-- Intervalo programación del día MARTES -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutRangoMartes"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewIntervaloMartes"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_repeat_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionIntervaloMartes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_intervalo_lunes"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_intervalo_lunes" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewIntervaloMartes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionIntervaloMartes"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_intervalo_lunes_resumen"
+                        tools:text="@string/programacion_intervalo_lunes_resumen" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- Programación del día MIERCOLES -->
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_below="@+id/linearMensajeValidado"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius"
+            card_view:cardElevation="@dimen/cardview_default_elevation"
+            card_view:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Etiqueta programación del día MIERCOLES -->
+                <TextView
+                    android:id="@+id/textViewEtiquetaProgramacionMiercoles"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin_dos"
+                    android:paddingBottom="@dimen/activity_horizontal_margin_dos"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/etiqueta_programacion_envio_ubicacion_miercoles"/>
+                <!-- Activación Programación del día MIERCOLES -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutProgramacionMiercoles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewEtiquetaProgramacionMiercoles"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewProgramacionMiercoles"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_today_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionProgramacionMiercoles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_dia_miercoles"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_dia_miercoles" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewProgramacionMiercolesResumen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionProgramacionMiercoles"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_dia_resumen"
+                        tools:text="@string/programacion_dia_resumen" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switchCompatProgramacionMiercoles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="0dp"
+                        android:layout_alignParentRight="true"
+                        android:checked="true"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+                <!-- Rango programación del día MIERCOLES -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutRangoMiercoles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutProgramacionMiercoles"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewRangoMiercoles"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_timelapse_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionRangoMiercoles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_rango"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_rango" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewRangoLunesMiercoles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionRangoMiercoles"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_rango_resumen"
+                        tools:text="@string/programacion_rango_resumen" />
+
+                </RelativeLayout>
+                <!-- Intervalo programación del día MIERCOLES -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutRangoMiercoles"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewIntervaloMiercoles"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_repeat_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionIntervaloMiercoles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_intervalo_lunes"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_intervalo_lunes" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewIntervaloMiercoles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionIntervaloMiercoles"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_intervalo_lunes_resumen"
+                        tools:text="@string/programacion_intervalo_lunes_resumen" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- Programación del día JUEVES -->
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_below="@+id/linearMensajeValidado"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius"
+            card_view:cardElevation="@dimen/cardview_default_elevation"
+            card_view:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Etiqueta programación del día JUEVES -->
+                <TextView
+                    android:id="@+id/textViewEtiquetaProgramacionJueves"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin_dos"
+                    android:paddingBottom="@dimen/activity_horizontal_margin_dos"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/etiqueta_programacion_envio_ubicacion_jueves"/>
+                <!-- Activación Programación del día JUEVES -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutProgramacionJueves"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewEtiquetaProgramacionJueves"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewProgramacionJueves"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_today_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionProgramacionJueves"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_dia_jueves"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_dia_jueves" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewProgramacionJuevesResumen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionProgramacionJueves"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_dia_resumen"
+                        tools:text="@string/programacion_dia_resumen" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switchCompatProgramacionJueves"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="0dp"
+                        android:layout_alignParentRight="true"
+                        android:checked="true"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+                <!-- Rango programación del día JUEVES -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutRangoJueves"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutProgramacionJueves"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewRangoJueves"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_timelapse_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionRangoJueves"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_rango"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_rango" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewRangoLunesJueves"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionRangoJueves"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_rango_resumen"
+                        tools:text="@string/programacion_rango_resumen" />
+
+                </RelativeLayout>
+                <!-- Intervalo programación del día JUEVES -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutRangoJueves"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewIntervaloJueves"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_repeat_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionIntervaloJueves"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_intervalo_lunes"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_intervalo_lunes" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewIntervaloJueves"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionIntervaloJueves"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_intervalo_lunes_resumen"
+                        tools:text="@string/programacion_intervalo_lunes_resumen" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- Programación del día VIERNES -->
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius"
+            card_view:cardElevation="@dimen/cardview_default_elevation"
+            card_view:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Etiqueta programación del día VIERNES -->
+                <TextView
+                    android:id="@+id/textViewEtiquetaProgramacionViernes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin_dos"
+                    android:paddingBottom="@dimen/activity_horizontal_margin_dos"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/etiqueta_programacion_envio_ubicacion_viernes"/>
+                <!-- Activación Programación del día VIERNES -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutProgramacionViernes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewEtiquetaProgramacionViernes"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewProgramacionViernes"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_today_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionProgramacionViernes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_dia_viernes"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_dia_viernes" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewProgramacionViernesResumen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionProgramacionViernes"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_dia_resumen"
+                        tools:text="@string/programacion_dia_resumen" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switchCompatProgramacionViernes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="0dp"
+                        android:layout_alignParentRight="true"
+                        android:checked="true"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+                <!-- Rango programación del día VIERNES -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutRangoViernes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutProgramacionViernes"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewRangoViernes"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_timelapse_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionRangoViernes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_rango"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_rango" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewRangoLunesViernes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionRangoViernes"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_rango_resumen"
+                        tools:text="@string/programacion_rango_resumen" />
+
+                </RelativeLayout>
+                <!-- Intervalo programación del día VIERNES -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutRangoViernes"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewIntervaloViernes"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_repeat_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionIntervaloViernes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_intervalo_lunes"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_intervalo_lunes" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewIntervaloViernes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionIntervaloViernes"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_intervalo_lunes_resumen"
+                        tools:text="@string/programacion_intervalo_lunes_resumen" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- Programación del día SABADO -->
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius"
+            card_view:cardElevation="@dimen/cardview_default_elevation"
+            card_view:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Etiqueta programación del día SABADO -->
+                <TextView
+                    android:id="@+id/textViewEtiquetaProgramacionSabado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin_dos"
+                    android:paddingBottom="@dimen/activity_horizontal_margin_dos"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/etiqueta_programacion_envio_ubicacion_sabado"/>
+                <!-- Activación Programación del día SABADO -->
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutProgramacionSabado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewEtiquetaProgramacionSabado"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewProgramacionSabado"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_today_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionProgramacionSabado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_dia_sabado"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_dia_sabado" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewProgramacionSabadoResumen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionProgramacionSabado"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_dia_resumen"
+                        tools:text="@string/programacion_dia_resumen" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switchCompatProgramacionSabado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="0dp"
+                        android:layout_alignParentRight="true"
+                        android:checked="true"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+                <!-- Rango programación del día SABADO -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutRangoSabado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutProgramacionSabado"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewRangoSabado"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_timelapse_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionRangoSabado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_rango"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_rango" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewRangoLunesSabado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionRangoSabado"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_rango_resumen"
+                        tools:text="@string/programacion_rango_resumen" />
+
+                </RelativeLayout>
+                <!-- Intervalo programación del día SABADO -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutRangoSabado"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewIntervaloSabado"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_repeat_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionIntervaloSabado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_intervalo_lunes"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_intervalo_lunes" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewIntervaloSabado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionIntervaloSabado"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_intervalo_lunes_resumen"
+                        tools:text="@string/programacion_intervalo_lunes_resumen" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- Programación del día DOMINGO -->
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius"
+            card_view:cardElevation="@dimen/cardview_default_elevation"
+            card_view:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Etiqueta programación del día DOMINGO -->
+                <TextView
+                    android:id="@+id/textViewEtiquetaProgramacionDomingo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin_dos"
+                    android:paddingBottom="@dimen/activity_horizontal_margin_dos"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/etiqueta_programacion_envio_ubicacion_domingo"/>
+                <!-- Activación Programación del día DOMINGO -->
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutProgramacionDomingo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewEtiquetaProgramacionDomingo"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewProgramacionDomingo"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_today_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionProgramacionDomingo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_dia_domingo"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_dia_domingo" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewProgramacionDomingoResumen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionProgramacionDomingo"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_dia_resumen"
+                        tools:text="@string/programacion_dia_resumen" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switchCompatProgramacionDomingo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="0dp"
+                        android:layout_alignParentRight="true"
+                        android:checked="true"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+                <!-- Rango programación del día DOMINGO -->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayoutRangoDomingo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutProgramacionDomingo"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewRangoDomingo"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_timelapse_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionRangoDomingo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_rango"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_rango" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewRangoLunesDomingo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionRangoDomingo"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_rango_resumen"
+                        tools:text="@string/programacion_rango_resumen" />
+
+                </RelativeLayout>
+                <!-- Intervalo programación del día DOMINGO -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeLayoutRangoDomingo"
+                    android:minHeight="?listPreferredItemHeight"
+                    android:background="@drawable/bg_list_row"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imageViewIntervaloDomingo"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/ic_repeat_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDescripcionIntervaloDomingo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item"
+                        android:text="@string/programacion_intervalo_lunes"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textStyle="bold"
+                        tools:text="@string/programacion_intervalo_lunes" />
+                    <!--android:textAppearance="?textAppearanceListItem"-->
+                    <TextView
+                        android:id="@+id/textViewIntervaloDomingo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="72dp"
+                        android:layout_marginTop="@dimen/padding_top_item_small"
+                        android:layout_marginBottom="@dimen/padding_top_item"
+                        android:layout_marginRight="50dp"
+                        android:layout_below="@+id/textViewDescripcionIntervaloDomingo"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/programacion_intervalo_lunes_resumen"
+                        tools:text="@string/programacion_intervalo_lunes_resumen" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

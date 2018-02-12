@@ -31,6 +31,7 @@ import java.util.Date;
 
 public class UbicacionDispositivoGpsServicioLocal extends IntentService
 {
+
     private static final String TAG = UbicacionDispositivoGpsServicioLocal.class.getSimpleName();
 
     public static final String ACCION_INSERTAR_UBICACION_DISPOSITIVO_GPS_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_INSERTAR_UBICACION_DISPOSITIVO_GPS_ISERVICE";

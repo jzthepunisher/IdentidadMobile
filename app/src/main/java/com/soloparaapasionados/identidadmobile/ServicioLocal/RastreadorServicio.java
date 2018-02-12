@@ -72,8 +72,8 @@ public class RastreadorServicio extends Service implements LocationListener
     private static final String TAG = RastreadorServicio.class.getSimpleName();
     public static final String STATUS_INTENT = "status";
 
-    private static final int NOTIFICATION_ID = 1;
-    private static final int FOREGROUND_SERVICE_ID = 1;
+    private static final int NOTIFICATION_ID = 2;
+    private static final int FOREGROUND_SERVICE_ID = 2;
     private static final int CONFIG_CACHE_EXPIRY = 600;  // 10 minutes.
 
     private GoogleApiClient mGoogleApiClient;
