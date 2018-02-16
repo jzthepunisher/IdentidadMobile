@@ -217,8 +217,8 @@
     <string name="rastrego_gps_resumen" translatable="false">Este dispositivo envía su ubicación a la central</string>
     <string name="rastrego_gps_estado" translatable="false">Estado rastreo GPS</string>
     <string name="rastrego_gps_estado_resumen" translatable="false">Actualmente sí está enviando su ubicación el dispositivo</string>
-    <string name="rastrego_gps_tipo" translatable="false">Tipo rastreo GPS</string>
-    <string name="rastrego_gps_tipo_resumen" translatable="false">El tipo de rastreo GPS asignado es : Técnico de Servicio</string>
+    <string name="rastrego_gps_tipo" translatable="false">Programación rastreo GPS</string>
+    <string name="rastrego_gps_tipo_resumen" translatable="false">La programación de rastreo GPS asignado es : Técnico de Servicio</string>
     <string name="etiqueta_programacion_envio_ubicacion_lunes" translatable="false">Programación de rastreo del día Lunes</string>
     <string name="etiqueta_programacion_envio_ubicacion_martes" translatable="false">Programación de rastreo del día Martes</string>
     <string name="etiqueta_programacion_envio_ubicacion_miercoles" translatable="false">Programación de rastreo del día Miércoles</string>

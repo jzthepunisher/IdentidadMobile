@@ -17,4 +17,6 @@
     <dimen name="app_bar_height">256dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="ancho_panel_lista">412dp</dimen>
+    <dimen name="list_item_left_padding">62dp</dimen>
+    List item left padding:
 </resources>

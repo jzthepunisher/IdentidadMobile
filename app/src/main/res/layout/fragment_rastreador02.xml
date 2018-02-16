@@ -53,8 +53,8 @@
 
                     <ImageView
                         android:id="@+id/imageViewRastreoGps"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:scaleType="fitXY"
                         app:srcCompat="@drawable/ic_track_changes_black_24dp" />
@@ -181,7 +181,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="72dp"
                         android:layout_marginTop="@dimen/padding_top_item"
-                        android:text="@string/rastrego_gps"
+                        android:text="@string/rastrego_gps_tipo"
                         android:textAppearance="?android:attr/textAppearanceListItem"
                         android:textStyle="bold"
                         tools:text="@string/rastrego_gps_tipo" />

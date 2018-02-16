@@ -185,6 +185,24 @@ public class ContratoCotizacion
         String CORRELATIVO  = "correlativo";
     }
 
+    interface ColumnasProgramacionRastregoGps
+    {
+        String ID_PROGRAMACION_RASTREO_GPS = "id_programacion_rastreo_gps";
+        String DESCRIPCION  = "descripcion";
+    }
+
+    interface ColumnasProgramacionRastregoGpsDetalle
+    {
+        String ID_PROGRAMACION_RASTREO_GPS = "id_programacion_rastreo_gps";
+        String DIA="dia";
+        String RASTREO_GPS="rastreo_gps";
+        String RANGO_HORA_INICIO="rango_hora_inicio";
+        String RANGO_HORA_FINAL="rango_hora_final";
+        String INTERVALO_HORA_CANTIDAD="intervalo_hora_cantidad";
+        String INTERVALO_MINUTO_CANTIDAD="intervalo_minuto_cantidad";
+        String INTERVALO_SEGUNDO_CANTIDAD="intervalo_segundo_cantidad";
+        String ESTADO_SINCRONIZACION ="estado_sincronizacion";
+    }
 
     public interface EstadoRegistro
     {
@@ -225,6 +243,8 @@ public class ContratoCotizacion
     private static final String RUTA_ORDENES_INSTALACION_EJECUCION_ACTIVIDAD="ordenes_instalacion_ejecucion_actividad";
     private static final String RUTA_UBICACIONES_DISPOSITIVO_GPS="ubicaciones_dispositivo_gps";
     private static final String RUTA_CORRELATIVOS_TABLA="correlativos_tabla";
+    private static final String RUTA_PROGRAMACION_RASTREO_GPS_TABLA="programacion_rastreo_gps_tabla";
+    private static final String RUTA_PROGRAMACION_RASTREO_GPS_DETALLE_TABLA="programacion_rastreo_gps_detalle_tabla";
     // [/URIS]
 
     // [TIPOS_MIME]
@@ -690,6 +710,48 @@ public class ContratoCotizacion
         }
 
         public static Uri crearUriCorrelativoTablaLista()
+        {
+            return URI_CONTENIDO;
+        }
+    }
+
+    //Clase contrato de Programacion Rastreo Gps Tabla
+    public static class ProgramacionesRastregoGpsTabla implements ColumnasProgramacionRastregoGps
+    {
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_PROGRAMACION_RASTREO_GPS_TABLA).build();
+
+        public static String obtenerIdTabla(Uri uri)
+        {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri crearUriProgramacionRastreoGpsTabla(String id)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+
+        public static Uri crearUriProgramacionRastreoGpsTablaLista()
+        {
+            return URI_CONTENIDO;
+        }
+    }
+
+    //Clase contrato de Programacion Rastreo Gps Detalle Tabla
+    public static class ProgramacionesRastregoGpsDetalleTabla implements ColumnasProgramacionRastregoGpsDetalle
+    {
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_PROGRAMACION_RASTREO_GPS_DETALLE_TABLA).build();
+
+        public static String obtenerIdTabla(Uri uri)
+        {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri crearUriProgramacionRastreoGpsDetalleTabla(String id)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+
+        public static Uri crearUriProgramacionRastreoGpsDetalleTablaLista()
         {
             return URI_CONTENIDO;
         }

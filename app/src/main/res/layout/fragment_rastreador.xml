@@ -7,16 +7,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@+id/app_bar"
+    android:layout_margin="0dp"
+    android:padding="0dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.soloparaapasionados.identidadmobile.actividades.RastreadorActivity">
-
 
     <!--  android:background="@color/colorPrimary" -->
     <RelativeLayout
         android:id="@+id/rootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:layout_margin="0dp"
+        android:padding="0dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.soloparaapasionados.identidadmobile.actividades.RastreadorActivity"
         tools:showIn="@layout/content_rastreador">
@@ -27,17 +29,20 @@
             android:id="@+id/linearLayoutContenedor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="0dp"
+            android:padding="0dp"
             android:focusableInTouchMode="true"
             android:clickable="true"
             android:focusable="true"
-            android:orientation="vertical"
-            android:padding="0dp">
+            android:orientation="vertical">
 
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="8dp"
+                android:layout_margin="0dp"
+                android:padding="0dp"
                 android:layout_below="@+id/linearMensajeValidado"
                 card_view:cardCornerRadius="@dimen/cardview_default_radius"
                 card_view:cardElevation="@dimen/cardview_default_elevation"
@@ -45,7 +50,9 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_margin="0dp"
+                    android:padding="0dp">
 
                     <!-- Rastreo GPS -->
                     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -56,16 +63,17 @@
                         android:layout_height="wrap_content"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
                         android:clickable="true"
                         android:focusable="true"
                         android:orientation="horizontal"
+                        android:layout_margin="0dp"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
                         android:paddingRight="@dimen/activity_horizontal_margin">
 
                         <ImageView
                             android:id="@+id/imageViewRastreoGps"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_track_changes_black_24dp" />
@@ -74,7 +82,7 @@
                             android:id="@+id/textViewDescripcionRastreoGps"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/rastrego_gps"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -85,7 +93,7 @@
                             android:id="@+id/textViewRastreoGpsResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -112,6 +120,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relatievLayourRastreoGps"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -122,8 +131,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewEstadoRastreoGps"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_location_on_black_24dp" />
@@ -132,7 +141,7 @@
                             android:id="@+id/textViewDescripcionEstadoRastreoGps"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/rastrego_gps_estado"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -143,7 +152,7 @@
                             android:id="@+id/textViewEstadoRastreoGpsResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -169,19 +178,21 @@
                         android:id="@+id/relativeLayoutTipoRastreoGps"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
                         android:layout_below="@+id/relativeLayoutEstadoRastregoGps"
-                        android:minHeight="?listPreferredItemHeight"
+                        android:layout_margin="0dp"
                         android:background="@drawable/bg_list_row"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
                         android:clickable="true"
                         android:focusable="true"
+                        android:minHeight="?listPreferredItemHeight"
                         android:orientation="horizontal"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
                         android:paddingRight="@dimen/activity_horizontal_margin">
 
                         <ImageView
                             android:id="@+id/imageViewTipoRastreoGps"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_my_location_black_24dp" />
@@ -190,9 +201,9 @@
                             android:id="@+id/textViewDescripcionTipoRastreoGps"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
-                            android:text="@string/rastrego_gps"
+                            android:text="@string/rastrego_gps_tipo"
                             android:textAppearance="?android:attr/textAppearanceListItem"
                             android:textStyle="bold"
                             tools:text="@string/rastrego_gps_tipo" />
@@ -201,13 +212,13 @@
                             android:id="@+id/textViewTipoRastreoGpsResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
-                            android:layout_marginTop="@dimen/padding_top_item_small"
-                            android:layout_marginBottom="@dimen/padding_top_item"
-                            android:layout_marginRight="50dp"
                             android:layout_below="@+id/textViewDescripcionTipoRastreoGps"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:layout_marginBottom="@dimen/padding_top_item"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
+                            android:layout_marginRight="50dp"
+                            android:layout_marginTop="@dimen/padding_top_item_small"
                             android:text="@string/rastrego_gps_tipo_resumen"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             tools:text="@string/rastrego_gps_tipo_resumen" />
 
                     </RelativeLayout>
@@ -248,6 +259,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textViewEtiquetaProgramacionLunes"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -258,8 +270,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewProgramacionLunes"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_today_black_24dp" />
@@ -268,7 +280,7 @@
                             android:id="@+id/textViewDescripcionProgramacionLunes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_dia_lunes"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -279,7 +291,7 @@
                             android:id="@+id/textViewProgramacionLunesResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -305,6 +317,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relativeLayoutProgramacionLunes"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -315,8 +328,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewRangoLunes"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_timelapse_black_24dp" />
@@ -325,7 +338,7 @@
                             android:id="@+id/textViewDescripcionRangoLunes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_rango"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -336,7 +349,7 @@
                             android:id="@+id/textViewRangoLunesResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -353,6 +366,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relativeLayoutRango"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -363,8 +377,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewIntervaloLunes"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_repeat_black_24dp" />
@@ -373,9 +387,9 @@
                             android:id="@+id/textViewDescripcionIntervaloLunes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
-                            android:text="@string/rastrego_gps_estado"
+                            android:text="@string/programacion_intervalo_lunes"
                             android:textAppearance="?android:attr/textAppearanceListItem"
                             android:textStyle="bold"
                             tools:text="@string/programacion_intervalo_lunes" />
@@ -384,7 +398,7 @@
                             android:id="@+id/textViewIntervaloLunes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -431,6 +445,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textViewEtiquetaProgramacionMartes"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -441,8 +456,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewProgramacionMartes"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_today_black_24dp" />
@@ -451,7 +466,7 @@
                             android:id="@+id/textViewDescripcionProgramacionMartes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_dia_martes"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -462,7 +477,7 @@
                             android:id="@+id/textViewProgramacionMartesResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -488,6 +503,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relativeLayoutProgramacionMartes"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -498,8 +514,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewRangoMartes"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_timelapse_black_24dp" />
@@ -508,7 +524,7 @@
                             android:id="@+id/textViewDescripcionRangoMartes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_rango"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -519,7 +535,7 @@
                             android:id="@+id/textViewRangoLunesMartes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -536,6 +552,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relativeLayoutRangoMartes"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -546,8 +563,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewIntervaloMartes"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_repeat_black_24dp" />
@@ -556,9 +573,9 @@
                             android:id="@+id/textViewDescripcionIntervaloMartes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
-                            android:text="@string/rastrego_gps_estado"
+                            android:text="@string/programacion_intervalo_lunes"
                             android:textAppearance="?android:attr/textAppearanceListItem"
                             android:textStyle="bold"
                             tools:text="@string/programacion_intervalo_lunes" />
@@ -567,7 +584,7 @@
                             android:id="@+id/textViewIntervaloMartes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -614,6 +631,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textViewEtiquetaProgramacionMiercoles"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -624,8 +642,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewProgramacionMiercoles"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_today_black_24dp" />
@@ -634,7 +652,7 @@
                             android:id="@+id/textViewDescripcionProgramacionMiercoles"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_dia_miercoles"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -645,7 +663,7 @@
                             android:id="@+id/textViewProgramacionMiercolesResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -671,6 +689,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relativeLayoutProgramacionMiercoles"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -681,8 +700,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewRangoMiercoles"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_timelapse_black_24dp" />
@@ -691,7 +710,7 @@
                             android:id="@+id/textViewDescripcionRangoMiercoles"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_rango"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -702,7 +721,7 @@
                             android:id="@+id/textViewRangoLunesMiercoles"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -719,6 +738,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relativeLayoutRangoMiercoles"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -729,8 +749,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewIntervaloMiercoles"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_repeat_black_24dp" />
@@ -739,9 +759,9 @@
                             android:id="@+id/textViewDescripcionIntervaloMiercoles"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
-                            android:text="@string/rastrego_gps_estado"
+                            android:text="@string/programacion_intervalo_lunes"
                             android:textAppearance="?android:attr/textAppearanceListItem"
                             android:textStyle="bold"
                             tools:text="@string/programacion_intervalo_lunes" />
@@ -750,7 +770,7 @@
                             android:id="@+id/textViewIntervaloMiercoles"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -797,6 +817,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textViewEtiquetaProgramacionJueves"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -807,8 +828,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewProgramacionJueves"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_today_black_24dp" />
@@ -817,7 +838,7 @@
                             android:id="@+id/textViewDescripcionProgramacionJueves"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_dia_jueves"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -828,7 +849,7 @@
                             android:id="@+id/textViewProgramacionJuevesResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -854,6 +875,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relativeLayoutProgramacionJueves"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -864,8 +886,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewRangoJueves"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_timelapse_black_24dp" />
@@ -874,7 +896,7 @@
                             android:id="@+id/textViewDescripcionRangoJueves"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_rango"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -885,7 +907,7 @@
                             android:id="@+id/textViewRangoLunesJueves"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -902,6 +924,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relativeLayoutRangoJueves"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -912,8 +935,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewIntervaloJueves"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_repeat_black_24dp" />
@@ -922,9 +945,9 @@
                             android:id="@+id/textViewDescripcionIntervaloJueves"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
-                            android:text="@string/rastrego_gps_estado"
+                            android:text="@string/programacion_intervalo_lunes"
                             android:textAppearance="?android:attr/textAppearanceListItem"
                             android:textStyle="bold"
                             tools:text="@string/programacion_intervalo_lunes" />
@@ -933,7 +956,7 @@
                             android:id="@+id/textViewIntervaloJueves"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -979,6 +1002,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textViewEtiquetaProgramacionViernes"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -989,8 +1013,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewProgramacionViernes"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_today_black_24dp" />
@@ -999,7 +1023,7 @@
                             android:id="@+id/textViewDescripcionProgramacionViernes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_dia_viernes"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -1010,7 +1034,7 @@
                             android:id="@+id/textViewProgramacionViernesResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -1036,6 +1060,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relativeLayoutProgramacionViernes"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -1046,8 +1071,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewRangoViernes"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_timelapse_black_24dp" />
@@ -1056,7 +1081,7 @@
                             android:id="@+id/textViewDescripcionRangoViernes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_rango"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -1067,7 +1092,7 @@
                             android:id="@+id/textViewRangoLunesViernes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -1082,6 +1107,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relativeLayoutRangoViernes"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -1092,8 +1118,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewIntervaloViernes"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_repeat_black_24dp" />
@@ -1102,9 +1128,9 @@
                             android:id="@+id/textViewDescripcionIntervaloViernes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
-                            android:text="@string/rastrego_gps_estado"
+                            android:text="@string/programacion_intervalo_lunes"
                             android:textAppearance="?android:attr/textAppearanceListItem"
                             android:textStyle="bold"
                             tools:text="@string/programacion_intervalo_lunes" />
@@ -1113,7 +1139,7 @@
                             android:id="@+id/textViewIntervaloViernes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -1157,6 +1183,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textViewEtiquetaProgramacionSabado"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -1167,8 +1194,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewProgramacionSabado"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_today_black_24dp" />
@@ -1177,7 +1204,7 @@
                             android:id="@+id/textViewDescripcionProgramacionSabado"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_dia_sabado"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -1188,7 +1215,7 @@
                             android:id="@+id/textViewProgramacionSabadoResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -1214,6 +1241,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relativeLayoutProgramacionSabado"
+                        android:layout_margin="0dp"
                         android:minHeight="?listPreferredItemHeight"
                         android:background="@drawable/bg_list_row"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -1224,8 +1252,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewRangoSabado"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_timelapse_black_24dp" />
@@ -1234,7 +1262,7 @@
                             android:id="@+id/textViewDescripcionRangoSabado"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_rango"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -1245,7 +1273,7 @@
                             android:id="@+id/textViewRangoLunesSabado"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -1270,8 +1298,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewIntervaloSabado"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_repeat_black_24dp" />
@@ -1280,9 +1308,9 @@
                             android:id="@+id/textViewDescripcionIntervaloSabado"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
-                            android:text="@string/rastrego_gps_estado"
+                            android:text="@string/programacion_intervalo_lunes"
                             android:textAppearance="?android:attr/textAppearanceListItem"
                             android:textStyle="bold"
                             tools:text="@string/programacion_intervalo_lunes" />
@@ -1291,7 +1319,7 @@
                             android:id="@+id/textViewIntervaloSabado"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -1345,8 +1373,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewProgramacionDomingo"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_today_black_24dp" />
@@ -1355,7 +1383,7 @@
                             android:id="@+id/textViewDescripcionProgramacionDomingo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_dia_domingo"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -1366,7 +1394,7 @@
                             android:id="@+id/textViewProgramacionDomingoResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -1402,8 +1430,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewRangoDomingo"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_timelapse_black_24dp" />
@@ -1412,7 +1440,7 @@
                             android:id="@+id/textViewDescripcionRangoDomingo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
                             android:text="@string/programacion_rango"
                             android:textAppearance="?android:attr/textAppearanceListItem"
@@ -1423,7 +1451,7 @@
                             android:id="@+id/textViewRangoLunesDomingo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -1448,8 +1476,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewIntervaloDomingo"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:scaleType="fitXY"
                             app:srcCompat="@drawable/ic_repeat_black_24dp" />
@@ -1458,9 +1486,9 @@
                             android:id="@+id/textViewDescripcionIntervaloDomingo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item"
-                            android:text="@string/rastrego_gps_estado"
+                            android:text="@string/programacion_intervalo_lunes"
                             android:textAppearance="?android:attr/textAppearanceListItem"
                             android:textStyle="bold"
                             tools:text="@string/programacion_intervalo_lunes" />
@@ -1469,7 +1497,7 @@
                             android:id="@+id/textViewIntervaloDomingo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="72dp"
+                            android:layout_marginLeft="@dimen/list_item_left_padding"
                             android:layout_marginTop="@dimen/padding_top_item_small"
                             android:layout_marginBottom="@dimen/padding_top_item"
                             android:layout_marginRight="50dp"
@@ -1505,8 +1533,6 @@
                 android:layout_height="match_parent"
                 android:background="@color/card_background"
                 android:padding="@dimen/activity_horizontal_margin">
-
-
 
                 <TextView
                     android:id="@+id/title"
