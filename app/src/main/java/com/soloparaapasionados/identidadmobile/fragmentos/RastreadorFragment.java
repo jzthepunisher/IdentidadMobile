@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.soloparaapasionados.identidadmobile.R;
+import com.soloparaapasionados.identidadmobile.ServicioLocal.ProgramacionRastreadosGpsServicioLocal;
 import com.soloparaapasionados.identidadmobile.ServicioLocal.RastreadorServicio;
 import com.soloparaapasionados.identidadmobile.serviciotransporttracker.TrackerService;
 
@@ -59,6 +60,7 @@ public class RastreadorFragment  extends Fragment
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
     private SwitchCompat mSwitchCompat;
+    private SwitchCompat switchCompatActivacionProgramacion;
     private Snackbar mSnackbarPermissions;
     private Snackbar mSnackbarGps;
 
@@ -115,6 +117,25 @@ public class RastreadorFragment  extends Fragment
         mTransportIdEditText.setText(transportID);
         mEmailEditText.setText(email);
         mPasswordEditText.setText(password);
+
+        switchCompatActivacionProgramacion = (SwitchCompat) root.findViewById(R.id.switchCompatActivacionProgramacion);
+        switchCompatActivacionProgramacion.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (((SwitchCompat) v).isChecked())
+                {
+                    Intent intentProgrmacionRastreoGps = new Intent(getActivity(), ProgramacionRastreadosGpsServicioLocal.class);
+                    intentProgrmacionRastreoGps.setAction(ProgramacionRastreadosGpsServicioLocal.ACCION_REACTIVAR_PROGRAMACION_RASTREO_GPS_ISERVICE);
+                    getActivity().startService(intentProgrmacionRastreoGps);
+                }
+                else
+                {
+                   /// confirmStop();
+                }
+            }
+        });
 
         mSwitchCompat = (SwitchCompat) root.findViewById(R.id.switchCompat);
         mSwitchCompat.setEnabled(mTransportIdEditText.length() > 0 && mEmailEditText.length() > 0 && mPasswordEditText.length() > 0);

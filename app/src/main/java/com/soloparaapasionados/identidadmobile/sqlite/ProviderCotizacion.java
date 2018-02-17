@@ -33,7 +33,7 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Ordenes
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.OrdenesInstalacionEjecucionActividad;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.UbicacionesDispositvoGps;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.CorrelativosTabla;
-
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.ProgramacionesRastregoGpsDetalleTabla;
 
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
@@ -104,6 +104,8 @@ public class ProviderCotizacion extends ContentProvider
     public static final int UBICACIONES_DISPOSITIVO_GPS_ID  = 1502;
     public static final int CORRELATIVOS_TABLA = 1601;
     public static final int CORRELATIVOS_TABLA_ID  = 1602;
+    public static final int PROGRAMACION_RASTREGO_GPS_DETALLE_TABLA = 1700;
+    public static final int PROGRAMACION_RASTREGO_GPS_DETALLE_TABLA_ID = 1701;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
@@ -143,6 +145,8 @@ public class ProviderCotizacion extends ContentProvider
         uriMatcher.addURI(AUTORIDAD, "ubicaciones_dispositivo_gps/*"                , UBICACIONES_DISPOSITIVO_GPS_ID);
         uriMatcher.addURI(AUTORIDAD, "correlativos_tabla"                  , CORRELATIVOS_TABLA);
         uriMatcher.addURI(AUTORIDAD, "correlativos_tabla/*"                , CORRELATIVOS_TABLA_ID);
+        uriMatcher.addURI(AUTORIDAD, "programacion_rastreo_gps_detalle_tabla"  , PROGRAMACION_RASTREGO_GPS_DETALLE_TABLA);
+        uriMatcher.addURI(AUTORIDAD, "programacion_rastreo_gps_detalle_tabla/*", PROGRAMACION_RASTREGO_GPS_DETALLE_TABLA_ID);
     }
     // [/URI_MATCHER]
 
@@ -276,6 +280,19 @@ public class ProviderCotizacion extends ContentProvider
             Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.TERMINADO,
             Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.FECHA_HORA_TERMINO,
             Tablas.ORDEN_INSTALACION_EJECUCION_ACTIVIDAD + "." + OrdenesInstalacionEjecucionInicioTerminoActividad.DIRECCION_TERMINO};
+
+    private final String[] proyProgramacionRastreoGpsDetalle= new String[]
+    {
+        Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + "." + BaseColumns._ID,
+        Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + "." + ProgramacionesRastregoGpsDetalleTabla.ID_PROGRAMACION_RASTREO_GPS,
+        Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + "." + ProgramacionesRastregoGpsDetalleTabla.DIA,
+        Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + "." + ProgramacionesRastregoGpsDetalleTabla.RASTREO_GPS,
+        Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + "." + ProgramacionesRastregoGpsDetalleTabla.RANGO_HORA_INICIO,
+        Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + "." + ProgramacionesRastregoGpsDetalleTabla.RANGO_HORA_FINAL,
+        Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + "." + ProgramacionesRastregoGpsDetalleTabla.INTERVALO_HORA_CANTIDAD,
+        Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + "." + ProgramacionesRastregoGpsDetalleTabla.INTERVALO_MINUTO_CANTIDAD,
+        Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + "." + ProgramacionesRastregoGpsDetalleTabla.INTERVALO_SEGUNDO_CANTIDAD
+    };
 
     // [/CAMPOS_AUXILIARES]
 
@@ -519,7 +536,7 @@ public class ProviderCotizacion extends ContentProvider
         // string auxiliar para los ids
         String id;
 
-        Cursor c=null;
+        Cursor c = null;
 
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
@@ -807,6 +824,15 @@ public class ProviderCotizacion extends ContentProvider
                 {
                     //leerTurnosUnidadesReaccionUbicacionRemotamente();
                 }
+
+                break;
+            case PROGRAMACION_RASTREGO_GPS_DETALLE_TABLA:
+
+                // Consultando ubiccaciones de Unidades de Reaccion por turno
+                builder.setTables(Tablas.PROGRAMACION_RASTREO_GPS_DETALLE);
+                c = builder.query(bd, proyProgramacionRastreoGpsDetalle,
+                        null,
+                        null, null, null, null);
 
                 break;
 

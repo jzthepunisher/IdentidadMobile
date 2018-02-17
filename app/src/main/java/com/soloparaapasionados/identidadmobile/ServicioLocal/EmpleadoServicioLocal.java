@@ -27,13 +27,15 @@ import java.util.Date;
  * Created by USUARIO on 13/05/2017.
  */
 
-public class EmpleadoServicioLocal extends IntentService {
+public class EmpleadoServicioLocal extends IntentService
+{
     private static final String TAG = EmpleadoServicioLocal.class.getSimpleName();
 
     public static final String ACCION_INSERTAR_EMPLEADO_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_INSERTAR_EMPLEADO_ISERVICE";
     public static final String ACCION_ACTUALIZAR_EMPLEADO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ACTUALIZAR_EMPLEADO_ISERVICE";
     public static final String ACCION_ELIMINAR_EMPLEADO_ISERVICE   = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ELIMINAR_EMPLEADO_ISERVICE";
     public static final String ACCION_ACTUALIZAR_ESTADO_EMPLEADO_ISERVICE = "com.soloparaapasionados.identidadmobile.ServicioLocal.action.ACCION_ACTUALIZAR_ESTADO_EMPLEADO_ISERVICE";
+
     public static final String EXTRA_MI_EMPLEADO = "extra_mi_empleado";
     public static final String EXTRA_ID_EMPLEADO = "extra_id_empleado";
     public static final String EXTRA_ESTADO_EMPLEADO = "extra_estado_empleado";
@@ -185,8 +187,10 @@ public class EmpleadoServicioLocal extends IntentService {
         }
     }
 
-    private void eliminarEmpleadoLocal(String idEmpleado){
-        try {
+    private void eliminarEmpleadoLocal(String idEmpleado)
+    {
+        try
+        {
             // Se construye la notificación
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .setSmallIcon(android.R.drawable.stat_sys_download_done)

@@ -740,15 +740,16 @@ public class ContratoCotizacion
     public static class ProgramacionesRastregoGpsDetalleTabla implements ColumnasProgramacionRastregoGpsDetalle
     {
         public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_PROGRAMACION_RASTREO_GPS_DETALLE_TABLA).build();
+        public static final String CODIGO_DETALLE = "codigo_detalle";
 
         public static String obtenerIdTabla(Uri uri)
         {
             return uri.getPathSegments().get(1);
         }
 
-        public static Uri crearUriProgramacionRastreoGpsDetalleTabla(String id)
+        public static Uri crearUriProgramacionRastreoGpsDetalleTabla(String id,String dia)
         {
-            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+            return URI_CONTENIDO.buildUpon().appendPath(id).appendPath(CODIGO_DETALLE).appendPath(dia).build();
         }
 
         public static Uri crearUriProgramacionRastreoGpsDetalleTablaLista()

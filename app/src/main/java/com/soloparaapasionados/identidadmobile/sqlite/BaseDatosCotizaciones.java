@@ -53,7 +53,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 106;
+    private static final int VERSION_ACTUAL = 107;
 
     private final Context contexto;
 
@@ -269,7 +269,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 ProgramacionesRastregoGpsTabla.ID_PROGRAMACION_RASTREO_GPS,ProgramacionesRastregoGpsTabla.DESCRIPCION));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "%s TEXT NOT NULL,%s TEXT UNIQUE NOT NULL"+
+                        "%s TEXT NOT NULL,%s TEXT UNIQUE NOT NULL,"+
                         "%s BOOLEAN DEFAULT 0, %s TEXT NULL," +
                         "%s TEXT NULL, %s INT NOT NULL DEFAULT 0," +
                         "%s INT NOT NULL DEFAULT 0, %s INT NOT NULL DEFAULT 0," +

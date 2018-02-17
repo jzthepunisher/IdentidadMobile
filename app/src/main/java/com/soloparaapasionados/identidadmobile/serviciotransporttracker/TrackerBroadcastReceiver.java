@@ -18,9 +18,9 @@ public class TrackerBroadcastReceiver extends BroadcastReceiver
     {
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
         {
-            Intent start = new Intent(context, TrackerActivity.class);
+            /*Intent start = new Intent(context, TrackerActivity.class);
             start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(start);
+            context.startActivity(start);*/
         }
     }
 }

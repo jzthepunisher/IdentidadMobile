@@ -118,6 +118,8 @@ public class RastreadorServicio extends Service implements LocationListener
         String email = mPrefs.getString(getString(R.string.email), "");
         String password = mPrefs.getString(getString(R.string.password), "");
 
+        
+
         authenticate(email, password);
     }
 
@@ -147,24 +149,24 @@ public class RastreadorServicio extends Service implements LocationListener
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>()
+            .addOnCompleteListener(new OnCompleteListener<AuthResult>()
+            {
+                @Override
+                public void onComplete(Task<AuthResult> task)
                 {
-                    @Override
-                    public void onComplete(Task<AuthResult> task)
+                    Log.i(TAG, "authenticate: " + task.isSuccessful());
+                    if (task.isSuccessful())
                     {
-                        Log.i(TAG, "authenticate: " + task.isSuccessful());
-                        if (task.isSuccessful())
-                        {
-                            fetchRemoteConfig();
-                            loadPreviousStatuses();
-                        }
-                        else
-                        {
-                            Toast.makeText(RastreadorServicio.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
-                            stopSelf();
-                        }
+                        fetchRemoteConfig();
+                        loadPreviousStatuses();
                     }
-                });
+                    else
+                    {
+                        Toast.makeText(RastreadorServicio.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
+                        stopSelf();
+                    }
+                }
+            });
     }
 
     private void fetchRemoteConfig()

@@ -41,13 +41,14 @@ public class ProgramacionRastreoGpsDetalle implements Serializable
     {
         this.IdProgramacionRastreoGps = cursor.getString(cursor.getColumnIndex(ProgramacionesRastregoGpsDetalleTabla.ID_PROGRAMACION_RASTREO_GPS));
         this.Dia = cursor.getString(cursor.getColumnIndex(ProgramacionesRastregoGpsDetalleTabla.DIA));
-        this.RastreoGps = Boolean.valueOf(cursor.getString(cursor.getColumnIndex(ProgramacionesRastregoGpsDetalleTabla.RASTREO_GPS)));
+        String valor=cursor.getString(cursor.getColumnIndex(ProgramacionesRastregoGpsDetalleTabla.RASTREO_GPS));
+        this.RastreoGps =valor.equals("1") ? true : false;
+        ///////this.RastreoGps = Boolean.valueOf(cursor.getString(cursor.getColumnIndex(ProgramacionesRastregoGpsDetalleTabla.RASTREO_GPS)));
         this.RangoHoraInicio = cursor.getString(cursor.getColumnIndex(ProgramacionesRastregoGpsDetalleTabla.RANGO_HORA_INICIO));
         this.RangoHoraFinal = cursor.getString(cursor.getColumnIndex(ProgramacionesRastregoGpsDetalleTabla.RANGO_HORA_FINAL));
         this.IntervaloHoraCantidad = cursor.getInt(cursor.getColumnIndex(ProgramacionesRastregoGpsDetalleTabla.INTERVALO_HORA_CANTIDAD));
         this.IntervaloMinutoCantidad = cursor.getInt(cursor.getColumnIndex(ProgramacionesRastregoGpsDetalleTabla.INTERVALO_MINUTO_CANTIDAD));
         this.IntervaloSegundoCantidad = cursor.getInt(cursor.getColumnIndex(ProgramacionesRastregoGpsDetalleTabla.INTERVALO_SEGUNDO_CANTIDAD));
-
     }
 
     public ContentValues toContentValues()
@@ -62,5 +63,69 @@ public class ProgramacionRastreoGpsDetalle implements Serializable
         values.put(ProgramacionesRastregoGpsDetalleTabla.INTERVALO_MINUTO_CANTIDAD, this.IntervaloMinutoCantidad);
         values.put(ProgramacionesRastregoGpsDetalleTabla.INTERVALO_SEGUNDO_CANTIDAD,  this.IntervaloSegundoCantidad);
         return values;
+    }
+
+    public String getIdProgramacionRastreoGps() {
+        return IdProgramacionRastreoGps;
+    }
+
+    public void setIdProgramacionRastreoGps(String idProgramacionRastreoGps) {
+        IdProgramacionRastreoGps = idProgramacionRastreoGps;
+    }
+
+    public String getDia() {
+        return Dia;
+    }
+
+    public void setDia(String dia) {
+        Dia = dia;
+    }
+
+    public Boolean getRastreoGps() {
+        return RastreoGps;
+    }
+
+    public void setRastreoGps(Boolean rastreoGps) {
+        RastreoGps = rastreoGps;
+    }
+
+    public String getRangoHoraInicio() {
+        return RangoHoraInicio;
+    }
+
+    public void setRangoHoraInicio(String rangoHoraInicio) {
+        RangoHoraInicio = rangoHoraInicio;
+    }
+
+    public String getRangoHoraFinal() {
+        return RangoHoraFinal;
+    }
+
+    public void setRangoHoraFinal(String rangoHoraFinal) {
+        RangoHoraFinal = rangoHoraFinal;
+    }
+
+    public int getIntervaloHoraCantidad() {
+        return IntervaloHoraCantidad;
+    }
+
+    public void setIntervaloHoraCantidad(int intervaloHoraCantidad) {
+        IntervaloHoraCantidad = intervaloHoraCantidad;
+    }
+
+    public int getIntervaloMinutoCantidad() {
+        return IntervaloMinutoCantidad;
+    }
+
+    public void setIntervaloMinutoCantidad(int intervaloMinutoCantidad) {
+        IntervaloMinutoCantidad = intervaloMinutoCantidad;
+    }
+
+    public int getIntervaloSegundoCantidad() {
+        return IntervaloSegundoCantidad;
+    }
+
+    public void setIntervaloSegundoCantidad(int intervaloSegundoCantidad) {
+        IntervaloSegundoCantidad = intervaloSegundoCantidad;
     }
 }

@@ -220,7 +220,8 @@ public class ClienteServicioRemoto extends IntentService {
     }
 
     //Procesador de nuevo registros para empleados
-    private void sincronizarClientes(List<Cliente> listaClientes) {
+    private void sincronizarClientes(List<Cliente> listaClientes)
+    {
         syncResult= new SyncResult();
         // Lista para recolección de operaciones pendientes
         ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
@@ -273,16 +274,16 @@ public class ClienteServicioRemoto extends IntentService {
                     Log.i(TAG, "Programando actualización de: " + existingUri);
 
                     ops.add(ContentProviderOperation.newUpdate(existingUri)
-                            .withValue(Clientes.NOMBRES_CLIENTE, clienteMatch.getNombresCliente())
-                            .withValue(Clientes.APELLIDO_PATERNO, clienteMatch.getApellidoPaterno())
-                            .withValue(Clientes.APELLIDO_MATERNO, clienteMatch.getApellidoMaterno())
-                            .withValue(Clientes.RAZON_SOCIAL_CLIENTE, clienteMatch.getRazonSocialCliente())
-                            .withValue(Clientes.RUC_CLIENTE, clienteMatch.getRucCliente())
-                            .withValue(Clientes.DIRECCION_CLIENTE, clienteMatch.getDireccionCliente())
-                            .withValue(Clientes.LATITUD_CLIENTE, clienteMatch.getLatitudCliente())
-                            .withValue(Clientes.LONGITUD_CLIENTE, clienteMatch.getLongitudCliente())
-                            .withValue(Clientes.MONITOREO_ACTIVO, clienteMatch.getMonitoreoActivo())
-                            .build());
+                        .withValue(Clientes.NOMBRES_CLIENTE, clienteMatch.getNombresCliente())
+                        .withValue(Clientes.APELLIDO_PATERNO, clienteMatch.getApellidoPaterno())
+                        .withValue(Clientes.APELLIDO_MATERNO, clienteMatch.getApellidoMaterno())
+                        .withValue(Clientes.RAZON_SOCIAL_CLIENTE, clienteMatch.getRazonSocialCliente())
+                        .withValue(Clientes.RUC_CLIENTE, clienteMatch.getRucCliente())
+                        .withValue(Clientes.DIRECCION_CLIENTE, clienteMatch.getDireccionCliente())
+                        .withValue(Clientes.LATITUD_CLIENTE, clienteMatch.getLatitudCliente())
+                        .withValue(Clientes.LONGITUD_CLIENTE, clienteMatch.getLongitudCliente())
+                        .withValue(Clientes.MONITOREO_ACTIVO, clienteMatch.getMonitoreoActivo())
+                        .build());
                     syncResult.stats.numUpdates++;
                 }
                 else

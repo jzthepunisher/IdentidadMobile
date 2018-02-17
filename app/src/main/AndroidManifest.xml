@@ -218,6 +218,20 @@
             android:name=".ServicioLocal.UbicacionDispositivoGpsServicioLocal"
             android:exported="false" />
 
+        <receiver
+            android:name="com.soloparaapasionados.identidadmobile.antenasReceptoras.ProgramacionRastreadosGpsBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".ServicioLocal.ProgramacionRastreadosGpsServicioLocal"
+            android:exported="false" />
+
+
        <service
            android:name="com.soloparaapasionados.identidadmobile.serviciotransporttracker.TrackerService"
            android:enabled="true"
