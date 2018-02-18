@@ -7,6 +7,7 @@ import com.soloparaapasionados.identidadmobile.modelo.CorrelativoTabla;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 
+import com.soloparaapasionados.identidadmobile.modelo.Grupo;
 import com.soloparaapasionados.identidadmobile.modelo.OrdenInstalacion;
 import com.soloparaapasionados.identidadmobile.modelo.OrdenInstalacionEjecucionActividad;
 import com.soloparaapasionados.identidadmobile.modelo.OrdenInstalacionEjecucionInicioTerminoActividad;
@@ -37,6 +38,8 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Correla
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.ProgramacionesRastregoGpsTabla;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.ProgramacionesRastregoGpsDetalleTabla;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.EstadoRegistro;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.GruposTabla;
+
 
 
 import android.content.Context;
@@ -53,7 +56,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 107;
+    private static final int VERSION_ACTUAL = 119;
 
     private final Context contexto;
 
@@ -79,6 +82,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         String CORRELATIVO_TABLA                = "correlativo_tabla";
         String PROGRAMACION_RASTREO_GPS         = "programacion_rastreo_gps";
         String PROGRAMACION_RASTREO_GPS_DETALLE = "programacion_rastreo_gps_detalle";
+        String GRUPO                            = "grupo";
     }
 
     interface Referencias
@@ -282,6 +286,23 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
                 ProgramacionesRastregoGpsDetalleTabla.INTERVALO_MINUTO_CANTIDAD,ProgramacionesRastregoGpsDetalleTabla.INTERVALO_SEGUNDO_CANTIDAD,
                 ProgramacionesRastregoGpsDetalleTabla.ESTADO_SINCRONIZACION));
 
+        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "%s TEXT UNIQUE NOT NULL,%s TEXT NOT NULL," +
+                        "%s BOOLEAN DEFAULT 0,%s BOOLEAN DEFAULT 0," +
+                        "%s TEXT NULL,%s TEXT NULL," +
+                        "%s TEXT NULL,%s TEXT NULL," +
+                        "%s TEXT DEFAULT '"+ EstadoRegistro.REGISTRADO_LOCALMENTE +"'" +
+                        ")",
+                Tablas.GRUPO, BaseColumns._ID,
+                GruposTabla.ID_GRUPO,GruposTabla.DESCRIPCION,
+                GruposTabla.RASTREO_GPS,GruposTabla.VER_EN_MAPA,
+                GruposTabla.FECHA_HORA_ULTIMA_UBICACION,GruposTabla.DIRECCION_ULTIMA_UBICACION,
+                GruposTabla.FECHA_HORA_CREACION,GruposTabla.ID_PROGRAMACION_RASTREO_GPS,
+                GruposTabla.ESTADO_SINCRONIZACION
+                ));
+
+
+
         mockData(db);
         //mockDataTurnos(db);
         //mockDataTiposUnidadReaccion(db);
@@ -302,6 +323,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
         mockDataProgramacionesRastreoGpsTabla(db);
         mockDataProgramacionesRastreoGpsDetalleTabla(db);
+
+        mockDataGrupoTabla(db);
     }
 
     @Override
@@ -343,6 +366,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.CORRELATIVO_TABLA);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.PROGRAMACION_RASTREO_GPS);
         db.execSQL("DROP TABLE IF EXISTS " + Tablas.PROGRAMACION_RASTREO_GPS_DETALLE);
+        db.execSQL("DROP TABLE IF EXISTS " + Tablas.GRUPO);
 
         onCreate(db);
     }
@@ -778,8 +802,14 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         mockProgramacionRastreoGpsDetalleTabla(sqLiteDatabase, new ProgramacionRastreoGpsDetalle("01","Miercoles", true,"08:30","19:00",1,1,1));
         mockProgramacionRastreoGpsDetalleTabla(sqLiteDatabase, new ProgramacionRastreoGpsDetalle("01","Jueves", true,"08:30","19:00",1,1,1));
         mockProgramacionRastreoGpsDetalleTabla(sqLiteDatabase, new ProgramacionRastreoGpsDetalle("01","Viernes", true,"08:30","19:00",1,1,1));
-        mockProgramacionRastreoGpsDetalleTabla(sqLiteDatabase, new ProgramacionRastreoGpsDetalle("01","Sabado", true,"8:30","1:00",0,1,1));
-        mockProgramacionRastreoGpsDetalleTabla(sqLiteDatabase, new ProgramacionRastreoGpsDetalle("01","Domingo", true,"8:30","20:00",0,1,1));
+        mockProgramacionRastreoGpsDetalleTabla(sqLiteDatabase, new ProgramacionRastreoGpsDetalle("01","Sabado", true,"8:30","13:00",0,1,1));
+        mockProgramacionRastreoGpsDetalleTabla(sqLiteDatabase, new ProgramacionRastreoGpsDetalle("01","Domingo", true,"0:33","3:30",0,1,1));
+
+    }
+
+    private void mockDataGrupoTabla(SQLiteDatabase sqLiteDatabase)
+    {
+        mockGrupoTabla(sqLiteDatabase, new Grupo("01", "Grupo 01",true,true,null,null,null,"01"));
 
     }
 
@@ -932,6 +962,14 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
             Tablas.PROGRAMACION_RASTREO_GPS_DETALLE,
             null,
             programacionRastreoGpsDetalle.toContentValues());
+    }
+
+    public long mockGrupoTabla(SQLiteDatabase db, Grupo grupo)
+    {
+        return db.insert(
+                Tablas.GRUPO,
+                null,
+                grupo.toContentValues());
     }
 
 }

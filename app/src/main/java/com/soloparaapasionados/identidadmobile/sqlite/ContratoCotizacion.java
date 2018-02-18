@@ -204,6 +204,19 @@ public class ContratoCotizacion
         String ESTADO_SINCRONIZACION ="estado_sincronizacion";
     }
 
+    interface ColumnasGrupo
+    {
+        String ID_GRUPO = "id_grupo";
+        String DESCRIPCION="descripcion";
+        String RASTREO_GPS="rastreo_gps";
+        String VER_EN_MAPA="ver_en_mapa";
+        String FECHA_HORA_ULTIMA_UBICACION="fecha_hora_ultima_ubicacion";
+        String DIRECCION_ULTIMA_UBICACION="direccion_ultima_ubicacion";
+        String ID_PROGRAMACION_RASTREO_GPS="id_programacion_rastreo_gps";
+        String FECHA_HORA_CREACION="fecha_hora_creacion";
+        String ESTADO_SINCRONIZACION ="estado_sincronizacion";
+    }
+
     public interface EstadoRegistro
     {
         String REGISTRADO_LOCALMENTE= "registrado.localmente";
@@ -245,6 +258,8 @@ public class ContratoCotizacion
     private static final String RUTA_CORRELATIVOS_TABLA="correlativos_tabla";
     private static final String RUTA_PROGRAMACION_RASTREO_GPS_TABLA="programacion_rastreo_gps_tabla";
     private static final String RUTA_PROGRAMACION_RASTREO_GPS_DETALLE_TABLA="programacion_rastreo_gps_detalle_tabla";
+    private static final String RUTA_GRUPO_TABLA="grupo_tabla";
+
     // [/URIS]
 
     // [TIPOS_MIME]
@@ -747,12 +762,38 @@ public class ContratoCotizacion
             return uri.getPathSegments().get(1);
         }
 
+        public static String obtenerIdDosTabla(Uri uri)
+        {
+            return uri.getPathSegments().get(3);
+        }
+
         public static Uri crearUriProgramacionRastreoGpsDetalleTabla(String id,String dia)
         {
             return URI_CONTENIDO.buildUpon().appendPath(id).appendPath(CODIGO_DETALLE).appendPath(dia).build();
         }
 
         public static Uri crearUriProgramacionRastreoGpsDetalleTablaLista()
+        {
+            return URI_CONTENIDO;
+        }
+    }
+
+    //Clase contrato de Programacion Rastreo Gps Detalle Tabla
+    public static class GruposTabla implements ColumnasGrupo
+    {
+        public static final Uri URI_CONTENIDO = URI_BASE.buildUpon().appendPath(RUTA_GRUPO_TABLA).build();
+
+        public static String obtenerIdGrupo(Uri uri)
+        {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static Uri crearUriGrupoTabla(String id)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
+        }
+
+        public static Uri crearUriGrupoTablaLista()
         {
             return URI_CONTENIDO;
         }

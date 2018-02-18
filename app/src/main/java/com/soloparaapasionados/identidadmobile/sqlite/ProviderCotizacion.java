@@ -12,6 +12,7 @@ import com.soloparaapasionados.identidadmobile.modelo.Cliente;
 import com.soloparaapasionados.identidadmobile.modelo.Dispositivo;
 import com.soloparaapasionados.identidadmobile.modelo.DispositivoEmpleado;
 import com.soloparaapasionados.identidadmobile.modelo.Empleado;
+import com.soloparaapasionados.identidadmobile.modelo.Grupo;
 import com.soloparaapasionados.identidadmobile.modelo.Turno_UnidadReaccionUbicacion;
 import com.soloparaapasionados.identidadmobile.modelo.UbicacionDispositivoGps;
 import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones.Tablas;
@@ -34,6 +35,8 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.Ordenes
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.UbicacionesDispositvoGps;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.CorrelativosTabla;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.ProgramacionesRastregoGpsDetalleTabla;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.GruposTabla;
+
 
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
@@ -106,6 +109,9 @@ public class ProviderCotizacion extends ContentProvider
     public static final int CORRELATIVOS_TABLA_ID  = 1602;
     public static final int PROGRAMACION_RASTREGO_GPS_DETALLE_TABLA = 1700;
     public static final int PROGRAMACION_RASTREGO_GPS_DETALLE_TABLA_ID = 1701;
+    public static final int PROGRAMACION_RASTREGO_GPS_DETALLE_TABLA_ID_CODIGO_DETALLE_ID = 1702;
+    public static final int GRUPO_TABLA = 1800;
+    public static final int GRUPO_TABLA_ID = 1801;
 
     public static final String AUTORIDAD = "com.soloparaapasionados.identidadmobile";
 
@@ -147,6 +153,10 @@ public class ProviderCotizacion extends ContentProvider
         uriMatcher.addURI(AUTORIDAD, "correlativos_tabla/*"                , CORRELATIVOS_TABLA_ID);
         uriMatcher.addURI(AUTORIDAD, "programacion_rastreo_gps_detalle_tabla"  , PROGRAMACION_RASTREGO_GPS_DETALLE_TABLA);
         uriMatcher.addURI(AUTORIDAD, "programacion_rastreo_gps_detalle_tabla/*", PROGRAMACION_RASTREGO_GPS_DETALLE_TABLA_ID);
+        uriMatcher.addURI(AUTORIDAD, "programacion_rastreo_gps_detalle_tabla/*/codigo_detalle/*", PROGRAMACION_RASTREGO_GPS_DETALLE_TABLA_ID_CODIGO_DETALLE_ID);
+
+        uriMatcher.addURI(AUTORIDAD, "grupo_tabla", GRUPO_TABLA);
+        uriMatcher.addURI(AUTORIDAD, "grupo_tabla/*", GRUPO_TABLA_ID);
     }
     // [/URI_MATCHER]
 
@@ -292,6 +302,19 @@ public class ProviderCotizacion extends ContentProvider
         Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + "." + ProgramacionesRastregoGpsDetalleTabla.INTERVALO_HORA_CANTIDAD,
         Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + "." + ProgramacionesRastregoGpsDetalleTabla.INTERVALO_MINUTO_CANTIDAD,
         Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + "." + ProgramacionesRastregoGpsDetalleTabla.INTERVALO_SEGUNDO_CANTIDAD
+    };
+
+    private final String[] proyGrupo= new String[]
+    {
+        Tablas.GRUPO + "." + BaseColumns._ID,
+        Tablas.GRUPO + "." + GruposTabla.ID_GRUPO,
+        Tablas.GRUPO + "." + GruposTabla.DESCRIPCION,
+        Tablas.GRUPO + "." + GruposTabla.RASTREO_GPS,
+        Tablas.GRUPO + "." + GruposTabla.VER_EN_MAPA,
+        Tablas.GRUPO + "." + GruposTabla.FECHA_HORA_ULTIMA_UBICACION,
+        Tablas.GRUPO + "." + GruposTabla.DIRECCION_ULTIMA_UBICACION,
+        Tablas.GRUPO + "." + GruposTabla.FECHA_HORA_CREACION,
+        Tablas.GRUPO + "." + GruposTabla.ID_PROGRAMACION_RASTREO_GPS
     };
 
     // [/CAMPOS_AUXILIARES]
@@ -835,6 +858,29 @@ public class ProviderCotizacion extends ContentProvider
                         null, null, null, null);
 
                 break;
+            case PROGRAMACION_RASTREGO_GPS_DETALLE_TABLA_ID_CODIGO_DETALLE_ID:
+                id = ProgramacionesRastregoGpsDetalleTabla.obtenerIdTabla(uri);
+
+                String dia = ProgramacionesRastregoGpsDetalleTabla.obtenerIdDosTabla(uri);
+                // Consultando ubiccaciones de Unidades de Reaccion por turno
+                builder.setTables(Tablas.PROGRAMACION_RASTREO_GPS_DETALLE);
+                c = builder.query(bd, proyProgramacionRastreoGpsDetalle,
+                        Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + '.' + ProgramacionesRastregoGpsDetalleTabla.ID_PROGRAMACION_RASTREO_GPS + "=" + "\'" + id + "\'"
+                                + " AND " + Tablas.PROGRAMACION_RASTREO_GPS_DETALLE + '.' + ProgramacionesRastregoGpsDetalleTabla.DIA + "=" + "\'" + dia + "\'"
+                                + (!TextUtils.isEmpty(selection) ?" AND (" + selection + ')' : ""),
+                        null, null, null, null);
+
+                break;
+
+            case GRUPO_TABLA:
+                // Consultando grupo
+                builder.setTables(Tablas.GRUPO);
+                c = builder.query(bd, proyGrupo,
+                    null,
+                    null, null, null, null);
+
+                break;
+
 
 
             default:

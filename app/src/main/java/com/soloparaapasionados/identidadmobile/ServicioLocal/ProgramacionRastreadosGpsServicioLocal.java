@@ -42,6 +42,8 @@ public class ProgramacionRastreadosGpsServicioLocal extends IntentService
     public static final String ACTIVAR="activar";
     public static final String DESACTIVAR="desactivar";
 
+    private static final int FOREGROUND_SERVICE_ID = 20;
+
     // Constant values in milliseconds
     private static final long milMinute = 60000L;
     private static final long milHour = 3600000L;
@@ -99,7 +101,7 @@ public class ProgramacionRastreadosGpsServicioLocal extends IntentService
 
             builder.setProgress( 2, 1, false);
 
-            startForeground(1, builder.build());
+            startForeground(FOREGROUND_SERVICE_ID, builder.build());
 
             ContentResolver resolver = getContentResolver();
 
@@ -181,7 +183,7 @@ public class ProgramacionRastreadosGpsServicioLocal extends IntentService
 
             builder.setProgress( 2, 1, false);
 
-            startForeground(1, builder.build());
+            startForeground(FOREGROUND_SERVICE_ID, builder.build());
 
             ContentResolver resolver = getContentResolver();
 

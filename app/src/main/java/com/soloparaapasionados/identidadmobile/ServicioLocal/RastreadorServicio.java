@@ -4,20 +4,24 @@ import android.Manifest;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.RemoteException;
 import android.support.v4.BuildConfig;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -47,15 +51,23 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.soloparaapasionados.identidadmobile.R;
 import com.soloparaapasionados.identidadmobile.actividades.RastreadorActivity;
 import com.soloparaapasionados.identidadmobile.modelo.CorrelativoTabla;
+import com.soloparaapasionados.identidadmobile.modelo.Grupo;
+import com.soloparaapasionados.identidadmobile.modelo.ProgramacionRastreoGpsDetalle;
 import com.soloparaapasionados.identidadmobile.modelo.UbicacionDispositivoGps;
 import com.soloparaapasionados.identidadmobile.serviciotransporttracker.TrackerTaskService;
 import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones;
 import com.soloparaapasionados.identidadmobile.sqlite.BaseDatosCotizaciones.Tablas;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion;
 import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.CorrelativosTabla;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.GruposTabla;
+import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.ProgramacionesRastregoGpsDetalleTabla;
+
+
 
 import java.io.File;
 import java.io.FileWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -85,6 +97,8 @@ public class RastreadorServicio extends Service implements LocationListener
     private PowerManager.WakeLock mWakelock;
 
     private SharedPreferences mPrefs;
+
+    private int mDiaSemana=0;
 
     public RastreadorServicio()
     {
@@ -118,9 +132,20 @@ public class RastreadorServicio extends Service implements LocationListener
         String email = mPrefs.getString(getString(R.string.email), "");
         String password = mPrefs.getString(getString(R.string.password), "");
 
-        
+        if (validaRangoInicioFin()==true)
+        {
+            Toast.makeText(this, "11111111111111111", Toast.LENGTH_LONG).show();
+            fetchRemoteConfig();
+            //////loadPreviousStatuses();
+            startLocationTracking();
+        }
+        else
+        {
+            Toast.makeText(this, "222222222222222222", Toast.LENGTH_LONG).show();
+            stopSelf();
+        }
 
-        authenticate(email, password);
+        //////authenticate(email, password);
     }
 
     @Override
@@ -261,9 +286,9 @@ public class RastreadorServicio extends Service implements LocationListener
     private void startLocationTracking()
     {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(mLocationRequestCallback)
-                .addApi(LocationServices.API)
-                .build();
+            .addConnectionCallbacks(mLocationRequestCallback)
+            .addApi(LocationServices.API)
+            .build();
 
         mGoogleApiClient.connect();
     }
@@ -351,11 +376,11 @@ public class RastreadorServicio extends Service implements LocationListener
         long hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         int startupSeconds = (int) (mFirebaseRemoteConfig.getDouble("SLEEP_HOURS_DURATION") * 3600);
 
-        if (hour == mFirebaseRemoteConfig.getLong("SLEEP_HOUR_OF_DAY"))
+        /*if (hour == mFirebaseRemoteConfig.getLong("SLEEP_HOUR_OF_DAY"))
         {
             shutdownAndScheduleStartup(startupSeconds);
             return;
-        }
+        }*/
 
         Map<String, Object> transportStatus = new HashMap<>();
         transportStatus.put("lat", location.getLatitude());
@@ -372,7 +397,7 @@ public class RastreadorServicio extends Service implements LocationListener
 
         insertarUbicacionDispositivoGpsLocalmente(location,fechaHoraUbicacionGps,batteryLevel);
 
-        if (locationIsAtStatus(location, 1) && locationIsAtStatus(location, 0))
+        /*if (locationIsAtStatus(location, 1) && locationIsAtStatus(location, 0))
         {
             // If the most recent two statuses are approximately at the same
             // location as the new current location, rather than adding the new
@@ -395,7 +420,7 @@ public class RastreadorServicio extends Service implements LocationListener
             // We push the entire list at once since each key/index changes, to
             // minimize network requests.
             mFirebaseTransportRef.setValue(mTransportStatuses);
-        }
+        }*/
 
         if (BuildConfig.DEBUG)
         {
@@ -405,7 +430,7 @@ public class RastreadorServicio extends Service implements LocationListener
         NetworkInfo info = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 
         boolean connected = info != null && info.isConnectedOrConnecting();
-        setStatusMessage(connected ? R.string.tracking : R.string.not_tracking);
+        //////setStatusMessage(connected ? R.string.tracking : R.string.not_tracking);
     }
 
     private void buildNotification()
@@ -463,5 +488,123 @@ public class RastreadorServicio extends Service implements LocationListener
         ubicacionDispositivoGps.setBateria(batteryLevel);
 
         return ubicacionDispositivoGps;
+    }
+
+    private boolean validaRangoInicioFin()
+    {
+        int mYear, mMonth, mHoraHoy=0, mMinutoHoy=0, mDay=0,mDiaSemana;
+        int mHoraInicio=0, mMinutoInicio=0, mHoraFin=0, mMinutoFin=0;
+        String mTime;
+        String mDate;
+
+        try
+        {
+            ContentResolver resolver = getContentResolver();
+
+            Uri uri =  GruposTabla.crearUriGrupoTablaLista();
+
+            Cursor cursorGrupo = resolver.query(uri, null, null, null, null);
+            assert cursorGrupo != null;
+
+            Log.i(TAG, "Se encontraron " + cursorGrupo.getCount() + " registros locales.");
+            // Encontrar datos obsoletos
+            if (cursorGrupo.moveToNext()== true)
+            {
+                Grupo grupo = new Grupo(cursorGrupo);
+
+                // Create a new notification
+                if (grupo.getRastreoGps() == true)
+                {
+                    Calendar mCalendarHoy;
+                    mCalendarHoy = Calendar.getInstance();
+                    mDiaSemana = mCalendarHoy.get(Calendar.DAY_OF_WEEK);
+
+                    Uri uriProgramacionRastreoGpsDetalle =  ProgramacionesRastregoGpsDetalleTabla.crearUriProgramacionRastreoGpsDetalleTabla(grupo.getIdProgramacionRastreoGps(),obtieneDiaSemana(mDiaSemana));
+
+                    Cursor cursorProgramacionRastreoGpsDetalle = resolver.query(uriProgramacionRastreoGpsDetalle, null, null, null, null);
+                    assert cursorProgramacionRastreoGpsDetalle != null;
+
+                    if (cursorProgramacionRastreoGpsDetalle.moveToNext()== true)
+                    {
+                        ProgramacionRastreoGpsDetalle programacionRastreoGpsDetalle = new ProgramacionRastreoGpsDetalle(cursorProgramacionRastreoGpsDetalle);
+
+                        if (programacionRastreoGpsDetalle.getRastreoGps() == true)
+                        {
+                            mYear = mCalendarHoy.get(Calendar.YEAR);
+                            mMonth = mCalendarHoy.get(Calendar.MONTH) + 1;
+                            mDay = mCalendarHoy.get(Calendar.DATE);
+                            mHoraHoy = mCalendarHoy.get(Calendar.HOUR_OF_DAY);
+                            mMinutoHoy = mCalendarHoy.get(Calendar.MINUTE);
+
+                            mDate = mDay + "/" + mMonth + "/" + mYear;
+
+                            DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+                            /////////////////Configura Inicio de Rastreo
+                            Date fechaRangoHoraInicio = format.parse( mDate + " " + programacionRastreoGpsDetalle.getRangoHoraInicio());
+
+                            Calendar mCalendarRangoHoraInicio;
+                            mCalendarRangoHoraInicio = Calendar.getInstance();
+                            mCalendarRangoHoraInicio.setTime(fechaRangoHoraInicio);
+
+                            mHoraInicio= mCalendarRangoHoraInicio.get(Calendar.HOUR_OF_DAY);
+                            mMinutoInicio=mCalendarRangoHoraInicio.get(Calendar.MINUTE);
+
+                            /////////////////Configura Fin de Rastreo
+                            Date fechaRangoHoraFin = format.parse( mDate + " " + programacionRastreoGpsDetalle.getRangoHoraFinal());
+
+                            Calendar mCalendarRangoHoraFin;
+                            mCalendarRangoHoraFin = Calendar.getInstance();
+                            mCalendarRangoHoraFin.setTime(fechaRangoHoraFin);
+
+                            mHoraFin= mCalendarRangoHoraFin.get(Calendar.HOUR_OF_DAY);
+                            mMinutoFin=mCalendarRangoHoraFin.get(Calendar.MINUTE);
+                        }
+                    }
+                    cursorProgramacionRastreoGpsDetalle.close();
+                }
+            }
+            cursorGrupo.close();
+
+            if((mHoraHoy >= mHoraInicio)  && (mHoraHoy <= mHoraFin ) )
+            {
+                if(((mHoraHoy == mHoraInicio && mMinutoHoy < mMinutoInicio) || (mHoraHoy == mHoraFin && mMinutoHoy > mMinutoFin ) ))
+                {
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch ( ParseException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private String obtieneDiaSemana(int dia)
+    {
+        switch (dia)
+        {
+            case 1 : //Domingo
+                return "Domingo";
+            case 2 : //Lunes
+                return "Lunes";
+            case 3 : //Martes
+                return "Martes";
+            case 4 : //Miercoles
+                return "Miercoles";
+            case 5 : //Jueves
+                return "Jueves";
+            case 6 : //Viernes
+                return "Viernes";
+            case 7 : //Sabado
+                return "Sabado";
+        }
+        return "Lunes";
     }
 }

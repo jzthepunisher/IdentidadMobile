@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.widget.Toast;
 
+import com.soloparaapasionados.identidadmobile.ServicioLocal.RastreadorServicio;
+
 /**
  * Created by USUARIO on 04/02/2018.
  */
@@ -21,6 +23,9 @@ public class GPSCheck extends BroadcastReceiver {
 
         if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
+            Intent intentInicio = new Intent(context, RastreadorServicio.class);
+            intentInicio.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intentInicio);
             Toast.makeText(context, "Has habilitado GPS", Toast.LENGTH_LONG).show();
         }
         else
