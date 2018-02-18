@@ -65,6 +65,8 @@ public class ReminderAlarmService  extends IntentService
 
         if(activar_desactivar.equals(ProgramacionRastreadosGpsServicioLocal.ACTIVAR))
         {
+
+
             if (isServiceRunning(RastreadorServicio.class))
             {
                 // If service already running, simply update UI.
@@ -90,23 +92,12 @@ public class ReminderAlarmService  extends IntentService
                     .addNextIntentWithParentStack(action)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            //Grab the task description
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-
             String titulo = "Progrmación rastreo GPS";
-            String description = "Se ha iniciado o finalizado rastreo";
-            //////try {
-            //////    if (cursor != null && cursor.moveToFirst()) {
-            //////        description = AlarmReminderContract.getColumnString(cursor, AlarmReminderContract.AlarmReminderEntry.KEY_TITLE);
-            //////    }
-            //////} finally {
-            //////    if (cursor != null) {
-            //////        cursor.close();
-            //////    }
-            //////}
+            String description = "Se ha" + activar_desactivar + "rastreo";
 
             Notification note = new NotificationCompat.Builder(this)
                     .setContentTitle(titulo)
+                    .setOngoing(true)
                     .setContentText(description)
                     .setSmallIcon(R.drawable.ic_access_time_black_24dp)
                     .setContentIntent(operation)
@@ -117,10 +108,51 @@ public class ReminderAlarmService  extends IntentService
 
             manager.notify(NOTIFICATION_ID, note);
 
+            //Grab the task description
+           /* if(uri != null)
+            {
+                Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            }*/
+
+            //////try {
+            //////    if (cursor != null && cursor.moveToFirst()) {
+            //////        description = AlarmReminderContract.getColumnString(cursor, AlarmReminderContract.AlarmReminderEntry.KEY_TITLE);
+            //////    }
+            //////} finally {
+            //////    if (cursor != null) {
+            //////        cursor.close();
+            //////    }
+            //////}
+
+
+
         }
 
         if(activar_desactivar.equals(ProgramacionRastreadosGpsServicioLocal.DESACTIVAR))
         {
+            //Display a notification to view the task details
+            Intent action = new Intent(this, RastreadorActivity.class);
+            action.setData(uri);
+            PendingIntent operation = TaskStackBuilder.create(this)
+                    .addNextIntentWithParentStack(action)
+                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            String titulo = "Progrmación rastreo GPS";
+            String description = "Se ha" + activar_desactivar + "rastreo";
+
+            Notification note = new NotificationCompat.Builder(this)
+                    .setContentTitle(titulo)
+                    .setOngoing(true)
+                    .setContentText(description)
+                    .setSmallIcon(R.drawable.ic_access_time_black_24dp)
+                    .setContentIntent(operation)
+                    .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
+                    .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                    .setAutoCancel(true)
+                    .build();
+
+            manager.notify(NOTIFICATION_ID, note);
+
             if (isServiceRunning(RastreadorServicio.class))
             {
                 stopLocationService();

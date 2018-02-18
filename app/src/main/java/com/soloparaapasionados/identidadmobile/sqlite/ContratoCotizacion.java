@@ -772,6 +772,11 @@ public class ContratoCotizacion
             return URI_CONTENIDO.buildUpon().appendPath(id).appendPath(CODIGO_DETALLE).appendPath(dia).build();
         }
 
+        public static Uri crearUriProgramacionRastreoGpsDetalleTablaActivadoDesactivado(String id,String dia,String activar_desactivar)
+        {
+            return URI_CONTENIDO.buildUpon().appendPath(id).appendPath(CODIGO_DETALLE).appendPath(dia).appendPath(activar_desactivar).build();
+        }
+
         public static Uri crearUriProgramacionRastreoGpsDetalleTablaLista()
         {
             return URI_CONTENIDO;

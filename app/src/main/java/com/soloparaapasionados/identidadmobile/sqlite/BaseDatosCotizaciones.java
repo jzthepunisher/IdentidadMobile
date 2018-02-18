@@ -56,7 +56,7 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
 
     private static final String NOMBRE_BASE_DATOS = "cotizaciones.db";
 
-    private static final int VERSION_ACTUAL = 119;
+    private static final int VERSION_ACTUAL = 140;
 
     private final Context contexto;
 
@@ -803,7 +803,8 @@ public class BaseDatosCotizaciones extends SQLiteOpenHelper {
         mockProgramacionRastreoGpsDetalleTabla(sqLiteDatabase, new ProgramacionRastreoGpsDetalle("01","Jueves", true,"08:30","19:00",1,1,1));
         mockProgramacionRastreoGpsDetalleTabla(sqLiteDatabase, new ProgramacionRastreoGpsDetalle("01","Viernes", true,"08:30","19:00",1,1,1));
         mockProgramacionRastreoGpsDetalleTabla(sqLiteDatabase, new ProgramacionRastreoGpsDetalle("01","Sabado", true,"8:30","13:00",0,1,1));
-        mockProgramacionRastreoGpsDetalleTabla(sqLiteDatabase, new ProgramacionRastreoGpsDetalle("01","Domingo", true,"0:33","3:30",0,1,1));
+        mockProgramacionRastreoGpsDetalleTabla(sqLiteDatabase, new ProgramacionRastreoGpsDetalle("01","Domingo", true,
+                "12:14","12:19",0,1,1));
 
     }
 

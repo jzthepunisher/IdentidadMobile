@@ -127,7 +127,7 @@ public class ProgramacionRastreadosGpsServicioLocal extends IntentService
             }
             cursorProgramacionRastreoGpsDetalle.close();
             // Lista de operaciones
-            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+            //ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
             // [INSERCIONES]
             //Date miFecha = new Date();
@@ -152,19 +152,22 @@ public class ProgramacionRastreadosGpsServicioLocal extends IntentService
                     .withValue(Empleados.FOTO, empleado.getFoto())
                     .build());*/
 
-            resolver.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
+            //resolver.applyBatch(ContratoCotizacion.AUTORIDAD, ops);
 
             // Quitar de primer plano
             builder.setProgress( 2, 2, false);
             stopForeground(true);
 
-        } catch (RemoteException e)
+        } catch (Exception e)
         {
             e.printStackTrace();
-        } catch (OperationApplicationException e)
+        }/* catch (RemoteException e)
         {
             e.printStackTrace();
-        }
+        }*/ /*catch (OperationApplicationException e)
+        {
+            e.printStackTrace();
+        }*/
     }
 
     private void activarAlarmasProgramacionRastreoGps()
@@ -204,7 +207,6 @@ public class ProgramacionRastreadosGpsServicioLocal extends IntentService
                 // Create a new notification
                 if (programacionRastreoGpsDetalle.getRastreoGps() == true)
                 {
-                    Uri uriProgramacionRastreoGpsDetalle =  ProgramacionesRastregoGpsDetalleTabla.crearUriProgramacionRastreoGpsDetalleTabla(programacionRastreoGpsDetalle.getIdProgramacionRastreoGps(),programacionRastreoGpsDetalle.getDia());
 
                     Calendar mCalendarHoy;
                     mCalendarHoy = Calendar.getInstance();
@@ -234,8 +236,12 @@ public class ProgramacionRastreadosGpsServicioLocal extends IntentService
 
                     long selectedTimestamp =  mCalendarRangoHoraInicio.getTimeInMillis();
 
+                    Uri uriProgramacionRastreoGpsDetalleActivar =  ProgramacionesRastregoGpsDetalleTabla.crearUriProgramacionRastreoGpsDetalleTablaActivadoDesactivado(programacionRastreoGpsDetalle.getIdProgramacionRastreoGps()
+                            ,programacionRastreoGpsDetalle.getDia()
+                            ,ProgramacionRastreadosGpsServicioLocal.ACTIVAR);
+
                     new AlarmScheduler().setRepeatAlarm(getApplicationContext(), selectedTimestamp,
-                        uriProgramacionRastreoGpsDetalle, mRepeatTime,
+                            uriProgramacionRastreoGpsDetalleActivar, mRepeatTime,
                         ProgramacionRastreadosGpsServicioLocal.ACTIVAR);
 
                     ///////////////////Configura Fin de Rastreo
@@ -247,8 +253,12 @@ public class ProgramacionRastreadosGpsServicioLocal extends IntentService
 
                     selectedTimestamp =  mCalendarRangoHoraFin.getTimeInMillis();
 
+                    Uri uriProgramacionRastreoGpsDetalleDesactivar =  ProgramacionesRastregoGpsDetalleTabla.crearUriProgramacionRastreoGpsDetalleTablaActivadoDesactivado(programacionRastreoGpsDetalle.getIdProgramacionRastreoGps()
+                            ,programacionRastreoGpsDetalle.getDia()
+                            ,ProgramacionRastreadosGpsServicioLocal.DESACTIVAR);
+
                     new AlarmScheduler().setRepeatAlarm(getApplicationContext(), selectedTimestamp,
-                        uriProgramacionRastreoGpsDetalle, mRepeatTime,
+                            uriProgramacionRastreoGpsDetalleDesactivar, mRepeatTime,
                         ProgramacionRastreadosGpsServicioLocal.DESACTIVAR);
 
                     Toast.makeText(this, "Alarm time is " + selectedTimestamp,Toast.LENGTH_LONG).show();

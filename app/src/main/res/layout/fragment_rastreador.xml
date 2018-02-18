@@ -108,6 +108,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="0dp"
                             android:layout_alignParentRight="true"
+                            android:enabled="true"
                             android:checked="true"
                             android:layout_centerVertical="true"/>
 
@@ -147,7 +148,10 @@
                             android:textAppearance="?android:attr/textAppearanceListItem"
                             android:textStyle="bold"
                             tools:text="@string/rastrego_gps_estado" />
-                        <!--android:textAppearance="?textAppearanceListItem"-->
+                        <!--android:textAppearance="?textAppearanceListItem"
+                        android:text="@string/rastrego_gps_estado_resumen"
+                            tools:text="@string/rastrego_gps_estado_resumen"
+                        -->
                         <TextView
                             android:id="@+id/textViewEstadoRastreoGpsResumen"
                             android:layout_width="wrap_content"
@@ -159,7 +163,7 @@
                             android:layout_below="@+id/textViewDescripcionEstadoRastreoGps"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="@string/rastrego_gps_estado_resumen"
-                            tools:text="@string/rastrego_gps_estado_resumen" />
+                            tools:text="@string/rastrego_gps_estado_resumen"/>
 
                         <android.support.v7.widget.SwitchCompat
                             android:id="@+id/switchCompatEstadoRastreoGps"
@@ -346,7 +350,7 @@
                             tools:text="@string/programacion_rango" />
                         <!--android:textAppearance="?textAppearanceListItem"-->
                         <TextView
-                            android:id="@+id/textViewRangoLunesResumen"
+                            android:id="@+id/textViewRangoMartesResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/list_item_left_padding"
@@ -718,7 +722,7 @@
                             tools:text="@string/programacion_rango" />
                         <!--android:textAppearance="?textAppearanceListItem"-->
                         <TextView
-                            android:id="@+id/textViewRangoLunesMiercoles"
+                            android:id="@+id/textViewRangoMiercolesResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/list_item_left_padding"
@@ -904,7 +908,7 @@
                             tools:text="@string/programacion_rango" />
                         <!--android:textAppearance="?textAppearanceListItem"-->
                         <TextView
-                            android:id="@+id/textViewRangoLunesJueves"
+                            android:id="@+id/textViewRangoJuevesResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/list_item_left_padding"
@@ -1089,7 +1093,7 @@
                             tools:text="@string/programacion_rango" />
                         <!--android:textAppearance="?textAppearanceListItem"-->
                         <TextView
-                            android:id="@+id/textViewRangoLunesViernes"
+                            android:id="@+id/textViewRangoViernesResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/list_item_left_padding"
@@ -1270,7 +1274,7 @@
                             tools:text="@string/programacion_rango" />
                         <!--android:textAppearance="?textAppearanceListItem"-->
                         <TextView
-                            android:id="@+id/textViewRangoLunesSabado"
+                            android:id="@+id/textViewRangoSabadoResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/list_item_left_padding"
@@ -1448,7 +1452,7 @@
                             tools:text="@string/programacion_rango" />
                         <!--android:textAppearance="?textAppearanceListItem"-->
                         <TextView
-                            android:id="@+id/textViewRangoLunesDomingo"
+                            android:id="@+id/textViewRangoDomingoResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/list_item_left_padding"
@@ -1627,6 +1631,14 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/switchCompat"
                     android:checked="true"
+                    android:layout_centerHorizontal="true"/>
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switchCompatActivaAlarma"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/switchCompatActivacionProgramacion"
+                    android:checked="false"
                     android:layout_centerHorizontal="true"/>
 
             </RelativeLayout>

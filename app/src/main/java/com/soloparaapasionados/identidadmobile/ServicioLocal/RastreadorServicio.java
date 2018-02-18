@@ -132,7 +132,7 @@ public class RastreadorServicio extends Service implements LocationListener
         String email = mPrefs.getString(getString(R.string.email), "");
         String password = mPrefs.getString(getString(R.string.password), "");
 
-        if (validaRangoInicioFin()==true)
+        if (validaRangoInicioFin() == true)
         {
             Toast.makeText(this, "11111111111111111", Toast.LENGTH_LONG).show();
             fetchRemoteConfig();
@@ -499,6 +499,8 @@ public class RastreadorServicio extends Service implements LocationListener
 
         try
         {
+            Boolean rastreoGpsDia=false;
+
             ContentResolver resolver = getContentResolver();
 
             Uri uri =  GruposTabla.crearUriGrupoTablaLista();
@@ -515,6 +517,7 @@ public class RastreadorServicio extends Service implements LocationListener
                 // Create a new notification
                 if (grupo.getRastreoGps() == true)
                 {
+                    rastreoGpsDia=true;
                     Calendar mCalendarHoy;
                     mCalendarHoy = Calendar.getInstance();
                     mDiaSemana = mCalendarHoy.get(Calendar.DAY_OF_WEEK);
@@ -557,8 +560,8 @@ public class RastreadorServicio extends Service implements LocationListener
                             mCalendarRangoHoraFin = Calendar.getInstance();
                             mCalendarRangoHoraFin.setTime(fechaRangoHoraFin);
 
-                            mHoraFin= mCalendarRangoHoraFin.get(Calendar.HOUR_OF_DAY);
-                            mMinutoFin=mCalendarRangoHoraFin.get(Calendar.MINUTE);
+                            mHoraFin = mCalendarRangoHoraFin.get(Calendar.HOUR_OF_DAY);
+                            mMinutoFin = mCalendarRangoHoraFin.get(Calendar.MINUTE);
                         }
                     }
                     cursorProgramacionRastreoGpsDetalle.close();
@@ -566,24 +569,30 @@ public class RastreadorServicio extends Service implements LocationListener
             }
             cursorGrupo.close();
 
-            if((mHoraHoy >= mHoraInicio)  && (mHoraHoy <= mHoraFin ) )
+            if (rastreoGpsDia == true)
             {
-                if(((mHoraHoy == mHoraInicio && mMinutoHoy < mMinutoInicio) || (mHoraHoy == mHoraFin && mMinutoHoy > mMinutoFin ) ))
+                if((mHoraHoy >= mHoraInicio)  && (mHoraHoy <= mHoraFin ) )
+                {
+                    if(((mHoraHoy == mHoraInicio && mMinutoHoy < mMinutoInicio) || (mHoraHoy == mHoraFin && mMinutoHoy > mMinutoFin ) ))
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+                else
                 {
                     return false;
                 }
-                return true;
             }
-            else
-            {
-                return false;
-            }
+
         }
         catch ( ParseException e)
         {
             e.printStackTrace();
             return false;
         }
+
+        return false;
     }
 
     private String obtieneDiaSemana(int dia)
