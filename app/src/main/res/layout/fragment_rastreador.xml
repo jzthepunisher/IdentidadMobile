@@ -350,16 +350,13 @@
                             tools:text="@string/programacion_rango" />
                         <!--android:textAppearance="?textAppearanceListItem"-->
                         <TextView
-                            android:id="@+id/textViewRangoMartesResumen"
+                            android:id="@+id/textViewRangoLunesResumen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/list_item_left_padding"
-                            android:layout_marginTop="@dimen/padding_top_item_small"
-                            android:layout_marginBottom="@dimen/padding_top_item"
-                            android:layout_marginRight="50dp"
+                            android:layout_alignStart="@+id/textViewDescripcionRangoLunes"
                             android:layout_below="@+id/textViewDescripcionRangoLunes"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="@string/programacion_rango_resumen"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             tools:text="@string/programacion_rango_resumen" />
 
                     </RelativeLayout>

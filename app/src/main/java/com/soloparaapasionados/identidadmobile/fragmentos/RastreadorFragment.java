@@ -21,7 +21,10 @@ import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
@@ -48,7 +51,7 @@ import com.soloparaapasionados.identidadmobile.sqlite.ContratoCotizacion.GruposT
  * Created by USUARIO on 10/02/2018.
  */
 
-public class RastreadorFragment  extends Fragment
+public class RastreadorFragment  extends Fragment implements  LoaderManager.LoaderCallbacks<Cursor>
 {
     private static final String TAG = RastreadorFragment.class.getSimpleName();
     private static final String ARGUMENTO_IMEI = "argumento_imei";
@@ -116,6 +119,7 @@ public class RastreadorFragment  extends Fragment
     private TextView textViewRangoDomingoResumen;
     private TextView  textViewIntervaloDomingo;
 
+    private int idCursor;
     public RastreadorFragment()
     {
     }
@@ -253,7 +257,10 @@ public class RastreadorFragment  extends Fragment
         }
 
         muestraGrupoInformacion();
-        muestraProgramacionRastreGpsDetalleInformacion();
+        //muestraProgramacionRastreGpsDetalleInformacion();
+
+        // Iniciar loader
+        getActivity().getSupportLoaderManager().restartLoader(1,null,this);
 
         return root;
     }
@@ -266,6 +273,7 @@ public class RastreadorFragment  extends Fragment
         textViewEstadoRastreoGpsResumen = (TextView) root.findViewById(R.id.textViewEstadoRastreoGpsResumen);
         textViewTipoRastreoGpsResumen= (TextView) root.findViewById(R.id.textViewTipoRastreoGpsResumen);
 
+
         switchCompatProgramacionLunes=(SwitchCompat) root.findViewById(R.id.switchCompatProgramacionLunes);
         textViewProgramacionLunesResumen= (TextView) root.findViewById(R.id.textViewProgramacionLunesResumen);
         textViewRangoLunesResumen= (TextView) root.findViewById(R.id.textViewRangoLunesResumen);
@@ -273,7 +281,7 @@ public class RastreadorFragment  extends Fragment
 
         switchCompatProgramacionMartes=(SwitchCompat) root.findViewById(R.id.switchCompatProgramacionMartes);
         textViewProgramacionMartesResumen= (TextView) root.findViewById(R.id.textViewProgramacionMartesResumen);
-        textViewRangoMartesResumen = (TextView) root.findViewById(R.id.textViewRangoMartesResumen);
+        textViewRangoMartesResumen = (TextView) root.findViewById(R.id.textViewRangoLunesResumen);
         textViewIntervaloMartes = (TextView) root.findViewById(R.id.textViewIntervaloMartes);
 
         switchCompatProgramacionMiercoles=(SwitchCompat) root.findViewById(R.id.switchCompatProgramacionMiercoles);
@@ -560,7 +568,7 @@ public class RastreadorFragment  extends Fragment
 
     }
 
-    private void muestraProgramacionRastreGpsDetalleInformacion()
+    /*private void muestraProgramacionRastreGpsDetalleInformacion()
     {
         try
         {
@@ -571,11 +579,8 @@ public class RastreadorFragment  extends Fragment
             Cursor cursorProgramacionRastreoGpsDetalle = resolver.query(uri, null, null, null, null);
             assert cursorProgramacionRastreoGpsDetalle != null;
 
-            Log.i(TAG, "Se encontraron " + cursorProgramacionRastreoGpsDetalle.getCount() + " registros locales.");
+            Log.i(TAG, "Se encontraron " + cursorProgramacionRastreoGpsDetalle.getCount() + " registros locales d.");
 
-            if (cursorProgramacionRastreoGpsDetalle.getCount()>=1)
-            {
-                //cursorProgramacionRastreoGpsDetalle.moveToPosition(-1);
 
 
                     // Encontrar datos obsoletos
@@ -793,7 +798,255 @@ public class RastreadorFragment  extends Fragment
 
                     }
 
+
+
+            cursorProgramacionRastreoGpsDetalle.close();
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }*/
+
+    private void muestraProgramacionRastreGpsDetalleInformacion(Cursor cursorProgramacionRastreoGpsDetalle)
+    {
+        try
+        {
+
+
+            assert cursorProgramacionRastreoGpsDetalle != null;
+
+            Log.i(TAG, "Se encontraron " + cursorProgramacionRastreoGpsDetalle.getCount() + " registros locales d.");
+
+           /* if (cursorProgramacionRastreoGpsDetalle.getCount()>=1)
+            {
+                cursorProgramacionRastreoGpsDetalle.moveToPosition(-1);
+*/
+
+            // Encontrar datos obsoletos
+            while (cursorProgramacionRastreoGpsDetalle.moveToNext())
+            {
+                Log.i(TAG, "cursorProgramacionRastreoGpsDetalle Posicion " + cursorProgramacionRastreoGpsDetalle.getPosition());
+
+                ProgramacionRastreoGpsDetalle programacionRastreoGpsDetalle = new ProgramacionRastreoGpsDetalle(cursorProgramacionRastreoGpsDetalle);
+
+                if (programacionRastreoGpsDetalle.getDia().equals("Lunes"))
+                {
+                    switchCompatProgramacionLunes.setEnabled(false);
+                    if (programacionRastreoGpsDetalle.getRastreoGps()==true)
+                    {
+                        switchCompatProgramacionLunes.setChecked(true);
+                        textViewProgramacionLunesResumen.setText("Este día sí será rastreado el dispostivo");
+                    }
+                    else
+                    {
+                        switchCompatProgramacionLunes.setChecked(false);
+                        textViewProgramacionLunesResumen.setText("Este día nó será rastreado el dispostivo");
+                    }
+
+                    if(programacionRastreoGpsDetalle.getRangoHoraInicio() !=null && programacionRastreoGpsDetalle.getRangoHoraFinal() != null)
+                    {
+                        textViewRangoLunesResumen.setText("Desde " + programacionRastreoGpsDetalle.getRangoHoraInicio() + " hasta " +
+                                programacionRastreoGpsDetalle.getRangoHoraFinal() + " el dispositivo será rastreado");
+                    }
+                    else
+                    {
+                        textViewRangoLunesResumen.setText("Desde 0 hasta 0 el dispositivo será rastreado");
+                    }
+
+
+                    textViewIntervaloLunes.setText("Cada " + programacionRastreoGpsDetalle.getIntervaloHoraCantidad() + " hora(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloMinutoCantidad() + " minuto(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloSegundoCantidad() + " segundo(s) enviará la ubicación el dispositivo");
+                }
+
+                if (programacionRastreoGpsDetalle.getDia().equals("Martes"))
+                {
+                    switchCompatProgramacionMartes.setEnabled(false);
+                    if (programacionRastreoGpsDetalle.getRastreoGps()==true)
+                    {
+                        switchCompatProgramacionMartes.setChecked(true);
+                        textViewProgramacionMartesResumen.setText("Este día sí será rastreado el dispostivo");
+                    }
+                    else
+                    {
+                        switchCompatProgramacionMartes.setChecked(false);
+                        textViewProgramacionMartesResumen.setText("Este día nó será rastreado el dispostivo");
+                    }
+
+                    if(programacionRastreoGpsDetalle.getRangoHoraInicio() !=null && programacionRastreoGpsDetalle.getRangoHoraFinal() != null)
+                    {
+                        textViewRangoMartesResumen.setText("Desde " + programacionRastreoGpsDetalle.getRangoHoraInicio() + " hasta " +
+                                programacionRastreoGpsDetalle.getRangoHoraFinal() + " el dispositivo será rastreado");
+                    }
+                    else
+                    {
+                        textViewRangoMartesResumen.setText("Desde 0 hasta 0 el dispositivo será rastreado");
+                    }
+
+
+                    textViewIntervaloMartes.setText("Cada " + programacionRastreoGpsDetalle.getIntervaloHoraCantidad() + " hora(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloMinutoCantidad() + " minuto(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloSegundoCantidad() + " segundo(s) enviará la ubicación el dispositivo");
+                }
+
+                if (programacionRastreoGpsDetalle.getDia().equals("Miercoles"))
+                {
+                    switchCompatProgramacionMiercoles.setEnabled(false);
+                    if (programacionRastreoGpsDetalle.getRastreoGps()==true)
+                    {
+                        switchCompatProgramacionMiercoles.setChecked(true);
+                        textViewProgramacionMiercolesResumen.setText("Este día sí será rastreado el dispostivo");
+                    }
+                    else
+                    {
+                        switchCompatProgramacionMiercoles.setChecked(false);
+                        textViewProgramacionMiercolesResumen.setText("Este día nó será rastreado el dispostivo");
+                    }
+
+                    if(programacionRastreoGpsDetalle.getRangoHoraInicio() !=null && programacionRastreoGpsDetalle.getRangoHoraFinal() != null)
+                    {
+                        textViewRangoMiercolesResumen.setText("Desde " + programacionRastreoGpsDetalle.getRangoHoraInicio() + " hasta " +
+                                programacionRastreoGpsDetalle.getRangoHoraFinal() + " el dispositivo será rastreado");
+                    }
+                    else
+                    {
+                        textViewRangoMiercolesResumen.setText("Desde 0 hasta 0 el dispositivo será rastreado");
+                    }
+
+
+                    textViewIntervaloMiercoles.setText("Cada " + programacionRastreoGpsDetalle.getIntervaloHoraCantidad() + " hora(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloMinutoCantidad() + " minuto(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloSegundoCantidad() + " segundo(s) enviará la ubicación el dispositivo");
+                }
+
+                if (programacionRastreoGpsDetalle.getDia().equals("Jueves"))
+                {
+                    switchCompatProgramacionJueves.setEnabled(false);
+                    if (programacionRastreoGpsDetalle.getRastreoGps()==true)
+                    {
+                        switchCompatProgramacionJueves.setChecked(true);
+                        textViewProgramacionJuevesResumen.setText("Este día sí será rastreado el dispostivo");
+                    }
+                    else
+                    {
+                        switchCompatProgramacionJueves.setChecked(false);
+                        textViewProgramacionJuevesResumen.setText("Este día nó será rastreado el dispostivo");
+                    }
+
+                    if(programacionRastreoGpsDetalle.getRangoHoraInicio() !=null && programacionRastreoGpsDetalle.getRangoHoraFinal() != null)
+                    {
+                        textViewRangoJuevesResumen.setText("Desde " + programacionRastreoGpsDetalle.getRangoHoraInicio() + " hasta " +
+                                programacionRastreoGpsDetalle.getRangoHoraFinal() + " el dispositivo será rastreado");
+                    }
+                    else
+                    {
+                        textViewRangoJuevesResumen.setText("Desde 0 hasta 0 el dispositivo será rastreado");
+                    }
+
+
+                    textViewIntervaloJueves.setText("Cada " + programacionRastreoGpsDetalle.getIntervaloHoraCantidad() + " hora(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloMinutoCantidad() + " minuto(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloSegundoCantidad() + " segundo(s) enviará la ubicación el dispositivo");
+                }
+
+                if (programacionRastreoGpsDetalle.getDia().equals("Viernes"))
+                {
+                    switchCompatProgramacionViernes.setEnabled(false);
+                    if (programacionRastreoGpsDetalle.getRastreoGps()==true)
+                    {
+                        switchCompatProgramacionViernes.setChecked(true);
+                        textViewProgramacionViernesResumen.setText("Este día sí será rastreado el dispostivo");
+                    }
+                    else
+                    {
+                        switchCompatProgramacionViernes.setChecked(false);
+                        textViewProgramacionViernesResumen.setText("Este día nó será rastreado el dispostivo");
+                    }
+
+                    if(programacionRastreoGpsDetalle.getRangoHoraInicio() !=null && programacionRastreoGpsDetalle.getRangoHoraFinal() != null)
+                    {
+                        textViewRangoViernesResumen.setText("Desde " + programacionRastreoGpsDetalle.getRangoHoraInicio() + " hasta " +
+                                programacionRastreoGpsDetalle.getRangoHoraFinal() + " el dispositivo será rastreado");
+                    }
+                    else
+                    {
+                        textViewRangoViernesResumen.setText("Desde 0 hasta 0 el dispositivo será rastreado");
+                    }
+
+
+                    textViewIntervaloViernes.setText("Cada " + programacionRastreoGpsDetalle.getIntervaloHoraCantidad() + " hora(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloMinutoCantidad() + " minuto(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloSegundoCantidad() + " segundo(s) enviará la ubicación el dispositivo");
+                }
+
+                if (programacionRastreoGpsDetalle.getDia().equals("Sabado"))
+                {
+                    switchCompatProgramacionSabado.setEnabled(false);
+                    if (programacionRastreoGpsDetalle.getRastreoGps()==true)
+                    {
+                        switchCompatProgramacionSabado.setChecked(true);
+                        textViewProgramacionSabadoResumen.setText("Este día sí será rastreado el dispostivo");
+                    }
+                    else
+                    {
+                        switchCompatProgramacionSabado.setChecked(false);
+                        textViewProgramacionSabadoResumen.setText("Este día nó será rastreado el dispostivo");
+                    }
+
+                    if(programacionRastreoGpsDetalle.getRangoHoraInicio() !=null && programacionRastreoGpsDetalle.getRangoHoraFinal() != null)
+                    {
+                        textViewRangoSabadoResumen.setText("Desde " + programacionRastreoGpsDetalle.getRangoHoraInicio() + " hasta " +
+                                programacionRastreoGpsDetalle.getRangoHoraFinal() + " el dispositivo será rastreado");
+                    }
+                    else
+                    {
+                        textViewRangoSabadoResumen.setText("Desde 0 hasta 0 el dispositivo será rastreado");
+                    }
+
+                    textViewIntervaloSabado.setText("Cada " + programacionRastreoGpsDetalle.getIntervaloHoraCantidad() + " hora(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloMinutoCantidad() + " minuto(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloSegundoCantidad() + " segundo(s) enviará la ubicación el dispositivo");
+                }
+
+                if (programacionRastreoGpsDetalle.getDia().equals("Domingo"))
+                {
+                    switchCompatProgramacionDomingo.setEnabled(false);
+                    if (programacionRastreoGpsDetalle.getRastreoGps()==true)
+                    {
+                        switchCompatProgramacionDomingo.setChecked(true);
+                        textViewProgramacionDomingoResumen.setText("Este día sí será rastreado el dispostivo");
+                    }
+                    else
+                    {
+                        switchCompatProgramacionDomingo.setChecked(false);
+                        textViewProgramacionDomingoResumen.setText("Este día nó será rastreado el dispostivo");
+                    }
+
+                    if(programacionRastreoGpsDetalle.getRangoHoraInicio() !=null && programacionRastreoGpsDetalle.getRangoHoraFinal() != null)
+                    {
+                        textViewRangoDomingoResumen.setText("Desde " + programacionRastreoGpsDetalle.getRangoHoraInicio() + " hasta " +
+                                programacionRastreoGpsDetalle.getRangoHoraFinal() + " el dispositivo será rastreado");
+                    }
+                    else
+                    {
+                        textViewRangoDomingoResumen.setText("Desde 0 hasta 0 el dispositivo será rastreado");
+                    }
+
+                    textViewIntervaloDomingo.setText("Cada " + programacionRastreoGpsDetalle.getIntervaloHoraCantidad() + " hora(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloMinutoCantidad() + " minuto(s) " +
+                            programacionRastreoGpsDetalle.getIntervaloSegundoCantidad() + " segundo(s) enviará la ubicación el dispositivo");
+                }
+
+                Log.i(TAG, "cursorProgramacionRastreoGpsDetalle Posicion fin " + cursorProgramacionRastreoGpsDetalle.getPosition());
+
+
             }
+
+            //}
+            Log.i(TAG, "cursorProgramacionRastreoGpsDetalle Posicion fin 2 " + cursorProgramacionRastreoGpsDetalle.getPosition());
 
             cursorProgramacionRastreoGpsDetalle.close();
 
@@ -804,5 +1057,41 @@ public class RastreadorFragment  extends Fragment
         }
 
     }
+
+    //Métodos implementados de la interface de comunicación LoaderManager.LoaderCallbacks<Cursor>
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args)
+    {
+        idCursor=id;
+        switch (id)
+        {
+            case 1:
+                //cursorCargos=getContentResolver().query(ContratoCotizacion.Cargos.crearUriCargoLista(), null, null, null, null);
+                return new CursorLoader(getActivity(), ProgramacionesRastregoGpsDetalleTabla.crearUriProgramacionRastreoGpsDetalleTablaLista(), null, null, null, null);
+
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data)
+    {
+        //Creando Adaptador para CargoSpinner
+        switch (loader.getId())
+        {
+            case 1:
+                if(data!=null)
+                {
+                    muestraProgramacionRastreGpsDetalleInformacion(data);
+                }
+                break;
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////
 
 }
