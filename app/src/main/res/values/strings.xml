@@ -238,4 +238,5 @@
     <string name="programacion_rango_resumen" translatable="false">Desde 8:30 hasta 19:00 el dispositivo será rastreado</string>
     <string name="programacion_intervalo_lunes" translatable="false">Intervalo</string>
     <string name="programacion_intervalo_lunes_resumen" translatable="false">Cada 0 hora(s) 3 minuto(s) 15 segundo(s) enviará la ubicación el dispositivo</string>
+    <string name="title_main_activity">Firebase Notifications</string>
 </resources>

@@ -12,13 +12,21 @@ import com.soloparaapasionados.identidadmobile.ServicioLocal.RastreadorServicio;
  * Created by USUARIO on 04/02/2018.
  */
 
-public class GPSCheck extends BroadcastReceiver {
+public class GPSCheck extends BroadcastReceiver
+{
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context context, Intent intent)
+    {
+        if (intent.getAction().matches("android.location.GPS_ENABLED_CHANGE"))
+        {
+            boolean enabled = intent.getBooleanExtra("enabled",false);
 
+            Toast.makeText(context, "GPS : " + enabled,
+                    Toast.LENGTH_SHORT).show();
+        }
 
-        LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+       /* LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
 
 
         if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
@@ -31,7 +39,7 @@ public class GPSCheck extends BroadcastReceiver {
         else
         {
             Toast.makeText(context, "Has deshabilitado GPS", Toast.LENGTH_LONG).show();
-        }
+        }*/
     }
 
 }

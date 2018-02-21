@@ -183,39 +183,30 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="sensorPortrait">
-            <intent-filter>
-                 <action android:name="android.intent.action.MAIN"/>
-                 <category android:name="android.intent.category.LAUNCHER"/>
-             </intent-filter>
-         </activity>
-
-         <service
-             android:name="com.soloparaapasionados.identidadmobile.ServicioLocal.RastreadorServicio"
-             android:enabled="true"
-             android:exported="true">
-         </service>
-
-         <service
-             android:name="com.soloparaapasionados.identidadmobile.ServicioLocal.RastreadorServicio"
-             android:enabled="true"
-             android:exported="true">
-         </service>
-
-         <service
-             android:name=".ServicioLocal.UbicacionDispositivoGpsServicioLocal"
-             android:exported="false" />
-
-        <receiver
-           android:name="com.soloparaapasionados.identidadmobile.antenasReceptoras.RastreadorBroadcastReceiver"
-           android:enabled="true"
-           android:exported="true">
            <intent-filter>
-               <action android:name="android.intent.action.BOOT_COMPLETED"/>
-           </intent-filter>
-       </receiver>
+                  <action android:name="android.intent.action.MAIN"/>
+                  <category android:name="android.intent.category.LAUNCHER"/>
+              </intent-filter>
+          </activity>
 
-       <receiver
-            android:name="com.soloparaapasionados.identidadmobile.antenasReceptoras.ProgramacionRastreadosGpsBroadcastReceiver"
+          <service
+              android:name="com.soloparaapasionados.identidadmobile.ServicioLocal.RastreadorServicio"
+              android:enabled="true"
+              android:exported="true">
+          </service>
+
+          <service
+              android:name="com.soloparaapasionados.identidadmobile.ServicioLocal.RastreadorServicio"
+              android:enabled="true"
+              android:exported="true">
+          </service>
+
+          <service
+              android:name=".ServicioLocal.UbicacionDispositivoGpsServicioLocal"
+              android:exported="false" />
+
+         <receiver
+            android:name="com.soloparaapasionados.identidadmobile.antenasReceptoras.RastreadorBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -223,27 +214,36 @@
             </intent-filter>
         </receiver>
 
-         <service
-             android:name=".ServicioLocal.ProgramacionRastreadosGpsServicioLocal"
-             android:exported="false" />
+        <receiver
+             android:name="com.soloparaapasionados.identidadmobile.antenasReceptoras.ProgramacionRastreadosGpsBroadcastReceiver"
+             android:enabled="true"
+             android:exported="true">
+             <intent-filter>
+                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
+             </intent-filter>
+         </receiver>
+
+          <service
+              android:name=".ServicioLocal.ProgramacionRastreadosGpsServicioLocal"
+              android:exported="false" />
+
+          <service
+              android:name=".alarmas.ReminderAlarmService"
+              android:exported="false" />
+
 
          <service
-             android:name=".alarmas.ReminderAlarmService"
-             android:exported="false" />
-
-
-        <service
-            android:name="com.soloparaapasionados.identidadmobile.serviciotransporttracker.TrackerService"
-            android:enabled="true"
-            android:exported="true">
-        </service>
-        <service android:name="com.soloparaapasionados.identidadmobile.serviciotransporttracker.TrackerTaskService"
+             android:name="com.soloparaapasionados.identidadmobile.serviciotransporttracker.TrackerService"
+             android:enabled="true"
+             android:exported="true">
+         </service>
+        <!-- <service android:name="com.soloparaapasionados.identidadmobile.serviciotransporttracker.TrackerTaskService"
             android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY"/>
             </intent-filter>
-        </service>
+        </service>-->
         <activity
             android:name="com.soloparaapasionados.identidadmobile.serviciotransporttracker.TrackerActivity"
             android:label="@string/title_activity_main"
@@ -253,7 +253,7 @@
                <action android:name="android.intent.action.MAIN"/>
                <category android:name="android.intent.category.LAUNCHER"/>
            </intent-filter> -->
-      </activity>
+        </activity>
         <!-- <receiver
              android:name="com.soloparaapasionados.identidadmobile.serviciotransporttracker.TrackerBroadcastReceiver"
              android:enabled="true"
@@ -269,15 +269,48 @@
              </intent-filter>
          </receiver>-->
 
-           <!--
-         <receiver android:name="com.soloparaapasionados.identidadmobile.serviciotransporttracker.GPSCheck" >
-             <intent-filter>
-                 <action android:name="android.location.PROVIDERS_CHANGED" />
-                 <category android:name="android.intent.category.DEFAULT" />
-             </intent-filter>
-         </receiver>-->
+
+        <!--<receiver android:name="com.soloparaapasionados.identidadmobile.serviciotransporttracker.GPSCheck" >
+           <intent-filter>
+               <action android:name="android.location.PROVIDERS_CHANGED" />
+               <category android:name="android.intent.category.DEFAULT" />
+           </intent-filter>
+       </receiver>-->
+
+      <receiver android:name="com.soloparaapasionados.identidadmobile.serviciotransporttracker.GPSCheck" >
+          <intent-filter>
+              <action android:name="android.location.GPS_ENABLED_CHANGE" />
+              <category android:name="android.intent.category.DEFAULT" />
+          </intent-filter>
+      </receiver>
+
+      <activity
+          android:name=".notifications.activity.MainActivity"
+          android:label="@string/title_main_activity"
+          android:theme="@style/AppTheme.NoActionBar">
+        <!--<intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter> -->
+    </activity>
+    <!-- Firebase Notifications -->
+        <service android:name="com.soloparaapasionados.identidadmobile.notifications.service.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name="com.soloparaapasionados.identidadmobile.notifications.service.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- ./Firebase Notifications -->
 
 
-     </application>
+
+
+    </application>
 
    </manifest>

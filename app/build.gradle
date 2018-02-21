@@ -31,7 +31,7 @@ android {
 
 ext {
     support = '25.3.1'
-    playServices = '9.6.0'
+    playServices = '11.8.0'
 }
 
 dependencies {
@@ -57,13 +57,14 @@ dependencies {
 
     compile "com.google.android.gms:play-services-maps:$playServices"
     compile "com.google.android.gms:play-services:$playServices"
-    compile "com.google.android.gms:play-services-gcm:$playServices"
+   // compile "com.google.android.gms:play-services-gcm:$playServices"
     compile "com.google.android.gms:play-services-location:$playServices"
     //
-    compile "com.google.firebase:firebase-auth:$playServices"
-    compile "com.google.firebase:firebase-config:$playServices"
-    compile "com.google.firebase:firebase-crash:$playServices"
-    compile "com.google.firebase:firebase-database:$playServices"
+    //compile "com.google.firebase:firebase-auth:$playServices"
+    //compile "com.google.firebase:firebase-config:$playServices"
+    //compile "com.google.firebase:firebase-crash:$playServices"
+    //compile "com.google.firebase:firebase-database:$playServices"
+    compile "com.google.firebase:firebase-core:$playServices"
     compile "com.google.firebase:firebase-messaging:$playServices"
 
     testCompile 'junit:junit:4.12'
